@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/config.xsd">
+    <elements>
+        <element type="text" scope="shop">
+            <name>apiKey</name>
+            <label lang="de">Zugriffsschlüssel (kann man bei info@endereco.de anfordern)</label>
+            <label lang="en">API-Key (you get it from info@endereco.de)</label>
+            <description lang="de">Zugriffsschlüssel für die Endereco Schnittstelle.</description>
+            <description lang="en">Access key for the Endereco API.</description>
+        </element>
+
+        <element type="button">
+            <name>textKey</name>
+            <label lang="de">Zugriffsschlüßel prüfen</label>
+            <label lang="en">Check API key</label>
+            <options>
+                <handler>
+                    <![CDATA[
+                    function() {
+                      var $apiKey = this.el.dom.closest('table').querySelector('tbody').querySelector('input').value;
+                      Ext.Ajax.request({
+                        url: 'EnderecoShopware5Client/testApi?apiKey='+$apiKey,
+                        success: function (response) {
+                            var responseO = JSON.parse(response.responseText)
+                            Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                        },
+                        failure: function (response) {
+                            var responseO = JSON.parse(response.responseText)
+                            Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                        }
+                      });
+                    }
+                    ]]>
+                </handler>
+            </options>
+        </element>
+
+        <element type="text" scope="shop">
+            <name>remoteApiUrl</name>
+            <label lang="de">URL für remote API</label>
+            <label lang="en">Remote API Url</label>
+            <value>https://endereco-service.de/rpc/v1</value>
+            <description lang="de">URL der Endereco API.</description>
+            <description lang="en">Access URL for the Endereco API.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>defaultCountryActive</name>
+            <label lang="de">Standardland vorauswählen</label>
+            <label lang="en">Preselect default caountry</label>
+            <value>false</value>
+        </element>
+
+        <element type="select" scope="shop">
+            <name>defaultCountry</name>
+            <label lang="de">Standardland</label>
+            <label lang="en">Default country</label>
+            <store>
+                <option><value>de</value><label lang="de">Deutschland</label><label lang="en">Germany</label></option>
+                <option><value>af</value><label lang="de">Afghanistan</label><label lang="en">Afghanistan</label></option>
+                <option><value>ax</value><label lang="de">Åland-Inseln</label><label lang="en">Åland Islands</label></option>
+                <option><value>al</value><label lang="de">Albanien</label><label lang="en">Albania</label></option>
+                <option><value>dz</value><label lang="de">Algerien</label><label lang="en">Algeria</label></option>
+                <option><value>as</value><label lang="de">Amerikanisch-Samoa</label><label lang="en">American Samoa</label></option>
+                <option><value>ad</value><label lang="de">Andorra</label><label lang="en">Andorra</label></option>
+                <option><value>ao</value><label lang="de">Angola</label><label lang="en">Angola</label></option>
+                <option><value>ai</value><label lang="de">Anguilla</label><label lang="en">Anguilla</label></option>
+                <option><value>aq</value><label lang="de">Antarktis</label><label lang="en">Antarctica</label></option>
+                <option><value>ag</value><label lang="de">Antigua und Barbuda</label><label lang="en">Antigua and Barbuda</label></option>
+                <option><value>ar</value><label lang="de">Argentinien</label><label lang="en">Argentina</label></option>
+                <option><value>am</value><label lang="de">Armenien</label><label lang="en">Armenia</label></option>
+                <option><value>aw</value><label lang="de">Aruba</label><label lang="en">Aruba</label></option>
+                <option><value>au</value><label lang="de">Australien</label><label lang="en">Australia</label></option>
+                <option><value>at</value><label lang="de">Österreich</label><label lang="en">Austria</label></option>
+                <option><value>az</value><label lang="de">Aserbaidschan</label><label lang="en">Azerbaijan</label></option>
+                <option><value>bs</value><label lang="de">Bahamas</label><label lang="en">Bahamas</label></option>
+                <option><value>bh</value><label lang="de">Bahrain</label><label lang="en">Bahrain</label></option>
+                <option><value>bd</value><label lang="de">Bangladesch</label><label lang="en">Bangladesh</label></option>
+                <option><value>bb</value><label lang="de">Barbados</label><label lang="en">Barbados</label></option>
+                <option><value>by</value><label lang="de">Weißrussland</label><label lang="en">Belarus</label></option>
+                <option><value>be</value><label lang="de">Belgien</label><label lang="en">Belgium</label></option>
+                <option><value>bz</value><label lang="de">Belize</label><label lang="en">Belize</label></option>
+                <option><value>bj</value><label lang="de">Benin</label><label lang="en">Benin</label></option>
+                <option><value>bm</value><label lang="de">Bermuda</label><label lang="en">Bermuda</label></option>
+                <option><value>bt</value><label lang="de">Bhutan</label><label lang="en">Bhutan</label></option>
+                <option><value>bo</value><label lang="de">Bolivien (Plurinationaler Staat)</label><label lang="en">Bolivia (Plurinational State of)</label></option>
+                <option><value>bq</value><label lang="de">Bonaire, Sint Eustatius und Saba</label><label lang="en">Bonaire, Sint Eustatius and Saba</label></option>
+                <option><value>ba</value><label lang="de">Bosnien und Herzegowina</label><label lang="en">Bosnia and Herzegovina</label></option>
+                <option><value>bw</value><label lang="de">Botswana</label><label lang="en">Botswana</label></option>
+                <option><value>bv</value><label lang="de">Bouvet-Insel</label><label lang="en">Bouvet Island</label></option>
+                <option><value>br</value><label lang="de">Brasilien</label><label lang="en">Brazil</label></option>
+                <option><value>io</value><label lang="de">Britisches Territorium im Indischen Ozean</label><label lang="en">British Indian Ocean Territory</label></option>
+                <option><value>bn</value><label lang="de">Brunei Darussalam</label><label lang="en">Brunei Darussalam</label></option>
+                <option><value>bg</value><label lang="de">Bulgarien</label><label lang="en">Bulgaria</label></option>
+                <option><value>bf</value><label lang="de">Burkina Faso</label><label lang="en">Burkina Faso</label></option>
+                <option><value>bi</value><label lang="de">Burundi</label><label lang="en">Burundi</label></option>
+                <option><value>cv</value><label lang="de">Cabo Verde</label><label lang="en">Cabo Verde</label></option>
+                <option><value>kh</value><label lang="de">Kambodscha</label><label lang="en">Cambodia</label></option>
+                <option><value>cm</value><label lang="de">Kamerun</label><label lang="en">Cameroon</label></option>
+                <option><value>ca</value><label lang="de">Kanada</label><label lang="en">Canada</label></option>
+                <option><value>ky</value><label lang="de">Kaimaninseln</label><label lang="en">Cayman Islands</label></option>
+                <option><value>cf</value><label lang="de">Zentralafrikanische Republik</label><label lang="en">Central African Republic</label></option>
+                <option><value>td</value><label lang="de">Tschad</label><label lang="en">Chad</label></option>
+                <option><value>cl</value><label lang="de">Chile</label><label lang="en">Chile</label></option>
+                <option><value>cn</value><label lang="de">China</label><label lang="en">China</label></option>
+                <option><value>cx</value><label lang="de">Weihnachtsinsel</label><label lang="en">Christmas Island</label></option>
+                <option><value>cc</value><label lang="de">Kokosinseln (Keeling)</label><label lang="en">Cocos (Keeling) Islands</label></option>
+                <option><value>co</value><label lang="de">Kolumbien</label><label lang="en">Colombia</label></option>
+                <option><value>km</value><label lang="de">Komoren</label><label lang="en">Comoros</label></option>
+                <option><value>cg</value><label lang="de">Kongo</label><label lang="en">Congo</label></option>
+                <option><value>cd</value><label lang="de">Kongo, Demokratische Republik Kongo</label><label lang="en">Congo, Democratic Republic of the</label></option>
+                <option><value>ck</value><label lang="de">Cook-Inseln</label><label lang="en">Cook Islands</label></option>
+                <option><value>cr</value><label lang="de">Costa Rica</label><label lang="en">Costa Rica</label></option>
+                <option><value>ci</value><label lang="de">Côte d'Ivoire</label><label lang="en">Côte d'Ivoire</label></option>
+                <option><value>hr</value><label lang="de">Kroatien</label><label lang="en">Croatia</label></option>
+                <option><value>cu</value><label lang="de">Kuba</label><label lang="en">Cuba</label></option>
+                <option><value>cw</value><label lang="de">Curaçao</label><label lang="en">Curaçao</label></option>
+                <option><value>cy</value><label lang="de">Zypern</label><label lang="en">Cyprus</label></option>
+                <option><value>cz</value><label lang="de">Tschechien</label><label lang="en">Czechia</label></option>
+                <option><value>dk</value><label lang="de">Dänemark</label><label lang="en">Denmark</label></option>
+                <option><value>dj</value><label lang="de">Dschibuti</label><label lang="en">Djibouti</label></option>
+                <option><value>dm</value><label lang="de">Dominica</label><label lang="en">Dominica</label></option>
+                <option><value>do</value><label lang="de">Dominikanische Republik</label><label lang="en">Dominican Republic</label></option>
+                <option><value>ec</value><label lang="de">Ecuador</label><label lang="en">Ecuador</label></option>
+                <option><value>eg</value><label lang="de">Ägypten</label><label lang="en">Egypt</label></option>
+                <option><value>sv</value><label lang="de">El Salvador</label><label lang="en">El Salvador</label></option>
+                <option><value>gq</value><label lang="de">Äquatorialguinea</label><label lang="en">Equatorial Guinea</label></option>
+                <option><value>er</value><label lang="de">Eritrea</label><label lang="en">Eritrea</label></option>
+                <option><value>ee</value><label lang="de">Estland</label><label lang="en">Estonia</label></option>
+                <option><value>sz</value><label lang="de">Eswatini</label><label lang="en">Eswatini</label></option>
+                <option><value>et</value><label lang="de">Äthiopien</label><label lang="en">Ethiopia</label></option>
+                <option><value>fk</value><label lang="de">Falkland-Inseln (Malwinen)</label><label lang="en">Falkland Islands (Malvinas)</label></option>
+                <option><value>fo</value><label lang="de">Färöer-Inseln</label><label lang="en">Faroe Islands</label></option>
+                <option><value>fj</value><label lang="de">Fidschi</label><label lang="en">Fiji</label></option>
+                <option><value>fi</value><label lang="de">Finnland</label><label lang="en">Finland</label></option>
+                <option><value>fr</value><label lang="de">Frankreich</label><label lang="en">France</label></option>
+                <option><value>gf</value><label lang="de">Französisch-Guayana</label><label lang="en">French Guiana</label></option>
+                <option><value>pf</value><label lang="de">Französisch-Polynesien</label><label lang="en">French Polynesia</label></option>
+                <option><value>tf</value><label lang="de">Französische Süd-Territorien</label><label lang="en">French Southern Territories</label></option>
+                <option><value>ga</value><label lang="de">Gabun</label><label lang="en">Gabon</label></option>
+                <option><value>gm</value><label lang="de">Gambia</label><label lang="en">Gambia</label></option>
+                <option><value>ge</value><label lang="de">Georgien</label><label lang="en">Georgia</label></option>
+                <option><value>gh</value><label lang="de">Ghana</label><label lang="en">Ghana</label></option>
+                <option><value>gi</value><label lang="de">Gibraltar</label><label lang="en">Gibraltar</label></option>
+                <option><value>gr</value><label lang="de">Griechenland</label><label lang="en">Greece</label></option>
+                <option><value>gl</value><label lang="de">Grönland</label><label lang="en">Greenland</label></option>
+                <option><value>gd</value><label lang="de">Grenada</label><label lang="en">Grenada</label></option>
+                <option><value>gp</value><label lang="de">Guadeloupe</label><label lang="en">Guadeloupe</label></option>
+                <option><value>gu</value><label lang="de">Guam</label><label lang="en">Guam</label></option>
+                <option><value>gt</value><label lang="de">Guatemala</label><label lang="en">Guatemala</label></option>
+                <option><value>gg</value><label lang="de">Guernsey</label><label lang="en">Guernsey</label></option>
+                <option><value>gn</value><label lang="de">Guinea</label><label lang="en">Guinea</label></option>
+                <option><value>gw</value><label lang="de">Guinea-Bissau</label><label lang="en">Guinea-Bissau</label></option>
+                <option><value>gy</value><label lang="de">Guyana</label><label lang="en">Guyana</label></option>
+                <option><value>ht</value><label lang="de">Haiti</label><label lang="en">Haiti</label></option>
+                <option><value>hm</value><label lang="de">Heard Island und McDonaldinseln</label><label lang="en">Heard Island and McDonald Islands</label></option>
+                <option><value>va</value><label lang="de">Heiliger Stuhl</label><label lang="en">Holy See</label></option>
+                <option><value>hn</value><label lang="de">Honduras</label><label lang="en">Honduras</label></option>
+                <option><value>hk</value><label lang="de">Hongkong</label><label lang="en">Hong Kong</label></option>
+                <option><value>hu</value><label lang="de">Ungarn</label><label lang="en">Hungary</label></option>
+                <option><value>is</value><label lang="de">Island</label><label lang="en">Iceland</label></option>
+                <option><value>in</value><label lang="de">Indien</label><label lang="en">India</label></option>
+                <option><value>id</value><label lang="de">Indonesien</label><label lang="en">Indonesia</label></option>
+                <option><value>ir</value><label lang="de">Iran (Islamische Republik)</label><label lang="en">Iran (Islamic Republic of)</label></option>
+                <option><value>iq</value><label lang="de">Irak</label><label lang="en">Iraq</label></option>
+                <option><value>ie</value><label lang="de">Irland</label><label lang="en">Ireland</label></option>
+                <option><value>im</value><label lang="de">Insel Man</label><label lang="en">Isle of Man</label></option>
+                <option><value>il</value><label lang="de">Israel</label><label lang="en">Israel</label></option>
+                <option><value>it</value><label lang="de">Italien</label><label lang="en">Italy</label></option>
+                <option><value>jm</value><label lang="de">Jamaika</label><label lang="en">Jamaica</label></option>
+                <option><value>jp</value><label lang="de">Japan</label><label lang="en">Japan</label></option>
+                <option><value>je</value><label lang="de">Jersey</label><label lang="en">Jersey</label></option>
+                <option><value>jo</value><label lang="de">Jordanien</label><label lang="en">Jordan</label></option>
+                <option><value>kz</value><label lang="de">Kasachstan</label><label lang="en">Kazakhstan</label></option>
+                <option><value>ke</value><label lang="de">Kenia</label><label lang="en">Kenya</label></option>
+                <option><value>ki</value><label lang="de">Kiribati</label><label lang="en">Kiribati</label></option>
+                <option><value>kp</value><label lang="de">Korea (Demokratische Volksrepublik)</label><label lang="en">Korea (Democratic People's Republic of)</label></option>
+                <option><value>kr</value><label lang="de">Korea, Republik</label><label lang="en">Korea, Republic of</label></option>
+                <option><value>kw</value><label lang="de">Kuwait</label><label lang="en">Kuwait</label></option>
+                <option><value>kg</value><label lang="de">Kirgisistan</label><label lang="en">Kyrgyzstan</label></option>
+                <option><value>la</value><label lang="de">Demokratische Volksrepublik Laos</label><label lang="en">Lao People's Democratic Republic</label></option>
+                <option><value>lv</value><label lang="de">Lettland</label><label lang="en">Latvia</label></option>
+                <option><value>lb</value><label lang="de">Libanon</label><label lang="en">Lebanon</label></option>
+                <option><value>ls</value><label lang="de">Lesotho</label><label lang="en">Lesotho</label></option>
+                <option><value>lr</value><label lang="de">Liberia</label><label lang="en">Liberia</label></option>
+                <option><value>ly</value><label lang="de">Libyen</label><label lang="en">Libya</label></option>
+                <option><value>li</value><label lang="de">Liechtenstein</label><label lang="en">Liechtenstein</label></option>
+                <option><value>lt</value><label lang="de">Litauen</label><label lang="en">Lithuania</label></option>
+                <option><value>lu</value><label lang="de">Luxemburg</label><label lang="en">Luxembourg</label></option>
+                <option><value>mo</value><label lang="de">Macao</label><label lang="en">Macao</label></option>
+                <option><value>mg</value><label lang="de">Madagaskar</label><label lang="en">Madagascar</label></option>
+                <option><value>mw</value><label lang="de">Malawi</label><label lang="en">Malawi</label></option>
+                <option><value>my</value><label lang="de">Malaysia</label><label lang="en">Malaysia</label></option>
+                <option><value>mv</value><label lang="de">Malediven</label><label lang="en">Maldives</label></option>
+                <option><value>ml</value><label lang="de">Mali</label><label lang="en">Mali</label></option>
+                <option><value>mt</value><label lang="de">Malta</label><label lang="en">Malta</label></option>
+                <option><value>mh</value><label lang="de">Marshall-Inseln</label><label lang="en">Marshall Islands</label></option>
+                <option><value>mq</value><label lang="de">Martinique</label><label lang="en">Martinique</label></option>
+                <option><value>mr</value><label lang="de">Mauretanien</label><label lang="en">Mauritania</label></option>
+                <option><value>mu</value><label lang="de">Mauritius</label><label lang="en">Mauritius</label></option>
+                <option><value>yt</value><label lang="de">Mayotte</label><label lang="en">Mayotte</label></option>
+                <option><value>mx</value><label lang="de">Mexiko</label><label lang="en">Mexico</label></option>
+                <option><value>fm</value><label lang="de">Mikronesien (Föderierte Staaten von)</label><label lang="en">Micronesia (Federated States of)</label></option>
+                <option><value>md</value><label lang="de">Moldawien, Republik</label><label lang="en">Moldova, Republic of</label></option>
+                <option><value>mc</value><label lang="de">Monaco</label><label lang="en">Monaco</label></option>
+                <option><value>mn</value><label lang="de">Mongolei</label><label lang="en">Mongolia</label></option>
+                <option><value>me</value><label lang="de">Montenegro</label><label lang="en">Montenegro</label></option>
+                <option><value>ms</value><label lang="de">Montserrat</label><label lang="en">Montserrat</label></option>
+                <option><value>ma</value><label lang="de">Marokko</label><label lang="en">Morocco</label></option>
+                <option><value>mz</value><label lang="de">Mosambik</label><label lang="en">Mozambique</label></option>
+                <option><value>mm</value><label lang="de">Myanmar</label><label lang="en">Myanmar</label></option>
+                <option><value>na</value><label lang="de">Namibia</label><label lang="en">Namibia</label></option>
+                <option><value>nr</value><label lang="de">Nauru</label><label lang="en">Nauru</label></option>
+                <option><value>np</value><label lang="de">Nepal</label><label lang="en">Nepal</label></option>
+                <option><value>nl</value><label lang="de">Niederlande</label><label lang="en">Netherlands</label></option>
+                <option><value>nc</value><label lang="de">Neukaledonien</label><label lang="en">New Caledonia</label></option>
+                <option><value>nz</value><label lang="de">Neuseeland</label><label lang="en">New Zealand</label></option>
+                <option><value>ni</value><label lang="de">Nicaragua</label><label lang="en">Nicaragua</label></option>
+                <option><value>ne</value><label lang="de">Niger</label><label lang="en">Niger</label></option>
+                <option><value>ng</value><label lang="de">Nigeria</label><label lang="en">Nigeria</label></option>
+                <option><value>nu</value><label lang="de">Niue</label><label lang="en">Niue</label></option>
+                <option><value>nf</value><label lang="de">Norfolkinsel</label><label lang="en">Norfolk Island</label></option>
+                <option><value>mk</value><label lang="de">Nord-Mazedonien</label><label lang="en">North Macedonia</label></option>
+                <option><value>mp</value><label lang="de">Nördliche Marianen-Inseln</label><label lang="en">Northern Mariana Islands</label></option>
+                <option><value>no</value><label lang="de">Norwegen</label><label lang="en">Norway</label></option>
+                <option><value>om</value><label lang="de">Oman</label><label lang="en">Oman</label></option>
+                <option><value>pk</value><label lang="de">Pakistan</label><label lang="en">Pakistan</label></option>
+                <option><value>pw</value><label lang="de">Palau</label><label lang="en">Palau</label></option>
+                <option><value>ps</value><label lang="de">Palästina, Staat</label><label lang="en">Palestine, State of</label></option>
+                <option><value>pa</value><label lang="de">Panama</label><label lang="en">Panama</label></option>
+                <option><value>pg</value><label lang="de">Papua-Neuguinea</label><label lang="en">Papua New Guinea</label></option>
+                <option><value>py</value><label lang="de">Paraguay</label><label lang="en">Paraguay</label></option>
+                <option><value>pe</value><label lang="de">Peru</label><label lang="en">Peru</label></option>
+                <option><value>ph</value><label lang="de">Philippinen</label><label lang="en">Philippines</label></option>
+                <option><value>pn</value><label lang="de">Pitcairn</label><label lang="en">Pitcairn</label></option>
+                <option><value>pl</value><label lang="de">Polen</label><label lang="en">Poland</label></option>
+                <option><value>pt</value><label lang="de">Portugal</label><label lang="en">Portugal</label></option>
+                <option><value>pr</value><label lang="de">Puerto Rico</label><label lang="en">Puerto Rico</label></option>
+                <option><value>qa</value><label lang="de">Katar</label><label lang="en">Qatar</label></option>
+                <option><value>re</value><label lang="de">Réunion</label><label lang="en">Réunion</label></option>
+                <option><value>ro</value><label lang="de">Rumänien</label><label lang="en">Romania</label></option>
+                <option><value>ru</value><label lang="de">Russische Föderation</label><label lang="en">Russian Federation</label></option>
+                <option><value>rw</value><label lang="de">Ruanda</label><label lang="en">Rwanda</label></option>
+                <option><value>bl</value><label lang="de">Sankt Barthélemy</label><label lang="en">Saint Barthélemy</label></option>
+                <option><value>sh</value><label lang="de">Heilige Helena, Himmelfahrt und Tristan da Cunha</label><label lang="en">Saint Helena, Ascension and Tristan da Cunha</label></option>
+                <option><value>kn</value><label lang="de">St. Kitts und Nevis</label><label lang="en">Saint Kitts and Nevis</label></option>
+                <option><value>lc</value><label lang="de">St. Lucia</label><label lang="en">Saint Lucia</label></option>
+                <option><value>mf</value><label lang="de">Saint Martin (französischer Teil)</label><label lang="en">Saint Martin (French part)</label></option>
+                <option><value>pm</value><label lang="de">St. Pierre und Miquelon</label><label lang="en">Saint Pierre and Miquelon</label></option>
+                <option><value>vc</value><label lang="de">St. Vincent und die Grenadinen</label><label lang="en">Saint Vincent and the Grenadines</label></option>
+                <option><value>ws</value><label lang="de">Samoa</label><label lang="en">Samoa</label></option>
+                <option><value>sm</value><label lang="de">San Marino</label><label lang="en">San Marino</label></option>
+                <option><value>st</value><label lang="de">São Tomé und Príncipe</label><label lang="en">Sao Tome and Principe</label></option>
+                <option><value>sa</value><label lang="de">Saudi-Arabien</label><label lang="en">Saudi Arabia</label></option>
+                <option><value>sn</value><label lang="de">Senegal</label><label lang="en">Senegal</label></option>
+                <option><value>rs</value><label lang="de">Serbien</label><label lang="en">Serbia</label></option>
+                <option><value>sc</value><label lang="de">Seychellen</label><label lang="en">Seychelles</label></option>
+                <option><value>sl</value><label lang="de">Sierra Leone</label><label lang="en">Sierra Leone</label></option>
+                <option><value>sg</value><label lang="de">Singapur</label><label lang="en">Singapore</label></option>
+                <option><value>sx</value><label lang="de">Sint Maarten (niederländischer Teil)</label><label lang="en">Sint Maarten (Dutch part)</label></option>
+                <option><value>sk</value><label lang="de">Slowakei</label><label lang="en">Slovakia</label></option>
+                <option><value>si</value><label lang="de">Slowenien</label><label lang="en">Slovenia</label></option>
+                <option><value>sb</value><label lang="de">Salomon-Inseln</label><label lang="en">Solomon Islands</label></option>
+                <option><value>so</value><label lang="de">Somalia</label><label lang="en">Somalia</label></option>
+                <option><value>za</value><label lang="de">Südafrika</label><label lang="en">South Africa</label></option>
+                <option><value>gs</value><label lang="de">Südgeorgien und die Südlichen Sandwichinseln</label><label lang="en">South Georgia and the South Sandwich Islands</label></option>
+                <option><value>ss</value><label lang="de">Südsudan</label><label lang="en">South Sudan</label></option>
+                <option><value>es</value><label lang="de">Spanien</label><label lang="en">Spain</label></option>
+                <option><value>lk</value><label lang="de">Sri Lanka</label><label lang="en">Sri Lanka</label></option>
+                <option><value>sd</value><label lang="de">Sudan</label><label lang="en">Sudan</label></option>
+                <option><value>sr</value><label lang="de">Surinam</label><label lang="en">Suriname</label></option>
+                <option><value>sj</value><label lang="de">Svalbard und Jan Mayen</label><label lang="en">Svalbard and Jan Mayen</label></option>
+                <option><value>se</value><label lang="de">Schweden</label><label lang="en">Sweden</label></option>
+                <option><value>ch</value><label lang="de">Schweiz</label><label lang="en">Switzerland</label></option>
+                <option><value>sy</value><label lang="de">Arabische Republik Syrien</label><label lang="en">Syrian Arab Republic</label></option>
+                <option><value>tw</value><label lang="de">Taiwan, Provinz China</label><label lang="en">Taiwan, Province of China</label></option>
+                <option><value>tj</value><label lang="de">Tadschikistan</label><label lang="en">Tajikistan</label></option>
+                <option><value>tz</value><label lang="de">Tansania, Vereinigte Republik</label><label lang="en">Tanzania, United Republic of</label></option>
+                <option><value>th</value><label lang="de">Thailand</label><label lang="en">Thailand</label></option>
+                <option><value>tl</value><label lang="de">Timor-Leste</label><label lang="en">Timor-Leste</label></option>
+                <option><value>tg</value><label lang="de">Togo</label><label lang="en">Togo</label></option>
+                <option><value>tk</value><label lang="de">Tokelau</label><label lang="en">Tokelau</label></option>
+                <option><value>to</value><label lang="de">Tonga</label><label lang="en">Tonga</label></option>
+                <option><value>tt</value><label lang="de">Trinidad und Tobago</label><label lang="en">Trinidad and Tobago</label></option>
+                <option><value>tn</value><label lang="de">Tunesien</label><label lang="en">Tunisia</label></option>
+                <option><value>tr</value><label lang="de">Türkei</label><label lang="en">Turkey</label></option>
+                <option><value>tm</value><label lang="de">Turkmenistan</label><label lang="en">Turkmenistan</label></option>
+                <option><value>tc</value><label lang="de">Turks- und Caicosinseln</label><label lang="en">Turks and Caicos Islands</label></option>
+                <option><value>tv</value><label lang="de">Tuvalu</label><label lang="en">Tuvalu</label></option>
+                <option><value>ug</value><label lang="de">Uganda</label><label lang="en">Uganda</label></option>
+                <option><value>ua</value><label lang="de">Ukraine</label><label lang="en">Ukraine</label></option>
+                <option><value>ae</value><label lang="de">Vereinigte Arabische Emirate</label><label lang="en">United Arab Emirates</label></option>
+                <option><value>gb</value><label lang="de">Vereinigtes Königreich von Großbritannien und Nordirland</label><label lang="en">United Kingdom of Great Britain and Northern Ireland</label></option>
+                <option><value>us</value><label lang="de">Vereinigte Staaten von Amerika</label><label lang="en">United States of America</label></option>
+                <option><value>um</value><label lang="de">Kleinere abgelegene Inseln der Vereinigten Staaten</label><label lang="en">United States Minor Outlying Islands</label></option>
+                <option><value>uy</value><label lang="de">Uruguay</label><label lang="en">Uruguay</label></option>
+                <option><value>uz</value><label lang="de">Usbekistan</label><label lang="en">Uzbekistan</label></option>
+                <option><value>vu</value><label lang="de">Vanuatu</label><label lang="en">Vanuatu</label></option>
+                <option><value>ve</value><label lang="de">Venezuela (Bolivarische Republik)</label><label lang="en">Venezuela (Bolivarian Republic of)</label></option>
+                <option><value>vn</value><label lang="de">Vietnam</label><label lang="en">Viet Nam</label></option>
+                <option><value>vg</value><label lang="de">Jungferninseln (Britisch)</label><label lang="en">Virgin Islands (British)</label></option>
+                <option><value>vi</value><label lang="de">Jungferninseln (Vereinigte Staaten)</label><label lang="en">Virgin Islands (U.S.)</label></option>
+                <option><value>wf</value><label lang="de">Wallis und Futuna</label><label lang="en">Wallis and Futuna</label></option>
+                <option><value>eh</value><label lang="de">Westsahara</label><label lang="en">Western Sahara</label></option>
+                <option><value>ye</value><label lang="de">Jemen</label><label lang="en">Yemen</label></option>
+                <option><value>zm</value><label lang="de">Sambia</label><label lang="en">Zambia</label></option>
+                <option><value>zw</value><label lang="de">Simbabwe</label><label lang="en">Zimbabwe</label></option>
+
+            </store>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>amsActive</name>
+            <label lang="de">Adressprüfung und Eingabe-Assistent aktivieren</label>
+            <label lang="en">Activate address check and input assistant</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>splitStreet</name>
+            <label lang="de">Straße in Straßenname und Hausnummer unterteilen</label>
+            <label lang="en">Divide street into street name and house number</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>checkExisting</name>
+            <label lang="de">Auch Bestandskunden einmalig prüfen</label>
+            <label lang="en">Also check existing customers once</label>
+            <value>true</value>
+            <description lang="de">Bestandskunden, die noch nicht geprüft wurden, werden bei einem Login und Aufruf einer Adressformular-Seite automatisch geprüft.</description>
+            <description lang="en">Existing customers who have not yet been checked are automatically checked when they log in and access an address form page.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>checkOnBlur</name>
+            <label lang="de">Adressprüfung sofort nach verlassen des Hausnummern Feldes auslösen</label>
+            <label lang="en">Trigger address check immediately after leaving the house number field</label>
+            <value>true</value>
+            <description lang="de">Ist die Funktion aktiv, wird die Adressprüfung sofort nach Eingabe der Adresse angestoßen. Ist die deaktiviert, erfolg die Prüfung beim Klick auf den "Speichern" Button.</description>
+            <description lang="en">If the function is active, the address check is triggered immediately after the address is entered. If the function is deactivated, the check is performed by clicking the "Save" button.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>smartFill</name>
+            <label lang="de">(beta) Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
+            <label lang="en">(beta) Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>emailCheckActive</name>
+            <label lang="de">E-Mail Adressprüfung aktivieren</label>
+            <label lang="en">Activate e-mail address verification</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>salutationCheckActive</name>
+            <label lang="de">Anredeprüfung basierend auf dem Vornamen aktivieren und Anrede automatisch setzen</label>
+            <label lang="en">Activate salutation check based on first name and set salutation automatically</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>useDefaultCss</name>
+            <label lang="de">Standard-CSS nutzen</label>
+            <label lang="en">Use standard CSS</label>
+            <value>true</value>
+        </element>
+
+        <element type="text" scope="shop">
+            <name>mainColor</name>
+            <label lang="de">Hauptfarbe im Dropdown</label>
+            <label lang="en">Main colour in the dropdown</label>
+        </element>
+
+        <element type="text" scope="shop">
+            <name>errorColor</name>
+            <label lang="de">Fehlerfarbe im Modal</label>
+            <label lang="en">Error color in modal</label>
+        </element>
+
+        <element type="text" scope="shop">
+            <name>successColor</name>
+            <label lang="de">Auswahlfarbe im Modal</label>
+            <label lang="en">Selection color in modal</label>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>showDebug</name>
+            <label lang="de">Debuginformationen in der Browserkonsole ausgeben</label>
+            <label lang="en">Outputting Debug Information to the Browser Console</label>
+            <value>false</value>
+        </element>
+    </elements>
+</config>
