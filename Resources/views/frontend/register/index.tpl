@@ -44,6 +44,12 @@
 				.endereco-hide-fields {
 					display: none !important;
 				}
+
+				.register--street-name-number,
+				.register--zip-city {
+					overflow: auto;
+					width: 100%;
+				}
             </style>
             <div class="register--street-name-number">
                 <input autocomplete="section-billing billing street-address-name"
@@ -65,7 +71,6 @@
                        value=""
                        class="register--field register--field-streetnumber address--field-zipcode is--required" />
             </div>
-            <div style="clear: both"></div>
         {/if}
     {/capture}
 {/block}
@@ -95,26 +100,14 @@
         {$smarty.capture.c_frontend_register_billing_fieldset_different_shipping}
     </div>
     <script>
-        if (window.EnderecoIntegrator && window.EnderecoIntegrator.initAMS) {
-            window.EnderecoIntegrator.waitUntilReady().then(function() {
-                window.EnderecoIntegrator.initAMS('register[billing]');
-            });
-        } else if (window.EnderecoIntegrator && !window.EnderecoIntegrator.initAMS && window.EnderecoIntegrator.asyncCallbacks) {
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
+        ( function() {
+            var $interval = setInterval( function() {
+                if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                     window.EnderecoIntegrator.initAMS('register[billing]');
-                });
-            });
-        } else {
-            window.EnderecoIntegrator = {
-                asyncCallbacks: []
-            };
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
-                    window.EnderecoIntegrator.initAMS('register[billing]');
-                });
-            });
-        }
+                    clearInterval($interval);
+                }
+            }, 100);
+        })();
     </script>
 {/block}
 
@@ -179,6 +172,12 @@
             .endereco-hide-fields {
                 display: none !important;
 			}
+
+			.register--street-name-number,
+            .register--zip-city {
+				overflow: auto;
+				width: 100%;
+			}
         </style>
 
             <div class="register--street-name-number">
@@ -201,7 +200,6 @@
                        value=""
                        class="register--field register--field-streetnumber address--field-zipcode is--required" />
             </div>
-            <div style="clear: both"></div>
         {/if}
     {/capture}
 {/block}
@@ -233,26 +231,14 @@
         {$smarty.capture.c_frontend_register_shipping_fieldset_different_shipping}
     </div>
     <script>
-        if (window.EnderecoIntegrator && window.EnderecoIntegrator.initAMS) {
-            window.EnderecoIntegrator.waitUntilReady().then(function() {
-                window.EnderecoIntegrator.initAMS('register[shipping]');
-            });
-        } else if (window.EnderecoIntegrator && !window.EnderecoIntegrator.initAMS && window.EnderecoIntegrator.asyncCallbacks) {
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
+        ( function() {
+            var $interval = setInterval( function() {
+                if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                     window.EnderecoIntegrator.initAMS('register[shipping]');
-                });
-            });
-        } else {
-            window.EnderecoIntegrator = {
-                asyncCallbacks: []
-            };
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
-                    window.EnderecoIntegrator.initAMS('register[shipping]');
-                });
-            });
-        }
+                    clearInterval($interval);
+                }
+            }, 100);
+        })();
     </script>
     <script>
         (function() {

@@ -212,7 +212,7 @@
       background-color: rgba(0, 0, 0, 0.125);
       content: " ";
       display: block;
-      top: ~"calc(50% - 1px)";
+      top: calc(50% - 1px);
       position: absolute; }
 
 .endereco-address-predictions {
@@ -251,7 +251,7 @@
     .endereco-address-predictions__label::after {
       content: " ";
       position: absolute;
-      top: ~"calc(50% - 5px)";
+      top: calc(50% - 5px);
       left: 28px;
       font-size: 56px;
       background-color: #4caf50;
@@ -263,7 +263,7 @@
       box-sizing: border-box; }
     .endereco-address-predictions__label::before {
       position: absolute;
-      top: ~"calc(50% - 26px/2)";
+      top: calc(50% - 26px/2);
       left: 20px;
       width: 26px;
       height: 26px;

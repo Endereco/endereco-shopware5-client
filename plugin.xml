@@ -5,11 +5,13 @@
     <label lang="en">Endereco Address-Services for Shopware</label>
     <label lang="de">Endereco Adress-Services für Shopware</label>
 
-    <version>3.0.1</version>
+    <version>3.1.0</version>
+
+    <link>https://www.endereco.de/shopware</link>
 
     <copyright>(c) Endereco UG (haftungsbeschränkt)</copyright>
 
-    <author>Endereco UG (haftungsbeschränkt)</author>
+    <author><![CDATA[ mobilemojo – Apps & eCommerce UG (haftungsbeschränkt) & Co. KG ]]></author>
 
     <license>AGPLv3</license>
 
@@ -24,6 +26,25 @@
     </description>
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
+
+    <changelog version="3.1.0">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li>Onsubmit Auslöser für AdressCheck kann deaktiviert werden</li>
+                <li>Fortsetzung des Submits nach der Adressprüfung kann deaktiviert werden</li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li>The onsubmit trigger for adresscheck can now be deactivated</li>
+                <li>The submit continuation after the address has benn selected can now be deactivated.</li>
+            </ul>
+        ]]>
+        </changes>
+    </changelog>
 
     <changelog version="3.0.1">
         <changes lang="de">

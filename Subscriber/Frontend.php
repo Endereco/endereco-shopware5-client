@@ -42,7 +42,6 @@ class Frontend implements SubscriberInterface
 	{
 		return [
 			'Theme_Compiler_Collect_Plugin_Javascript' => 'onCollectJavascript',
-            'Theme_Compiler_Collect_Plugin_Css' => 'onCollectCss',
 			'Theme_Inheritance_Template_Directories_Collected' => 'onCollectTemplateDir',
 
             'Shopware\Models\Customer\Address::postPersist' => 'onPostPersist',
@@ -128,6 +127,8 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_success_color_bg', $successColorBG);
         }
 
+        $view->assign('endereco_use_default_styles', $config->get('useDefaultCss'));
+
     }
 
 	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
@@ -137,15 +138,6 @@ class Frontend implements SubscriberInterface
 
 		$args->setReturn($dirs);
 	}
-
-    public function onCollectCss()
-    {
-        $cssPath = [
-            $this->pluginDir . '/Resources/views/frontend/_public/src/css/shopware5-default.css',
-        ];
-
-        return new ArrayCollection($cssPath);
-    }
 
     private function _hex2rgb($hex) {
         $hex = str_replace("#", "", $hex);

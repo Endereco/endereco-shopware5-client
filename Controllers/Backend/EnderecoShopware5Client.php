@@ -35,6 +35,13 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
             $apiKey = $config->get('apiKey');
         }
 
+        if (!$apiKey) {
+            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            $this->logger->addError(Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
+            $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
+            return;
+        }
+
         $xml = simplexml_load_file(dirname(dirname(dirname(__FILE__))) . 'plugin.xml');
         $agent_info  = "Endereco Shopware5 Client v" . $xml->version;
 
@@ -55,14 +62,15 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
             if ('ready' === $status['result']['status']) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiOK'));
             } else {
-              throw new \Exception(json_encode($status));
+                $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
             }
         } catch (\Exception $exception) {
             $errorMessage = $exception->getMessage();
             // Log it.
             $this->logger->addError($exception->getMessage());
 
-            $this->response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
 
             if (strpos($errorMessage, '400') !== false) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));

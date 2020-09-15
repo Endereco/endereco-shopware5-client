@@ -24,16 +24,6 @@
     {capture name='c_frontend_address_form_input_street'}
         {$smarty.block.parent}
 
-        {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}
-            <style>
-                .mopt-wunschpaket-streetwrapper::before {
-                    content: " ";
-                    display: block;
-                    clear: both;
-                }
-            </style>
-        {/if}
-
         {if $endereco_split_street}
             <style>
                 .register--street:not(.mopt-wunschpaket-streetwrapper),
@@ -54,6 +44,12 @@
 
 				.endereco-hide-fields {
 					display: none !important;
+				}
+
+				.address--street-name-number,
+                .address--zip-city {
+					overflow: auto;
+					width: 100%;
 				}
             </style>
             <input type="hidden" name="address_form_prefix" value="{$inputPrefix}"/>
@@ -78,7 +74,6 @@
                        class="address--field address--field-streetnumber address--field-zipcode is--required"/>
             </div>
         {/if}
-        <div style="clear: both"></div>
 
         <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsstatus]" value="{$formData.attribute.enderecoamsstatus|escape}" />
         <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsts]" value="{$formData.attribute.enderecoamsts|escape}" />
@@ -143,46 +138,17 @@
     {$smarty.capture.c_frontend_address_form_input_set_default_billing}
 
     <script>
-        var initAddressAMS = function() {
-            var $EAO = window.EnderecoIntegrator.initAMS('{$inputPrefix}');
-        }
-        if (window.EnderecoIntegrator && window.EnderecoIntegrator.initAMS) {
-            window.EnderecoIntegrator.waitUntilReady().then(initAddressAMS);
-        } else if (window.EnderecoIntegrator && !window.EnderecoIntegrator.initAMS && window.EnderecoIntegrator.asyncCallbacks) {
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(initAddressAMS);
-            });
-        } else {
-            window.EnderecoIntegrator = {
-                asyncCallbacks: []
-            };
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(initAddressAMS);
-            });
-        }
-    </script>
-    <script>
-        if (window.EnderecoIntegrator && window.EnderecoIntegrator.initPersonServices) {
-            window.EnderecoIntegrator.waitUntilReady().then(function() {
-                window.EnderecoIntegrator.initPersonServices('{$inputPrefix}');
-            });
-        } else if (window.EnderecoIntegrator && !window.EnderecoIntegrator.initPersonServices && window.EnderecoIntegrator.asyncCallbacks) {
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
+        ( function() {
+            var $interval = setInterval( function() {
+                if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
+                    window.EnderecoIntegrator.initAMS('{$inputPrefix}');
                     window.EnderecoIntegrator.initPersonServices('{$inputPrefix}');
-                });
-            });
-        } else {
-            window.EnderecoIntegrator = {
-                asyncCallbacks: []
-            };
-            window.EnderecoIntegrator.asyncCallbacks.push(function() {
-                window.EnderecoIntegrator.waitUntilReady().then(function() {
-                    window.EnderecoIntegrator.initPersonServices('{$inputPrefix}');
-                });
-            });
-        }
+                    clearInterval($interval);
+                }
+            }, 100);
+        })();
     </script>
+
     <script>
         (function() {
             var $prevValue = '';

@@ -12,22 +12,30 @@
 
         <element type="button">
             <name>textKey</name>
-            <label lang="de">Zugriffsschlüßel prüfen</label>
+            <label lang="de">Zugriffsschlüssel prüfen</label>
             <label lang="en">Check API key</label>
             <options>
-                <handler>
+                <handler lang="de">
                     <![CDATA[
                     function() {
                       var $apiKey = this.el.dom.closest('table').querySelector('tbody').querySelector('input').value;
                       Ext.Ajax.request({
                         url: 'EnderecoShopware5Client/testApi?apiKey='+$apiKey,
                         success: function (response) {
-                            var responseO = JSON.parse(response.responseText)
-                            Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                            try {
+                                var responseO = JSON.parse(response.responseText)
+                                Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                            } catch (e) {
+                                // There is no json here, probably user clicked on the button, before the controller is visible.
+                            }
                         },
                         failure: function (response) {
-                            var responseO = JSON.parse(response.responseText)
-                            Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                            try {
+                                var responseO = JSON.parse(response.responseText)
+                                Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
+                            } catch (e) {
+                                // There is no json here, probably user clicked on the button, before the controller is visible.
+                            }
                         }
                       });
                     }
@@ -49,7 +57,7 @@
             <name>defaultCountryActive</name>
             <label lang="de">Standardland vorauswählen</label>
             <label lang="en">Preselect default caountry</label>
-            <value>false</value>
+            <value>true</value>
         </element>
 
         <element type="select" scope="shop">
@@ -343,6 +351,13 @@
         </element>
 
         <element type="boolean" scope="shop">
+            <name>resumeSubmit</name>
+            <label lang="de">Das Absenden des Formulars nach der Adressauswahl fortsetzen</label>
+            <label lang="en">Continue submit after the address has been selected</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
             <name>smartFill</name>
             <label lang="de">(beta) Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
             <label lang="en">(beta) Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
@@ -386,6 +401,13 @@
             <name>successColor</name>
             <label lang="de">Auswahlfarbe im Modal</label>
             <label lang="en">Selection color in modal</label>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>checkOnSubmit</name>
+            <label lang="de">Adressprüfung beim Absenden des Formulars auslösen</label>
+            <label lang="en">Check address on submit</label>
+            <value>true</value>
         </element>
 
         <element type="boolean" scope="shop">
