@@ -336,7 +336,7 @@
             <name>checkExisting</name>
             <label lang="de">Auch Bestandskunden einmalig prüfen</label>
             <label lang="en">Also check existing customers once</label>
-            <value>true</value>
+            <value>false</value>
             <description lang="de">Bestandskunden, die noch nicht geprüft wurden, werden bei einem Login und Aufruf einer Adressformular-Seite automatisch geprüft.</description>
             <description lang="en">Existing customers who have not yet been checked are automatically checked when they log in and access an address form page.</description>
         </element>

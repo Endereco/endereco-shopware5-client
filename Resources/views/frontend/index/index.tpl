@@ -26,7 +26,12 @@
                         yourInput: "{s namespace='EnderecoShopware5Client' name='yourInput'}{/s}",
                         editYourInput: "{s namespace='EnderecoShopware5Client' name='editYourInput'}{/s}",
                         ourSuggestions: "{s namespace='EnderecoShopware5Client' name='ourSuggestions'}{/s}",
-                        useSelected: "{s namespace='EnderecoShopware5Client' name='useSelected'}{/s}"
+                        useSelected: "{s namespace='EnderecoShopware5Client' name='useSelected'}{/s}",
+                        popupHeadlines: {
+                            general_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadline'}{/s}",
+                            billing_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadlineBilling'}{/s}",
+                            shipping_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadlineShipping'}{/s}",
+                        }
                     };
                     window.EnderecoIntegrator.activeServices = {
                         ams: !!('{config name='amsActive' namespace="EnderecoShopware5Client"}'),

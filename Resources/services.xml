@@ -10,7 +10,13 @@
             <argument>%endereco_shopware5_client.plugin_info%</argument>
             <argument type="service" id="pluginlogger" />
             <argument type="service" id="shopware.cache_manager" />
+            <argument type="service" id="endereco_shopware5_client.endereco_service" />
             <tag name="shopware.event_subscriber"/>
+        </service>
+        <service id="endereco_shopware5_client.endereco_service" class="EnderecoShopware5Client\Services\EnderecoService" >
+            <argument>%endereco_shopware5_client.plugin_info%</argument>
+            <argument type="service" id="http_client" />
+            <argument type="service" id="pluginlogger" />
         </service>
     </services>
 </container>

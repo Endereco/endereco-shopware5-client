@@ -263,7 +263,7 @@
       box-sizing: border-box; }
     .endereco-address-predictions__label::before {
       position: absolute;
-      top: calc(50% - 26px/2);
+      top: calc(50% - 26px / 2);
       left: 20px;
       width: 26px;
       height: 26px;

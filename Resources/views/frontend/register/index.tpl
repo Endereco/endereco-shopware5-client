@@ -72,6 +72,9 @@
                        class="register--field register--field-streetnumber address--field-zipcode is--required" />
             </div>
         {/if}
+        <input type="hidden" name="register[billing][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
+        <input type="hidden" name="register[billing][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
+        <input type="hidden" name="register[billing][attribute][enderecoamsapredictions]" value="{$form_data.attribute.enderecoamsapredictions|escape}" />
     {/capture}
 {/block}
 {block name='frontend_register_billing_fieldset_input_addition_address_line1'}
@@ -103,7 +106,12 @@
         ( function() {
             var $interval = setInterval( function() {
                 if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
-                    window.EnderecoIntegrator.initAMS('register[billing]');
+                    window.EnderecoIntegrator.initAMS(
+                        'register[billing]',
+                        {
+                            addressType: 'billing_address'
+                        }
+                    );
                     clearInterval($interval);
                 }
             }, 100);
@@ -201,6 +209,9 @@
                        class="register--field register--field-streetnumber address--field-zipcode is--required" />
             </div>
         {/if}
+        <input type="hidden" name="register[shipping][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
+        <input type="hidden" name="register[shipping][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
+        <input type="hidden" name="register[shipping][attribute][enderecoamsapredictions]" value="{$form_data.attribute.enderecoamsapredictions|escape}" />
     {/capture}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_addition_address_line1'}
@@ -234,7 +245,12 @@
         ( function() {
             var $interval = setInterval( function() {
                 if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
-                    window.EnderecoIntegrator.initAMS('register[shipping]');
+                    window.EnderecoIntegrator.initAMS(
+                        'register[shipping]',
+                        {
+                            addressType: 'shipping_address'
+                        }
+                    );
                     clearInterval($interval);
                 }
             }, 100);

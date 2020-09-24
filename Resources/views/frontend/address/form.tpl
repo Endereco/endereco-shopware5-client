@@ -77,6 +77,7 @@
 
         <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsstatus]" value="{$formData.attribute.enderecoamsstatus|escape}" />
         <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsts]" value="{$formData.attribute.enderecoamsts|escape}" />
+        <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsapredictions]" value="{$formData.attribute.enderecoamsapredictions|escape}" />
     {/capture}
 {/block}
 {block name='frontend_address_form_input_addition_address_line1'}
@@ -141,7 +142,12 @@
         ( function() {
             var $interval = setInterval( function() {
                 if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
-                    window.EnderecoIntegrator.initAMS('{$inputPrefix}');
+                    window.EnderecoIntegrator.initAMS(
+                        '{$inputPrefix}',
+                        {
+                            addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if}
+                        }
+                    );
                     window.EnderecoIntegrator.initPersonServices('{$inputPrefix}');
                     clearInterval($interval);
                 }

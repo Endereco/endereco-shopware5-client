@@ -4,9 +4,9 @@ namespace EnderecoShopware5Client\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Shopware\Components\Plugin\XmlReader\XmlPluginReader;
 use Shopware\Components\CacheManager;
-use Shopware\Components\Theme\LessDefinition;
+use Shopware\Models\Customer\Address;
+use Shopware\Models\Customer\AddressRepository;
 use Shopware_Controllers_Backend_Config;
 
 class Frontend implements SubscriberInterface
@@ -18,6 +18,7 @@ class Frontend implements SubscriberInterface
 	private $pluginInfo;
 	private $logger;
 	private $http;
+	private $enderecoService;
 
     /**
      * @var CacheManager
@@ -27,12 +28,13 @@ class Frontend implements SubscriberInterface
 	/**
 	 * @param string $pluginDir
 	 */
-	public function __construct($pluginDir, $pluginInfo, $logger, $cacheManager) {
+	public function __construct($pluginDir, $pluginInfo, $logger, $cacheManager, $enderecoService) {
 		$this->pluginDir = $pluginDir;
 		$this->pluginInfo = $pluginInfo;
         $this->cacheManager = $cacheManager;
         $this->logger = $logger;
-        $this->http = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);;
+        $this->http = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
+        $this->enderecoService = $enderecoService;
 	}
 
 	/**
@@ -46,12 +48,139 @@ class Frontend implements SubscriberInterface
 
             'Shopware\Models\Customer\Address::postPersist' => 'onPostPersist',
             'Shopware\Models\Customer\Address::postUpdate' => 'onPostUpdate',
-            'Shopware\Models\Customer\Address::preRemove' => 'onPreRemove',
 
             'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onPostDispatch',
-            'Enlight_Controller_Action_PostDispatchSecure_Backend_Config' => 'onPostDispatchConfig'
+            'Enlight_Controller_Action_PostDispatchSecure_Backend_Config' => 'onPostDispatchConfig',
+
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'checkExistingCustomerAddresses',
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
 		];
 	}
+
+	public function checkAdressesOrOpenModals($args) {
+        $request = $args->getRequest();
+        $controller = $args->get('subject');
+        $view = $controller->View();
+        $availableActions = ['confirm'];
+
+        if (!in_array(strtolower($request->getActionName()), $availableActions, true)) {
+            return;
+        }
+
+        $config = Shopware()->Container()->get('config');
+        if (!$config->get('checkExisting')) {
+            return;
+        }
+
+        $sUserData = $view->getAssign('sUserData');
+
+        if (array_key_exists('user', $sUserData['additional'])) {
+            // Fetch all user addresses.
+            /**
+             * @var AddressRepository
+             */
+            $addressRepository = Shopware()->Models()->getRepository(Address::class);
+            $addresses = $addressRepository->getListArray($sUserData['additional']['user']['id']);
+            $addressesToCheck = array();
+
+            foreach ($addresses as $address) {
+                // Check if users address is alright.
+                if (
+                    array_key_exists('enderecoamsstatus', $address['attribute']) &&
+                    (!array_key_exists('moptwunschpaketaddresstype', $address['attribute']) || !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])) &&
+                    (!$address['attribute']['enderecoamsstatus'] || (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked')))
+                ) {
+                    $addressesToCheck[$address['id']] = true;
+                }
+            }
+
+            // Check addresses.
+            $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
+
+            if ($addressesToCheck) {
+                $view->assign('endereco_need_to_reload', true);
+                return;
+            }
+        }
+
+        $needToCheckBilling = false;
+        $needToCheckShipping = false;
+
+        // Check if users billing address is alright.
+        if (
+            $sUserData &&
+            $sUserData['billingaddress'] &&
+            array_key_exists('enderecoamsstatus', $sUserData['billingaddress']['attributes']) &&
+            !in_array('address_selected_by_customer', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) &&
+            (
+                in_array('address_needs_correction', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) ||
+                in_array('address_multiple_variants', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus']))
+            )
+
+        ) {
+            $needToCheckBilling = true;
+        }
+        // Check if users billing address is alright.
+        if (
+            $sUserData &&
+            $sUserData['shippingaddress'] &&
+            $sUserData['billingaddress']['id'] !== $sUserData['shippingaddress']['id'] &&
+            array_key_exists('enderecoamsstatus', $sUserData['shippingaddress']['attributes']) &&
+            !in_array('address_selected_by_customer', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) &&
+            (
+                in_array('address_needs_correction', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) ||
+                in_array('address_multiple_variants', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus']))
+            )
+
+        ) {
+            $needToCheckShipping = true;
+        }
+
+        $view->assign('endereco_need_to_check_billing', $needToCheckBilling);
+        $view->assign('endereco_need_to_check_shipping', $needToCheckShipping);
+    }
+
+	public function checkExistingCustomerAddresses($args) {
+        $request = $args->getRequest();
+        $controller = $args->get('subject');
+        $view = $controller->View();
+        $availableActions = ['login', 'index'];
+
+        if (!in_array(strtolower($request->getActionName()), $availableActions, true)) {
+            return;
+        }
+
+        $config = Shopware()->Container()->get('config');
+        if (!$config->get('checkExisting')) {
+            return;
+        }
+
+        $sUserData = $view->getAssign('sUserData');
+
+        if (array_key_exists('user', $sUserData['additional'])) {
+            // Fetch all user addresses.
+            /**
+             * @var AddressRepository
+             */
+            $addressRepository = Shopware()->Models()->getRepository(Address::class);
+            $addresses = $addressRepository->getListArray($sUserData['additional']['user']['id']);
+            $addressesToCheck = array();
+
+            foreach ($addresses as $address) {
+                // Check if users address is alright.
+                if (
+                    array_key_exists('enderecoamsstatus', $address['attribute']) &&
+                    (!array_key_exists('moptwunschpaketaddresstype', $address['attribute']) || !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])) &&
+                    (!$address['attribute']['enderecoamsstatus'] || (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked')))
+                ) {
+                    $addressesToCheck[$address['id']] = true;
+                }
+            }
+
+            // Check addresses.
+            $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
+        }
+    }
 
 	public function onPostPersist($args) {
         $this->_doAccounting();
@@ -91,8 +220,6 @@ class Frontend implements SubscriberInterface
         $config = Shopware()->Container()->get('config');
         $splitStreet = $config->get('splitStreet');
 
-
-
         /** @var \Enlight_Controller_Action $controller */
         $controller = $args->get('subject');
         $view = $controller->View();
@@ -117,7 +244,6 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_error_color_bg', $errorColorBG);
         }
 
-
         $successColorCode = $config->get('successColor');
         if ($successColorCode) {
             list($red, $gren, $blue) = $this->_hex2rgb($successColorCode);
@@ -128,7 +254,6 @@ class Frontend implements SubscriberInterface
         }
 
         $view->assign('endereco_use_default_styles', $config->get('useDefaultCss'));
-
     }
 
 	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
@@ -155,76 +280,20 @@ class Frontend implements SubscriberInterface
     }
 
     private function _doAccounting() {
-        $config = Shopware()->Container()->get('config');
-        $anyDoAccounting = false;
-        $info = 'Endereco Shopware5 Client v'.$this->pluginInfo['version'];
-        $apikey = $config->get('apiKey');
-        $endpoint = $config->get('remoteApiUrl');
+        $accountableSessionIds = array();
 
         if ('POST' === $_SERVER['REQUEST_METHOD']) {
             foreach ($_POST as $sVarName => $sVarValue) {
 
                 if ((strpos($sVarName, '_session_counter') !== false) && 0 < intval($sVarValue)) {
                     $sSessionIdName = str_replace('_session_counter', '', $sVarName) . '_session_id';
-                    $sSessionId = $_POST[$sSessionIdName];
-                    try {
-                        $message = array(
-                            'jsonrpc' => '2.0',
-                            'id' => 1,
-                            'method' => 'doAccounting',
-                            'params' => array(
-                                'sessionId' => $sSessionId
-                            )
-                        );
-                        $newHeaders = array(
-                            'Content-Type' => 'application/json',
-                            'X-Auth-Key' => $apikey,
-                            'X-Transaction-Id' => $sSessionId,
-                            'X-Transaction-Referer' => 'EnderecoShopware5Client\Subscriber\Frontend.php',
-                            'X-Agent' => $info,
-                        );
-                        $this->http->post(
-                            $endpoint,
-                            array(
-                                'headers' => $newHeaders,
-                                'body' => json_encode($message)
-                            )
-                        );
-                        $anyDoAccounting = true;
-
-                    } catch(\Exception $e) {
-                        $this->logger->addError($e->getMessage());
-                    }
+                    $accountableSessionIds[$_POST[$sSessionIdName]] = true;
                 }
             }
 
+            $accountableSessionIds = array_keys($accountableSessionIds);
         }
 
-        if ($anyDoAccounting) {
-            try {
-                $message = array(
-                    'jsonrpc' => '2.0',
-                    'id' => 1,
-                    'method' => 'doConversion',
-                    'params' => array()
-                );
-                $newHeaders = array(
-                    'Content-Type' => 'application/json',
-                    'X-Auth-Key' => $apikey,
-                    'X-Transaction-Id' => 'not_required',
-                    'X-Transaction-Referer' => 'EnderecoShopware5Client\Subscriber\Frontend.php',
-                    'X-Agent' => $info,
-                );
-                $this->http->post(
-                    $endpoint,
-                    array(
-                        'headers' => $newHeaders,
-                        'body' => json_encode($message)
-                    )
-                );
-            } catch(\Exception $e) {
-                $this->logger->addError($e->getMessage());
-            }
-        }
+        $this->enderecoService->sendDoAccountings($accountableSessionIds);
     }
 }
