@@ -75,20 +75,26 @@ class EnderecoShopware5Client extends Plugin
          * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
          */
         $service = $this->container->get('shopware_attribute.crud_service');
-        $service->update('s_user_addresses_attributes', 'enderecoamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-            'label' => 'Zeitpunkt der Adressprüfung',
-            'custom' => true,
-            'displayInBackend' => true
-        ]);
-        $service->update('s_user_addresses_attributes', 'enderecoamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-            'label' => 'Status der Adressprüfung',
-            'displayInBackend' => true,
-            'custom' => true
-        ]);
-        $service->update('s_user_addresses_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-            'displayInBackend' => false,
-            'custom' => true
-        ]);
+        if (!$service->get('s_user_addresses_attributes', 'enderecoamsts')) {
+            $service->update('s_user_addresses_attributes', 'enderecoamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Zeitpunkt der Adressprüfung',
+                'custom' => true,
+                'displayInBackend' => true
+            ]);
+        }
+        if (!$service->get('s_user_addresses_attributes', 'enderecoamsstatus')) {
+            $service->update('s_user_addresses_attributes', 'enderecoamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Status der Adressprüfung',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_user_addresses_attributes', 'enderecoamsapredictions')) {
+            $service->update('s_user_addresses_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);

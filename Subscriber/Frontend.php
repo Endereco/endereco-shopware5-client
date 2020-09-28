@@ -213,6 +213,8 @@ class Frontend implements SubscriberInterface
         if ($request->isPost() && ('EnderecoShopware5Client' === $request->getParam('name'))) {
             $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_CONFIG);
             $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_TEMPLATE);
+            $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_HTTP);
+
         }
     }
 
