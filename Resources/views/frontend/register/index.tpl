@@ -359,6 +359,10 @@
                     addRequiredToggler(document.querySelector('[name="register[shipping][streetname]"]'));
                     addRequiredToggler(document.querySelector('[name="register[shipping][streetnumber]"]'));
 
+                    addRequiredToggler(document.querySelector('[name="register[billing][street]"]'));
+                    addRequiredToggler(document.querySelector('[name="register[billing][streetname]"]'));
+                    addRequiredToggler(document.querySelector('[name="register[billing][streetnumber]"]'));
+
                     clearInterval(waitForComplete);
                 }
             }, 100);
