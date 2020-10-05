@@ -20,6 +20,8 @@ if ($_SERVER['HTTP_X_TRANSACTION_ID']) {
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 6);
+curl_setopt($ch, CURLOPT_TIMEOUT, 6);
 curl_setopt(
     $ch,
     CURLOPT_HTTPHEADER,

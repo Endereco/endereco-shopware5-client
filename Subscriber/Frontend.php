@@ -211,10 +211,9 @@ class Frontend implements SubscriberInterface
 
         // If this is a POST-Request, and affects our plugin, we may clear the config cache
         if ($request->isPost() && ('EnderecoShopware5Client' === $request->getParam('name'))) {
-            $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_CONFIG);
-            $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_TEMPLATE);
-            $this->cacheManager->clearByTag(CacheManager::CACHE_TAG_HTTP);
-
+            $this->cacheManager->clearHttpCache();
+            $this->cacheManager->clearConfigCache();
+            $this->cacheManager->clearTemplateCache();
         }
     }
 
