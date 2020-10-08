@@ -73,7 +73,7 @@
 
 .endereco-popup-container {
   position: fixed;
-  z-index: 9900;
+  z-index: 999900;
   background-color: rgba(0, 0, 0, 0.3);
   top: 0;
   left: 0;

@@ -15,7 +15,6 @@
         </service>
         <service id="endereco_shopware5_client.endereco_service" class="EnderecoShopware5Client\Services\EnderecoService" >
             <argument>%endereco_shopware5_client.plugin_info%</argument>
-            <argument type="service" id="http_client" />
             <argument type="service" id="pluginlogger" />
         </service>
     </services>

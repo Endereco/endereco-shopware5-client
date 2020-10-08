@@ -8,13 +8,13 @@ use Shopware\Models\Customer\AddressRepository;
 
 class EnderecoService {
     private $logger;
-    private $httpClient;
     private $pluginInfo;
     private $apiKey;
+    private $httpClient;
     private $info;
     private $serviceUrl;
 
-    public function __construct($pluginInfo, $httpClient, $logger) {
+    public function __construct($pluginInfo, $logger) {
         $this->pluginInfo = $pluginInfo;
         $this->logger = $logger;
         $this->httpClient = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
