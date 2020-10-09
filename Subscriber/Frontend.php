@@ -95,10 +95,11 @@ class Frontend implements SubscriberInterface
             }
 
             // Check addresses.
-            $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
+            $checkedAddresses = $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
 
-            if ($addressesToCheck) {
+            if ($addressesToCheck && (0 < $checkedAddresses) && !Shopware()->Session()->endereco_should_not_reload_anymore) {
                 $view->assign('endereco_need_to_reload', true);
+                Shopware()->Session()->endereco_should_not_reload_anymore = true;
                 return;
             }
         }

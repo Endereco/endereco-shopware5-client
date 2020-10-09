@@ -33,6 +33,7 @@ class EnderecoService {
     }
 
     public function checkAddresses($addressIdArray = array()) {
+        $checkedAddressesCounter = 0;
         if(!$addressIdArray) {
             return;
         }
@@ -169,6 +170,7 @@ class EnderecoService {
                             $attribute->setEnderecoamsapredictions(json_encode($predictions));
                             Shopware()->Container()->get('shopware_account.address_service')->update($address);
                         }
+                        $checkedAddressesCounter++;
                     }
                 } catch(\Exception $e) {
                     $this->logger->addError($e->getMessage());
@@ -177,6 +179,8 @@ class EnderecoService {
         }
 
         $this->sendDoAccountings($accountableSessions);
+
+        return $checkedAddressesCounter;
     }
 
     public function sendDoAccountings($sessionIds = array()) {
