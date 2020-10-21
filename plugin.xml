@@ -2,10 +2,10 @@
 <plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/5.3/engine/Shopware/Components/Plugin/schema/plugin.xsd">
 
-    <label lang="en">Endereco Address-Services for Shopware</label>
-    <label lang="de">Endereco Adress-Services für Shopware</label>
+    <label lang="en">Endereco Address-Services for Shopware (Download)</label>
+    <label lang="de">Endereco Adress-Services für Shopware (Download)</label>
 
-    <version>3.2.2</version>
+    <version>3.2.3</version>
 
     <link>https://www.endereco.de/shopware</link>
 
@@ -18,14 +18,39 @@
     <compatibility minVersion="5.3.0" />
 
     <description lang="en">
-        Customer master data validation and correction proposals.
+        <![CDATA[
+            <p>Endereco's Address Management Service bundles many services in one plugin to enable customers to enter their master data quickly, accurately and correctly formatted. This ensures correct customer data and makes it easier for your customers to enter addresses on smartphones, tablets and desktop PCs.</p><p><br></p><p>- international address validation / address check for Europe and worldwide</p><p>- DHL Leitcodable German addresses</p><p>- Autocomplete / Auto complete / input assistant for postal code, city, street</p><p>- E-mail check for format and deliverability</p><p>- Salutation check and automatic setting of the correct salutation</p><p>- Optional separation of street and house number</p><p>- Suppression of autofill for many browsers - to avoid wrong input</p><p>- Server - to server communication - 100% cookie free</p><p>- DSGVO Conform</p><p>- Optional testing of existing customers</p><p>- Storage of the test status for further processing in the merchandise management system</p><p>- Left to right, right to left support (e.g. for arabic languages)</p><p>- Made in Germany</p><p>- German support for store operators and agencies</p><p>- Test 30 days without any risk!</p><p>&nbsp;- No contractual obligation,&nbsp;No minimum term,&nbsp;no basic fee,&nbsp;no minimum turnover,&nbsp;</p><p>- up to 250 tests per month free of charge!</p><p>Request your free API Key at: https://www.endereco.de/jetzt-1-monat-gratis-testen/</p>
+        ]]>
     </description>
 
     <description lang="de">
-        Kundenstammdaten-Validierung und Korrekturvorschläge.
+        <![CDATA[
+            <p>Der Address Management Service von Endereco bündeln viele Dienste in einem Plugin, um Kunden zu ermöglichen, Ihre Stammdaten schnell, fehlerfrei und richtig formatiert einzugeben. So erhältst Du korrekte Kundendaten und erleichterst deinen Kunden die Adresseingabe auf Smartphones, Tablets und Desktop PCs.</p><p><br></p><p>- Internationale Adressprüfung / Adresscheck für Europa und weltweit für über 200 Länder<br></p><p>- DHL Leitcodierfähige deutsche Adressen</p><p>- Autocomplete / Auto Vervollständigung / Eingabe Assistent für PLZ, Ort, Strasse</p><p>- E-Mail Prüfung auf Format und Zustellbarkeit</p><p>- Anredeprüfung und automatisches setzen der richtigen Anrede</p><p>- Optionale Trennung von Strasse und Hausnummer <br></p><p>- Unterdrückung des Autofillls für viele Browser - um Fehleingaben zu vermeiden</p><p>- Server - Zu Server Kommunikation - 100% Cookiefrei</p><p>- DSGVO Konform</p><p>- Optionale einmalige Prüfung von Bestandskunden nach Login - vor der Bestellung <br></p><p>- Speicherung des Prüfstatuses zur weiteren Bearbeitung in der Warenwirtschaft</p><p>- Left to right, right to left support (z.B. für arabische sprachen)</p><p>- Made in Germany</p><p>- Deutscher Support für Shopbetreiber und Agenturen</p><p><br></p><b>30 Tage ohne Risiko testen!</b><br><p></p><ul><li>Keine Vertragsbindung,&nbsp;</li><li>Keine Mindestlaufzeit,&nbsp;</li><li>keine Grundgebühr,&nbsp;</li><li>kein Mindestumsatz,&nbsp;</li><li>bis 250 Prüfungen im Monat dauerhaft kostenfrei!</li><li>Gratis API Key anfordern unter:&nbsp;<a href="https://www.endereco.de/jetzt-1-monat-gratis-testen/" target="_blank">https://www.endereco.de/shopware/</a></li></ul>
+        ]]>
     </description>
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
+
+    <changelog version="3.2.3">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li>Pluginbeschreibung hinzugefügt.</li>
+                <li>Plugin Name angepasst, um zwischen Store und gitHub Version zu unterscheiden.</li>
+                <li>Kompatibilität zwischen Store und GitHub Version verbessert.</li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li>Added plugin description.</li>
+                <li>Plugin name changed to distinguish between the store and github version.</li>
+                <li>Improved compatibility between store and github versions.</li>
+            </ul>
+        ]]>
+        </changes>
+    </changelog>
 
     <changelog version="3.2.2">
         <changes lang="de">

@@ -2,6 +2,7 @@
 
 namespace EnderecoShopware5Client;
 
+use Shopware\Bundle\PluginInstallerBundle\Service\InstallerService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\ActivateContext;
@@ -38,6 +39,36 @@ class EnderecoShopware5Client extends Plugin
 
     public function activate(ActivateContext $activateContext)
     {
+        $temp = explode('\\', get_class($this));
+        $className =  $temp[count($temp)-1];
+        $isStoreVersion = ('Endereco' . 'AMS') === $className;
+        $pluginManager = $this->container->get('shopware_plugininstaller.plugin_manager');
+        if ($isStoreVersion) {
+            // Try to deactivate open source version.
+            try {
+
+                $plugin = $pluginManager->getPluginByName('EnderecoShopware5' . 'Client');
+                // Is it active?
+                if ($plugin->getInstalled()) {
+                    $pluginManager->deactivatePlugin($plugin);
+                }
+            } catch(\Exception $e) {
+                // Not installed.
+            }
+        } else {
+            // Try to deactivate store version.
+            try {
+
+                $plugin = $pluginManager->getPluginByName('Endereco' . 'AMS');
+                // Is it active?
+                if ($plugin->getInstalled()) {
+                    $pluginManager->deactivatePlugin($plugin);
+                }
+            } catch(\Exception $e) {
+                // Not installed.
+            }
+        }
+
         $activateContext->scheduleClearCache(ActivateContext::CACHE_LIST_ALL);
     }
 
@@ -61,6 +92,7 @@ class EnderecoShopware5Client extends Plugin
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);
+        $uninstallContext->scheduleClearCache(DeactivateContext::CACHE_LIST_ALL);
     }
 
     public function update(UpdateContext $updateContext)
@@ -95,6 +127,38 @@ class EnderecoShopware5Client extends Plugin
                 'custom' => true
             ]);
         }
+
+        // If current plugin is EnderecoAMS, the GitHub version is not installed, try to remove old attributes.
+        $temp = explode('\\', get_class($this));
+        $className =  $temp[count($temp)-1];
+        $isStoreVersion = ('Endereco' . 'AMS') === $className;
+        $openSourceVersionInstalled = false;
+
+        try {
+            $pluginManager = $this->container->get('shopware_plugininstaller.plugin_manager');
+            $plugin = $pluginManager->getPluginByName('EnderecoShopware5' . 'Client');
+            // Is it active?
+            if ($plugin->getInstalled()) {
+                $openSourceVersionInstalled = true;
+            }
+        } catch(\Exception $e) {
+            // Not installed.
+        }
+
+        if (
+            $isStoreVersion && !$openSourceVersionInstalled
+        ) {
+            if ($service->get('s_user_addresses_attributes', 'endereco'.'amsts')) {
+                $service->delete('s_user_addresses_attributes', 'endereco'.'amsts');
+            }
+            if ($service->get('s_user_addresses_attributes', 'enderecoams'.'status')) {
+                $service->delete('s_user_addresses_attributes', 'enderecoams'.'status');
+            }
+            if ($service->get('s_user_addresses_attributes', 'enderecoamsa'.'predictions')) {
+                $service->delete('s_user_addresses_attributes', 'enderecoamsa'.'predictions');
+            }
+        }
+
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);
