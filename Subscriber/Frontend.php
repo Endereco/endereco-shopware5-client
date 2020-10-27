@@ -54,8 +54,33 @@ class Frontend implements SubscriberInterface
 
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'checkExistingCustomerAddresses',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
+
+            'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
 		];
 	}
+
+	public function onAfterOrderSaveOrder($args) {
+        $sOrder = $args->get('subject');
+        $returnValue = $args->getReturn();
+
+        if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus']) {
+            $returnValue['endereco_order_billingamsstatus'] = $sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus'];
+        }
+
+        if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']) {
+            $returnValue['endereco_order_shippingamsstatus'] = $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus'];
+        }
+
+        if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsts']) {
+            $returnValue['endereco_order_billingamsts'] = $sOrder->sUserData['billingaddress']['attributes']['enderecoamsts'];
+        }
+
+        if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts']) {
+            $returnValue['endereco_order_shippingamsts'] = $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
+        }
+
+        return $returnValue;
+    }
 
 	public function checkAdressesOrOpenModals($args) {
         $request = $args->getRequest();

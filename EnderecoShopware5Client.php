@@ -89,6 +89,21 @@ class EnderecoShopware5Client extends Plugin
         if ($service->get('s_user_addresses_attributes', 'enderecoamsapredictions')) {
             $service->delete('s_user_addresses_attributes', 'enderecoamsapredictions');
         }
+
+        // Attribute sin the order.
+        if ($service->get('s_order_attributes', 'endereco_order_billingamsts')) {
+            $service->delete('s_order_attributes', 'endereco_order_billingamsts');
+        }
+        if ($service->get('s_order_attributes', 'endereco_order_shippingamsts')) {
+            $service->delete('s_order_attributes', 'endereco_order_shippingamsts');
+        }
+        if ($service->get('s_order_attributes', 'endereco_order_billingamsstatus')) {
+            $service->delete('s_order_attributes', 'endereco_order_billingamsstatus');
+        }
+        if ($service->get('s_order_attributes', 'endereco_order_shippingamsstatus')) {
+            $service->delete('s_order_attributes', 'endereco_order_shippingamsstatus');
+        }
+
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);
@@ -123,6 +138,30 @@ class EnderecoShopware5Client extends Plugin
         }
         if (!$service->get('s_user_addresses_attributes', 'enderecoamsapredictions')) {
             $service->update('s_user_addresses_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_attributes', 'endereco_order_billingamsts')) {
+            $service->update('s_order_attributes', 'endereco_order_billingamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_attributes', 'endereco_order_shippingamsts')) {
+            $service->update('s_order_attributes', 'endereco_order_shippingamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_attributes', 'endereco_order_billingamsstatus')) {
+            $service->update('s_order_attributes', 'endereco_order_billingamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_attributes', 'endereco_order_shippingamsstatus')) {
+            $service->update('s_order_attributes', 'endereco_order_shippingamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
                 'displayInBackend' => false,
                 'custom' => true
             ]);

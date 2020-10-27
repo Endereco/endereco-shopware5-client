@@ -343,8 +343,8 @@
 
         <element type="boolean" scope="shop">
             <name>checkOnBlur</name>
-            <label lang="de">Adressprüfung sofort nach verlassen des Hausnummern Feldes auslösen</label>
-            <label lang="en">Trigger address check immediately after leaving the house number field</label>
+            <label lang="de">Adressprüfung sofort nach Verlassen der Adressfelder ausführen</label>
+            <label lang="en">Trigger address check immediately after leaving the address fields</label>
             <value>true</value>
             <description lang="de">Ist die Funktion aktiv, wird die Adressprüfung sofort nach Eingabe der Adresse angestoßen. Ist die deaktiviert, erfolg die Prüfung beim Klick auf den "Speichern" Button.</description>
             <description lang="en">If the function is active, the address check is triggered immediately after the address is entered. If the function is deactivated, the check is performed by clicking the "Save" button.</description>
