@@ -5,6 +5,7 @@ use GuzzleHttp\Client;
 use Shopware\Models\Country\Country;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\AddressRepository;
+use GuzzleHttp\Exception\RequestException;
 
 class EnderecoService {
     private $logger;
@@ -172,6 +173,13 @@ class EnderecoService {
                         }
                         $checkedAddressesCounter++;
                     }
+                } catch (RequestException $e) {
+                    if ($e->hasResponse()) {
+                        $response = $e->getResponse();
+                        if (500 <= $response->getStatusCode()) {
+                            $this->logger->addError($e->getMessage());
+                        }
+                    }
                 } catch(\Exception $e) {
                     $this->logger->addError($e->getMessage());
                 }
@@ -216,6 +224,13 @@ class EnderecoService {
                 );
                 $anyDoAccounting = true;
 
+            } catch (RequestException $e) {
+                if ($e->hasResponse()) {
+                    $response = $e->getResponse();
+                    if (500 <= $response->getStatusCode()) {
+                        $this->logger->addError($e->getMessage());
+                    }
+                }
             } catch(\Exception $e) {
                 $this->logger->addError($e->getMessage());
             }
@@ -243,6 +258,13 @@ class EnderecoService {
                         'body' => json_encode($message)
                     )
                 );
+            } catch (RequestException $e) {
+                if ($e->hasResponse()) {
+                    $response = $e->getResponse();
+                    if (500 <= $response->getStatusCode()) {
+                        $this->logger->addError($e->getMessage());
+                    }
+                }
             } catch(\Exception $e) {
                 $this->logger->addError($e->getMessage());
             }

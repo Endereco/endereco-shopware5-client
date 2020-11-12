@@ -14,9 +14,15 @@ class Shopware_Controllers_Frontend_EnderecoShopware5Client extends \Enlight_Con
         $countryRepository = $this->container->get('models')->getRepository(\Shopware\Models\Country\Country::class);
 
         if (isset($countryId) && '' !== $countryId) {
-            $return = strtolower($countryRepository->find($countryId)->getIso());
+            $temp = $countryRepository->find($countryId);
+            if ($temp) {
+                $return = strtolower($temp->getIso());
+            }
         } elseif (isset($countryCode) && '' !== $countryCode) {
-            $return = strtolower($countryRepository->findOneBy(array('iso' => $countryCode))->getId());
+            $temp = $countryRepository->findOneBy(array('iso' => $countryCode));
+            if ($temp) {
+                $return = strtolower($temp->getId());
+            }
         }
 
         Shopware()->Plugins()->Controller()->ViewRenderer()->setNoRender();

@@ -5,7 +5,7 @@
     <label lang="en">Endereco Address-Services for Shopware (Download)</label>
     <label lang="de">Endereco Adress-Services für Shopware (Download)</label>
 
-    <version>3.3.0</version>
+    <version>3.3.3</version>
 
     <link>https://www.endereco.de/shopware</link>
 
@@ -30,6 +30,49 @@
     </description>
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
+
+    <changelog version="3.3.3">
+        <changes lang="de">
+            <![CDATA[
+            <p>BUGfix: 400 Fehler wegen gesperrten Diensten werden nicht mehr geloggt.</p>
+            <p>BUGfix: bei Auflösung von Landes-ID zu Landeskürzel und umgekehrt, wird explizit geprüft, ob ein Objekt gefunden wurde.</p>
+            <p>Feature: Republik Kosovo zur Auswahl der Standardländer hinzugefügt.</p>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <p>BUGfix: Errors with 400 code because of not assigned services will not be logged anymore.</p>
+            <p>BUGfix: Country-ID to Country-Code and vice-versa mappings check if repository returns an objekt before reading the field value.</p>
+            <p>Feature: Added Republic of Kosovo to default countries selector.</p>
+        ]]>
+        </changes>
+    </changelog>
+
+    <changelog version="3.3.2">
+        <changes lang="de">
+            <![CDATA[
+            BUGfix: Attributennamen in address/form.tpl berichtigt
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            BUGfix: corrected attribute names in address/form.tpl
+        ]]>
+        </changes>
+    </changelog>
+
+    <changelog version="3.3.1">
+        <changes lang="de">
+            <![CDATA[
+            BUGfix: löst das Problem mit fehlender Spalte
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            BUGfix: fix the bug with missing column
+        ]]>
+        </changes>
+    </changelog>
 
     <changelog version="3.3.0">
         <changes lang="de">
