@@ -14,6 +14,7 @@ class EnderecoService {
     private $httpClient;
     private $info;
     private $serviceUrl;
+    private $version;
 
     public function __construct($pluginInfo, $logger) {
         $this->pluginInfo = $pluginInfo;
@@ -24,6 +25,11 @@ class EnderecoService {
         $this->apiKey = $config->get('apiKey');
         $this->info = 'Endereco Shopware5 Client v'.$this->pluginInfo['version'];
         $this->serviceUrl = $config->get('remoteApiUrl');
+        $this->version = $this->pluginInfo['version'];
+    }
+
+    public function getVersion() {
+        return $this->version;
     }
 
     public function generateTid() {

@@ -109,6 +109,7 @@
                     window.EnderecoIntegrator.initAMS(
                         'register[billing]',
                         {
+                            name: 'billing',
                             addressType: 'billing_address'
                         }
                     );
@@ -248,6 +249,7 @@
                     window.EnderecoIntegrator.initAMS(
                         'register[shipping]',
                         {
+                            name: 'shipping',
                             addressType: 'shipping_address'
                         }
                     );
@@ -275,16 +277,16 @@
                             streetNamefullBlock.classList.add('endereco-hide-fields');
                         }
                         var interval = setInterval( function() {
-                            if (undefined !== EnderecoIntegrator.integratedObjects.register_shipping__ams) {
-                                EnderecoIntegrator.integratedObjects.register_shipping__ams.addressType = 'shipping_address';
+                            if (undefined !== EnderecoIntegrator.integratedObjects.shipping_ams) {
+                                EnderecoIntegrator.integratedObjects.shipping_ams.addressType = 'shipping_address';
                                 clearInterval(interval);
                             }
                         }, 100);
                     } else {
                         if (streetNameBlock) {
                             streetNameBlock.classList.add('endereco-hide-fields');
-                            if (window.EnderecoIntegrator.integratedObjects.register_shipping__ams) {
-                                window.EnderecoIntegrator.integratedObjects.register_shipping__ams.addressStatus = [""];
+                            if (window.EnderecoIntegrator.integratedObjects.shipping_ams) {
+                                window.EnderecoIntegrator.integratedObjects.shipping_ams.addressStatus = [""];
                             }
                             streetNameBlock.querySelector('[name="register[shipping][streetname]"]').required = false;
                             streetNameBlock.querySelector('[name="register[shipping][streetnumber]"]').required = false;
@@ -293,8 +295,8 @@
                             streetNamefullBlock.classList.remove('endereco-hide-fields');
                         }
                         var interval = setInterval( function() {
-                            if (undefined !== EnderecoIntegrator.integratedObjects.register_shipping__ams) {
-                                EnderecoIntegrator.integratedObjects.register_shipping__ams.addressType = wunschSelector.value;
+                            if (undefined !== EnderecoIntegrator.integratedObjects.shipping_ams) {
+                                EnderecoIntegrator.integratedObjects.shipping_ams.addressType = wunschSelector.value;
                                 clearInterval(interval)
                             }
                         }, 100);

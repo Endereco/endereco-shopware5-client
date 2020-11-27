@@ -2,6 +2,7 @@
 
 {block name="frontend_index_header_javascript"}
     {$smarty.block.parent}
+    <script async defer src="{link file="frontend/_public/src/js/endereco.min.js"}?ver={$endereco_plugin_version}"></script>
     <script>
         ( function() {
             var $interval = setInterval( function() {
@@ -18,6 +19,7 @@
                     window.EnderecoIntegrator.config.ux.smartFill = !!('{config name='smartFill' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.config.ux.checkExisting = !!('{config name='checkExisting' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.config.ux.resumeSubmit = !!('{config name='resumeSubmit' namespace="EnderecoShopware5Client"}');
+                    window.EnderecoIntegrator.config.ux.showEmailStatus = !!('{config name='showEmailStatus' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.countryMappingUrl = '{url controller='EnderecoShopware5Client' action='country' _seo=false}';
                     window.EnderecoIntegrator.config.templates.button = '<button class="btn is--primary address--form-submit is--large" type="button" endereco-use-selection>{s namespace='EnderecoShopware5Client' name='useSelected'}{/s}</button>';
                     window.EnderecoIntegrator.config.texts = {
@@ -31,6 +33,11 @@
                             general_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadline'}{/s}",
                             billing_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadlineBilling'}{/s}",
                             shipping_address: "{s namespace='EnderecoShopware5Client' name='popUpHeadlineShipping'}{/s}",
+                        },
+                        statuses: {
+                            'email_not_correct': "{s namespace='EnderecoShopware5Client' name='statusEmailNotCorrect'}{/s}",
+                            'email_cant_receive': "{s namespace='EnderecoShopware5Client' name='statusEmailCantReceive'}{/s}",
+                            'email_syntax_error': "{s namespace='EnderecoShopware5Client' name='statusEmailSyntaxError'}{/s}",
                         }
                     };
                     window.EnderecoIntegrator.activeServices = {

@@ -24,6 +24,18 @@
     {capture name='c_frontend_address_form_input_street'}
         {$smarty.block.parent}
 
+        <style>
+			.address--street.mopt-wunschpaket-streetwrapper {
+				width: 100%;
+				overflow: auto;
+			}
+			.address--street-name-number,
+			.address--zip-city {
+				overflow: auto;
+				width: 100%;
+			}
+        </style>
+
         {if $endereco_split_street}
             <style>
                 .register--street:not(.mopt-wunschpaket-streetwrapper),
@@ -44,12 +56,6 @@
 
 				.endereco-hide-fields {
 					display: none !important;
-				}
-
-				.address--street-name-number,
-                .address--zip-city {
-					overflow: auto;
-					width: 100%;
 				}
             </style>
             <input type="hidden" name="address_form_prefix" value="{$inputPrefix}"/>
@@ -145,6 +151,7 @@
                     window.EnderecoIntegrator.initAMS(
                         '{$inputPrefix}',
                         {
+                            name: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing'{else}'general'{/if},
                             addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if}
                         }
                     );
@@ -174,17 +181,14 @@
                             streetNamefullBlock.classList.add('endereco-hide-fields');
                         }
                         var interval = setInterval( function() {
-                            if (!!EnderecoIntegrator.integratedObjects.address_ams) {
-                                EnderecoIntegrator.integratedObjects.address_ams.addressType = 'shipping_address';
+                            if (!!EnderecoIntegrator.integratedObjects.shipping_ams && EnderecoIntegrator.integratedObjects.shipping_ams.active) {
+                                EnderecoIntegrator.integratedObjects.shipping_ams.addressType = 'shipping_address';
                                 clearInterval(interval);
                             }
                         }, 100);
                     } else {
                         if (streetNameBlock) {
                             streetNameBlock.classList.add('endereco-hide-fields');
-                            if (!!window.EnderecoIntegrator.integratedObjects.address_ams) {
-                                window.EnderecoIntegrator.integratedObjects.address_ams.addressStatus = [""];
-                            }
                             streetNameBlock.querySelector('[name="{$inputPrefix}[streetname]"]').required = false;
                             streetNameBlock.querySelector('[name="{$inputPrefix}[streetnumber]"]').required = false;
                         }
@@ -192,8 +196,8 @@
                             streetNamefullBlock.classList.remove('endereco-hide-fields');
                         }
                         var interval = setInterval( function() {
-                            if (undefined !== EnderecoIntegrator.integratedObjects.address_ams) {
-                                EnderecoIntegrator.integratedObjects.address_ams.addressType = wunschSelector.value;
+                            if (!!EnderecoIntegrator.integratedObjects.shipping_ams && EnderecoIntegrator.integratedObjects.shipping_ams.active) {
+                                EnderecoIntegrator.integratedObjects.shipping_ams.addressType = wunschSelector.value;
                                 clearInterval(interval)
                             }
                         }, 100);

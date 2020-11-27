@@ -10,6 +10,13 @@
             <description lang="en">Access key for the Endereco API.</description>
         </element>
 
+        <element type="boolean" scope="shop">
+            <name>isPluginActive</name>
+            <label lang="de">Plugin ist aktiv</label>
+            <label lang="en">Plugin is active</label>
+            <value>true</value>
+        </element>
+
         <element type="button">
             <name>textKey</name>
             <label lang="de">Zugriffsschlüssel prüfen</label>
@@ -369,6 +376,13 @@
             <name>emailCheckActive</name>
             <label lang="de">E-Mail Adressprüfung aktivieren</label>
             <label lang="en">Activate e-mail address verification</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>showEmailStatus</name>
+            <label lang="de">E-Mail Statusmeldungen anzeigen</label>
+            <label lang="en">Display email status messages</label>
             <value>true</value>
         </element>
 

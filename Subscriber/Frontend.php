@@ -43,7 +43,6 @@ class Frontend implements SubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return [
-			'Theme_Compiler_Collect_Plugin_Javascript' => 'onCollectJavascript',
 			'Theme_Inheritance_Template_Directories_Collected' => 'onCollectTemplateDir',
 
             'Shopware\Models\Customer\Address::postPersist' => 'onPostPersist',
@@ -62,6 +61,11 @@ class Frontend implements SubscriberInterface
 	public function onAfterOrderSaveOrder($args) {
         $sOrder = $args->get('subject');
         $returnValue = $args->getReturn();
+
+        $config = Shopware()->Container()->get('config');
+        if (!$config->get('isPluginActive')) {
+            return $returnValue;
+        }
 
         if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus']) {
             $returnValue['endereco_order_billingamsstatus'] = $sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus'];
@@ -83,6 +87,11 @@ class Frontend implements SubscriberInterface
     }
 
 	public function checkAdressesOrOpenModals($args) {
+        $config = Shopware()->Container()->get('config');
+        if (!$config->get('isPluginActive')) {
+            return;
+        }
+
         $request = $args->getRequest();
         $controller = $args->get('subject');
         $view = $controller->View();
@@ -180,6 +189,9 @@ class Frontend implements SubscriberInterface
         if (!$config->get('checkExisting')) {
             return;
         }
+        if (!$config->get('isPluginActive')) {
+            return;
+        }
 
         $sUserData = $view->getAssign('sUserData');
 
@@ -220,15 +232,6 @@ class Frontend implements SubscriberInterface
         $this->_doAccounting();
     }
 
-	public function onCollectJavascript()
-	{
-		$jsPath = [
-			$this->pluginDir . '/Resources/views/frontend/_public/src/js/shopware5-bundle.js',
-		];
-
-		return new ArrayCollection($jsPath);
-	}
-
     public function onPostDispatchConfig(\Enlight_Event_EventArgs $args)
     {
         /** @var Shopware_Controllers_Backend_Config $subject */
@@ -245,12 +248,16 @@ class Frontend implements SubscriberInterface
 
 	public function onPostDispatch(\Enlight_Event_EventArgs $args) {
         $config = Shopware()->Container()->get('config');
+        $enderecoService = Shopware()->Container()->get('endereco_shopware5_client.endereco_service');
         $splitStreet = $config->get('splitStreet');
 
         /** @var \Enlight_Controller_Action $controller */
         $controller = $args->get('subject');
         $view = $controller->View();
         $view->assign('endereco_split_street', $splitStreet);
+        $view->assign('endereco_plugin_version', $enderecoService->getVersion());
+
+        $view->assign('endereco_is_active', $config->get('isPluginActive'));
 
         $mainColorCode = $config->get('mainColor');
         if ($mainColorCode) {
@@ -285,6 +292,11 @@ class Frontend implements SubscriberInterface
 
 	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
 	{
+        $config = Shopware()->Container()->get('config');
+        if (!$config->get('isPluginActive')) {
+            return;
+        }
+
 		$dirs = $args->getReturn();
 		$dirs[] = $this->pluginDir . '/Resources/views/';
 

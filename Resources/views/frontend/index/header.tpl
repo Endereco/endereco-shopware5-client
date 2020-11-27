@@ -57,8 +57,4 @@
 
         </style>
     {/if}
-
-    {if $endereco_use_default_styles }
-        <link rel="stylesheet" href="{link file="frontend/_public/src/css/shopware5-default.css"}">
-    {/if}
 {/block}
