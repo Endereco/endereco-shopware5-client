@@ -38,6 +38,7 @@
                             'email_not_correct': "{s namespace='EnderecoShopware5Client' name='statusEmailNotCorrect'}{/s}",
                             'email_cant_receive': "{s namespace='EnderecoShopware5Client' name='statusEmailCantReceive'}{/s}",
                             'email_syntax_error': "{s namespace='EnderecoShopware5Client' name='statusEmailSyntaxError'}{/s}",
+                            'email_no_mx': "{s namespace='EnderecoShopware5Client' name='statusEmailNoMx'}{/s}",
                         }
                     };
                     window.EnderecoIntegrator.activeServices = {

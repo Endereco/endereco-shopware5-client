@@ -31,6 +31,25 @@
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
 
+    <changelog version="3.4.0">
+        <changes lang="de">
+            <![CDATA[
+            <p>Feature: Im Subshop kann das Modul komplett deaktiviert werden.</p>
+            <p>Feature: Fehlermeldungen werden unter der E-Mail Adresse anngezeigt (deaktivierbares Feature).</p>
+            <p>Feature: Prüfungsstatus wird durch Hintergrundfarbe auffälliger.</p>
+            <p>BUGfix: 400 Fehler sollen bei gesprerrten Diensten den Error-Log nicht überfüllen.</p>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <p>Feature: The module can be completely deactivated in the subshop.</p>
+            <p>Feature: Error messages for email check will be displayed as text under the input (can be deactivated).</p>
+            <p>Feature: Check status is more visible through colorfull background color.</p>
+            <p>BUGfix: 400 errors should not fill the error log anymore.</p>
+        ]]>
+        </changes>
+    </changelog>
+
     <changelog version="3.3.3">
         <changes lang="de">
             <![CDATA[
