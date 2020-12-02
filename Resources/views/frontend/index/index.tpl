@@ -20,6 +20,7 @@
                     window.EnderecoIntegrator.config.ux.checkExisting = !!('{config name='checkExisting' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.config.ux.resumeSubmit = !!('{config name='resumeSubmit' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.config.ux.showEmailStatus = !!('{config name='showEmailStatus' namespace="EnderecoShopware5Client"}');
+                    window.EnderecoIntegrator.config.ux.useStandardCss = !!('{config name='useDefaultCss' namespace="EnderecoShopware5Client"}');
                     window.EnderecoIntegrator.countryMappingUrl = '{url controller='EnderecoShopware5Client' action='country' _seo=false}';
                     window.EnderecoIntegrator.config.templates.button = '<button class="btn is--primary address--form-submit is--large" type="button" endereco-use-selection>{s namespace='EnderecoShopware5Client' name='useSelected'}{/s}</button>';
                     window.EnderecoIntegrator.config.texts = {
