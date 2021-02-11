@@ -63,7 +63,7 @@
         <element type="boolean" scope="shop">
             <name>defaultCountryActive</name>
             <label lang="de">Standardland vorauswählen</label>
-            <label lang="en">Preselect default caountry</label>
+            <label lang="en">Preselect default country</label>
             <value>true</value>
         </element>
 

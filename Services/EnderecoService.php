@@ -23,7 +23,7 @@ class EnderecoService {
 
         $config = Shopware()->Container()->get('config');
         $this->apiKey = $config->get('apiKey');
-        $this->info = 'Endereco Shopware5 Client v'.$this->pluginInfo['version'];
+        $this->info = 'Endereco Shopware5 Client (Download) v'.$this->pluginInfo['version'];
         $this->serviceUrl = $config->get('remoteApiUrl');
         $this->version = $this->pluginInfo['version'];
     }
@@ -97,7 +97,7 @@ class EnderecoService {
                         'Content-Type' => 'application/json',
                         'X-Auth-Key' => $this->apiKey,
                         'X-Transaction-Id' => $tid,
-                        'X-Transaction-Referer' => 'EnderecoShopware5Client\Services\EnderecoService.php',
+                        'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
                         'X-Agent' => $this->info,
                     );
 
@@ -218,7 +218,7 @@ class EnderecoService {
                     'Content-Type' => 'application/json',
                     'X-Auth-Key' => $this->apiKey,
                     'X-Transaction-Id' => $sessionId,
-                    'X-Transaction-Referer' => 'EnderecoShopware5Client\Services\EnderecoService.php',
+                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
                     'X-Agent' => $this->info,
                 );
                 $this->httpClient->post(
@@ -254,7 +254,7 @@ class EnderecoService {
                     'Content-Type' => 'application/json',
                     'X-Auth-Key' => $this->apiKey,
                     'X-Transaction-Id' => 'not_required',
-                    'X-Transaction-Referer' => 'EnderecoShopware5Client\Services\EnderecoService.php',
+                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
                     'X-Agent' => $this->info,
                 );
                 $this->httpClient->post(
