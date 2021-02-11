@@ -31,19 +31,24 @@
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
 
-    <changelog version="3.4.1">
+    <changelog version="3.4.2">
         <changes lang="de">
             <![CDATA[
-            <p>BUGfix: rightiger client info und referer wird übermittelt.</p>
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Client Information ist bei GitHub und Store Version gleich</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #4</a> Falscher referer bei serverseitigen Anfragen</li>
+            </ul>
         ]]>
         </changes>
         <changes lang="en">
             <![CDATA[
-            <p>BUGfix: set correct referer and client info.</p>
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Clinet info is the same between GitHub and Store version of the client</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #4</a> Wrong referer for serverside requests</li>
+            </ul>
         ]]>
         </changes>
     </changelog>
-
 
     <changelog version="3.4.1">
         <changes lang="de">
