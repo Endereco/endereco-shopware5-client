@@ -43,7 +43,7 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
         }
 
         $xml = simplexml_load_file(dirname(dirname(dirname(__FILE__))) . 'plugin.xml');
-        $agent_info  = "Endereco Shopware5 Client v" . $xml->version;
+        $agent_info  = "Endereco Shopware5 Client (Download) v" . $xml->version;
 
         try {
             $response = $this->http->post(

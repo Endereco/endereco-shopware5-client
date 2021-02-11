@@ -43,7 +43,7 @@
         <changes lang="en">
             <![CDATA[
             <ul>
-                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Clinet info is the same between GitHub and Store version of the client</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Client info is the same between GitHub and Store version of the client</li>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #3</a> Wrong referer for serverside requests</li>
             </ul>
         ]]>
