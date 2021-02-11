@@ -36,7 +36,7 @@
             <![CDATA[
             <ul>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Client Information ist bei GitHub und Store Version gleich</li>
-                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #4</a> Falscher referer bei serverseitigen Anfragen</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #3</a> Falscher referer bei serverseitigen Anfragen</li>
             </ul>
         ]]>
         </changes>
@@ -44,7 +44,7 @@
             <![CDATA[
             <ul>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/4">Issue #4</a> Clinet info is the same between GitHub and Store version of the client</li>
-                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #4</a> Wrong referer for serverside requests</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/3">Issue #3</a> Wrong referer for serverside requests</li>
             </ul>
         ]]>
         </changes>
