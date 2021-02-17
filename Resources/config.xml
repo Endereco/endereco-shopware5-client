@@ -425,6 +425,13 @@
             <value>true</value>
         </element>
 
+        <element type="text" scope="shop">
+            <name>whitelistController</name>
+            <label lang="de">Plugin JavaScript bei folgenden Controllern ausspielen. (kleingeschrieben und mit Komma getrennt, z.B. "index,newsleter,customcontroller")</label>
+            <label lang="en">Use plugin javascrpt on following controller names. (lowercase and comma separated, e.g. "index,newsletter,customcontroller")</label>
+            <value></value>
+        </element>
+
         <element type="boolean" scope="shop">
             <name>showDebug</name>
             <label lang="de">Debuginformationen in der Browserkonsole ausgeben</label>

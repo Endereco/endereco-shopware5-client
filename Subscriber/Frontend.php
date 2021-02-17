@@ -257,6 +257,20 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_split_street', $splitStreet);
         $view->assign('endereco_plugin_version', $enderecoService->getVersion());
 
+        // Create whitelist.
+        // 1. These classes are always in the list.
+        $whitelist = ['register', 'address', 'checkout'];
+        $addController = explode(
+            ',',
+            strtolower(
+                preg_replace('/\s+/', '', $config->get('whitelistController'))
+            )
+        );
+        if (!empty($addController)) {
+            $whitelist = array_merge($whitelist, $addController);
+        }
+        $view->assign('endereco_controller_whitelist', $whitelist);
+
         $view->assign('endereco_is_active', $config->get('isPluginActive'));
 
         $mainColorCode = $config->get('mainColor');
@@ -292,12 +306,7 @@ class Frontend implements SubscriberInterface
 
 	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
 	{
-        $config = Shopware()->Container()->get('config');
-        if (!$config->get('isPluginActive')) {
-            return;
-        }
-
-		$dirs = $args->getReturn();
+        $dirs = $args->getReturn();
 		$dirs[] = $this->pluginDir . '/Resources/views/';
 
 		$args->setReturn($dirs);

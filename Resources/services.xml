@@ -5,7 +5,7 @@
 
     <services>
         <service id="endereco_shopware5_client.subscriber.frontend"
-                 class="EnderecoShopware5Client\Subscriber\Frontend">
+                 class="EnderecoShopware5Client\Subscriber\Frontend" public="true">
             <argument>%endereco_shopware5_client.plugin_dir%</argument>
             <argument>%endereco_shopware5_client.plugin_info%</argument>
             <argument type="service" id="pluginlogger" />
@@ -13,7 +13,7 @@
             <argument type="service" id="endereco_shopware5_client.endereco_service" />
             <tag name="shopware.event_subscriber"/>
         </service>
-        <service id="endereco_shopware5_client.endereco_service" class="EnderecoShopware5Client\Services\EnderecoService" >
+        <service id="endereco_shopware5_client.endereco_service" class="EnderecoShopware5Client\Services\EnderecoService" public="true">
             <argument>%endereco_shopware5_client.plugin_info%</argument>
             <argument type="service" id="pluginlogger" />
         </service>
