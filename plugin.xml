@@ -37,7 +37,7 @@
             <ul>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/6">Issue #6</a> Plugin mit Shopware 5.7 kompatibel machen</li>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/7">Issue #7</a> Modul nur auf den Seiten laden, wo es gebraucht wird</li>
-                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/2">Issue #2</a>Fix für den Fehler "directory X not allowed by security setting"</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/2">Issue #2</a> Fix für den Fehler "directory X not allowed by security setting"</li>
             </ul>
         ]]>
         </changes>
@@ -46,7 +46,7 @@
             <ul>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/6">Issue #6</a> Make Plugin compatible with Shopware 5.7</li>
                 <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/7">Issue #7</a> Load module only where it's needed</li>
-                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/2">Issue #2</a>Fix for the bug "directory X not allowed by security setting"</li>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/2">Issue #2</a> Fix for the bug "directory X not allowed by security setting"</li>
             </ul>
         ]]>
         </changes>
