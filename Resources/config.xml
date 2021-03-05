@@ -64,7 +64,7 @@
             <name>defaultCountryActive</name>
             <label lang="de">Standardland vorauswählen</label>
             <label lang="en">Preselect default country</label>
-            <value>true</value>
+            <value>false</value>
         </element>
 
         <element type="select" scope="shop">
