@@ -282,7 +282,6 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_main_color_bg', $mainColorBG);
         }
 
-
         $errorColorCode = $config->get('errorColor');
         if ($errorColorCode) {
             list($red, $gren, $blue) = $this->_hex2rgb($errorColorCode);
