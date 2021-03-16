@@ -193,7 +193,7 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
 });
 
 if (window.EnderecoIntegrator) {
-    window.EnderecoIntegrator = merge(window.EnderecoIntegrator, EnderecoIntegrator);
+    window.EnderecoIntegrator = merge(EnderecoIntegrator, window.EnderecoIntegrator);
 } else {
     window.EnderecoIntegrator = EnderecoIntegrator;
 }

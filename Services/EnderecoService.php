@@ -19,7 +19,7 @@ class EnderecoService {
     public function __construct($pluginInfo, $logger) {
         $this->pluginInfo = $pluginInfo;
         $this->logger = $logger;
-        $this->httpClient = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
+        $this->httpClient = new Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
 
         $config = Shopware()->Container()->get('config');
         $this->apiKey = $config->get('apiKey');
