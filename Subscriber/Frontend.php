@@ -19,6 +19,7 @@ class Frontend implements SubscriberInterface
 	private $logger;
 	private $http;
 	private $enderecoService;
+    private $config;
 
     /**
      * @var CacheManager
@@ -35,6 +36,15 @@ class Frontend implements SubscriberInterface
         $this->logger = $logger;
         $this->http = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
         $this->enderecoService = $enderecoService;
+
+        $shop = false;
+        if (Shopware()->Container()->initialized('shop')) {
+            $shop = Shopware()->Container()->get('shop');
+        }
+        if (!$shop) {
+            $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
+        }
+        $this->config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
 	}
 
 	/**
@@ -62,8 +72,7 @@ class Frontend implements SubscriberInterface
         $sOrder = $args->get('subject');
         $returnValue = $args->getReturn();
 
-        $config = Shopware()->Container()->get('config');
-        if (!$config->get('isPluginActive')) {
+        if (!$this->config['isPluginActive']) {
             return $returnValue;
         }
 
@@ -87,8 +96,7 @@ class Frontend implements SubscriberInterface
     }
 
 	public function checkAdressesOrOpenModals($args) {
-        $config = Shopware()->Container()->get('config');
-        if (!$config->get('isPluginActive')) {
+        if (!$this->config['isPluginActive']) {
             return;
         }
 
@@ -101,8 +109,7 @@ class Frontend implements SubscriberInterface
             return;
         }
 
-        $config = Shopware()->Container()->get('config');
-        if (!$config->get('checkExisting')) {
+        if (!$this->config['isPluginActive']) {
             return;
         }
 
@@ -185,11 +192,10 @@ class Frontend implements SubscriberInterface
             return;
         }
 
-        $config = Shopware()->Container()->get('config');
-        if (!$config->get('checkExisting')) {
+        if (!$this->config['checkExisting']) {
             return;
         }
-        if (!$config->get('isPluginActive')) {
+        if (!$this->config['isPluginActive']) {
             return;
         }
 
@@ -247,9 +253,9 @@ class Frontend implements SubscriberInterface
     }
 
 	public function onPostDispatch(\Enlight_Event_EventArgs $args) {
-        $config = Shopware()->Container()->get('config');
         $enderecoService = Shopware()->Container()->get('endereco_shopware5_client.endereco_service');
-        $splitStreet = $config->get('splitStreet');
+
+        $splitStreet = $this->config['splitStreet'];
 
         /** @var \Enlight_Controller_Action $controller */
         $controller = $args->get('subject');
@@ -263,7 +269,7 @@ class Frontend implements SubscriberInterface
         $addController = explode(
             ',',
             strtolower(
-                preg_replace('/\s+/', '', $config->get('whitelistController'))
+                preg_replace('/\s+/', '', $this->config['whitelistController'])
             )
         );
         if (!empty($addController)) {
@@ -271,9 +277,9 @@ class Frontend implements SubscriberInterface
         }
         $view->assign('endereco_controller_whitelist', $whitelist);
 
-        $view->assign('endereco_is_active', $config->get('isPluginActive'));
+        $view->assign('endereco_is_active', $this->config['isPluginActive']);
 
-        $mainColorCode = $config->get('mainColor');
+        $mainColorCode =  $this->config['mainColor'];
         if ($mainColorCode) {
             list($red, $gren, $blue) = $this->_hex2rgb($mainColorCode);
             $mainColor = "rgb({$red}, {$gren}, {$blue})";
@@ -282,7 +288,7 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_main_color_bg', $mainColorBG);
         }
 
-        $errorColorCode = $config->get('errorColor');
+        $errorColorCode = $this->config['errorColor'];
         if ($errorColorCode) {
             list($red, $gren, $blue) = $this->_hex2rgb($errorColorCode);
             $errorColor = "rgb({$red}, {$gren}, {$blue})";
@@ -291,7 +297,7 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_error_color_bg', $errorColorBG);
         }
 
-        $successColorCode = $config->get('successColor');
+        $successColorCode = $this->config['successColor'];
         if ($successColorCode) {
             list($red, $gren, $blue) = $this->_hex2rgb($successColorCode);
             $successColor = "rgb({$red}, {$gren}, {$blue})";
@@ -300,7 +306,7 @@ class Frontend implements SubscriberInterface
             $view->assign('endereco_success_color_bg', $successColorBG);
         }
 
-        $view->assign('endereco_use_default_styles', $config->get('useDefaultCss'));
+        $view->assign('endereco_use_default_styles', $this->config['useDefaultCss']);
     }
 
 	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)

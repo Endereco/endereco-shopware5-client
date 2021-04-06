@@ -21,10 +21,18 @@ class EnderecoService {
         $this->logger = $logger;
         $this->httpClient = new Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
 
-        $config = Shopware()->Container()->get('config');
-        $this->apiKey = $config->get('apiKey');
+        $shop = false;
+        if (Shopware()->Container()->initialized('shop')) {
+            $shop = Shopware()->Container()->get('shop');
+        }
+        if (!$shop) {
+            $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
+        }
+        $config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
+
+        $this->apiKey = $config['apiKey'];
         $this->info = 'Endereco Shopware5 Client (Download) v'.$this->pluginInfo['version'];
-        $this->serviceUrl = $config->get('remoteApiUrl');
+        $this->serviceUrl = $config['remoteApiUrl'];
         $this->version = $this->pluginInfo['version'];
     }
 

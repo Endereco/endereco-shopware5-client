@@ -27,12 +27,20 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
         );
         $dataString = json_encode($readinessCheckRequest);
 
-        $config = Shopware()->Container()->get('config');
+        //$config = Shopware()->Container()->get('config');
+        $shop = false;
+        if (Shopware()->Container()->initialized('shop')) {
+            $shop = Shopware()->Container()->get('shop');
+        }
+        if (!$shop) {
+            $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
+        }
+        $config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
 
         if ($this->request->getParam('apiKey')) {
             $apiKey = $this->request->getParam('apiKey');
         } else {
-            $apiKey = $config->get('apiKey');
+            $apiKey = $config['apiKey'];
         }
 
         if (!$apiKey) {
@@ -47,7 +55,7 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
 
         try {
             $response = $this->http->post(
-                $config->get('remoteApiUrl'),
+                $config['remoteApiUrl'],
                 array(
                     'Content-Type' => 'application/json',
                     'X-Auth-Key' => $apiKey,
