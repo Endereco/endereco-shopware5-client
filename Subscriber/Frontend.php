@@ -109,7 +109,7 @@ class Frontend implements SubscriberInterface
             return;
         }
 
-        if (!$this->config['isPluginActive']) {
+        if (!$this->config['checkExisting']) {
             return;
         }
 

@@ -78,7 +78,7 @@ class EnderecoService {
                 $countryRepository = Shopware()->Models()->getRepository(Country::class);
                 $countryCode = strtolower($countryRepository->find($addressArray['country'])->getIso());
 
-                $locale = Shopware()->Container()->get('Shop')->getLocale()->getLocale();
+                $locale = Shopware()->Container()->get('shop')->getLocale()->getLocale();
                 $languageCode = explode('_', $locale)[0];
             } catch(\Exception $e) {
                 $this->logger->addError($e->getMessage());
