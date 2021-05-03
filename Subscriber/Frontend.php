@@ -115,6 +115,19 @@ class Frontend implements SubscriberInterface
 
         $sUserData = $view->getAssign('sUserData');
 
+        // Payments whitelist. Payments not in the list will have no adresscheck.
+        $currentPaymentMethod = $sUserData['additional']['payment']['name'];
+        $whitelistetPaymentMethods = [
+            'prepayment',
+            'cash',
+            'invoice',
+            'debit',
+            'sepa'
+        ];
+        if (!in_array($currentPaymentMethod, $whitelistetPaymentMethods)) {
+            return;
+        }
+
         if (array_key_exists('user', $sUserData['additional'])) {
             // Fetch all user addresses.
             /**
