@@ -55,11 +55,12 @@ class Frontend implements SubscriberInterface
 		return [
 			'Theme_Inheritance_Template_Directories_Collected' => 'onCollectTemplateDir',
 
-            'Shopware\Models\Customer\Address::postPersist' => 'onPostPersist',
-            'Shopware\Models\Customer\Address::postUpdate' => 'onPostUpdate',
-
             'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onPostDispatch',
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Config' => 'onPostDispatchConfig',
+
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Register' => 'sendDoAccountingRegister',
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Address' => 'sendDoAccountingAddress',
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Forms' => 'sendDoAccountingForms',
 
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'checkExistingCustomerAddresses',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
@@ -67,6 +68,26 @@ class Frontend implements SubscriberInterface
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
 		];
 	}
+
+    public function sendDoAccountingForms($args) {
+        $this->_doAccounting();
+    }
+
+    public function sendDoAccountingRegister($args) {
+        $request = $args->getRequest();
+        $blackListActions = [
+            'ajax_validate_password',
+            'ajax_validate_email'
+        ];
+        if (in_array($request->getActionName(), $blackListActions)) {
+            return;
+        }
+        $this->_doAccounting();
+    }
+
+	public function sendDoAccountingAddress($args) {
+	    $this->_doAccounting();
+    }
 
 	public function onAfterOrderSaveOrder($args) {
         $sOrder = $args->get('subject');
@@ -237,18 +258,6 @@ class Frontend implements SubscriberInterface
             // Check addresses.
             $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
         }
-    }
-
-	public function onPostPersist($args) {
-        $this->_doAccounting();
-    }
-
-    public function onPostUpdate($args) {
-        $this->_doAccounting();
-    }
-
-    public function onPreRemove($args) {
-        $this->_doAccounting();
     }
 
     public function onPostDispatchConfig(\Enlight_Event_EventArgs $args)
