@@ -66,6 +66,7 @@ class Frontend implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
 
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
+            'Shopware_Modules_Order_SaveOrder_FilterParams' => 'addCommentToOrder',
 		];
 	}
 
@@ -112,6 +113,101 @@ class Frontend implements SubscriberInterface
         if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts']) {
             $returnValue['endereco_order_shippingamsts'] = $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
         }
+
+        return $returnValue;
+    }
+
+    public function addCommentToOrder($args) {
+        $sOrder = $args->get('subject');
+        $returnValue = $args->getReturn();
+
+        if (!$this->config['isPluginActive']) {
+            return $returnValue;
+        }
+
+        $statusCodes = explode(',', $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']);
+
+        if (!empty($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'])) {
+            $predictions = json_decode($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'], true);
+        } else {
+            $predictions = [];
+        }
+
+        $curDate = date('d.m.Y H:i:s', time());
+
+        // Write internal comment for specific case.
+        // Case #1: Address was not found
+        if (in_array('address_not_found', $statusCodes)) {
+            $template = "Stand der Adressprüfung vom %s";
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = "Lieferadresse wurde nicht gefunden, bitte den Käufer kontaktieren.";
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+        // Case #2: Address is correct
+        if (in_array('address_correct', $statusCodes)) {
+            $template = "Stand der Adressprüfung vom %s";
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = "Lieferadresse ist korrekt.";
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+        // Case #3: Address needs correction
+        if (in_array('address_needs_correction', $statusCodes)) {
+            $template = "Stand der Adressprüfung vom %s";
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = "Lieferadresse ist korrekturbedürftig.";
+            if (!empty($predictions[0])) {
+                $commentBody .= " Korrekturvorschlag: \n";
+                $commentCorrection = sprintf(
+                    "  %s %s,  %s %s,  %s",
+                    $predictions[0]['streetName'],
+                    $predictions[0]['buildingNumber'],
+                    $predictions[0]['postalCode'],
+                    $predictions[0]['locality'],
+                    strtoupper($predictions[0]['countryCode'])
+                );
+            } else {
+                $commentCorrection = null;
+            }
+
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody, $commentCorrection]);
+            return $returnValue;
+        }
+        // Case #4: Address has multiple variants
+        if (in_array('address_multiple_variants', $statusCodes)) {
+            $template = "Stand der Adressprüfung vom %s";
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = "Lieferadresse ist mehrdeutig.";
+            if (0 < count($predictions)) {
+                $commentBody .= " Varianten: \n";
+                $variants = [];
+                foreach ($predictions as $prediction) {
+                    $variants[] = sprintf(
+                        "  %s %s,  %s %s,  %s",
+                        $prediction['streetName'],
+                        $prediction['buildingNumber'],
+                        $prediction['postalCode'],
+                        $prediction['locality'],
+                        strtoupper($prediction['countryCode'])
+                    );
+                }
+                $commentCorrection = implode("\n", $variants);
+            } else {
+                $commentCorrection = null;
+            }
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody, $commentCorrection]);
+            return $returnValue;
+        }
+        // Case #5: Address is of not supported type.
+        if (in_array('address_of_not_supported_type', $statusCodes)) {
+            $template = "Stand der Adressprüfung vom %s";
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = "Adresse ist von nicht unterstütztem Typ und wurde nicht geprüft.";
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+
 
         return $returnValue;
     }
