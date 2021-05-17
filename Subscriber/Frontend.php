@@ -138,29 +138,29 @@ class Frontend implements SubscriberInterface
         // Write internal comment for specific case.
         // Case #1: Address was not found
         if (in_array('address_not_found', $statusCodes)) {
-            $template = "Stand der Adressprüfung vom %s";
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = "Lieferadresse wurde nicht gefunden, bitte den Käufer kontaktieren.";
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotFoundMainERP');
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
         // Case #2: Address is correct
         if (in_array('address_correct', $statusCodes)) {
-            $template = "Stand der Adressprüfung vom %s";
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = "Lieferadresse ist korrekt.";
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressCorrectMainERP');
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
         // Case #3: Address needs correction
         if (in_array('address_needs_correction', $statusCodes)) {
-            $template = "Stand der Adressprüfung vom %s";
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = "Lieferadresse ist korrekturbedürftig.";
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionMainERP');
             if (!empty($predictions[0])) {
-                $commentBody .= " Korrekturvorschlag: \n";
+                $commentBody .= " ". Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionSecondaryERP') ." \n";
                 $commentCorrection = sprintf(
-                    "  %s %s,  %s %s,  %s",
+                    "  %s %s,  %s %s,  %s", // TODO: country specific formats.
                     $predictions[0]['streetName'],
                     $predictions[0]['buildingNumber'],
                     $predictions[0]['postalCode'],
@@ -176,15 +176,15 @@ class Frontend implements SubscriberInterface
         }
         // Case #4: Address has multiple variants
         if (in_array('address_multiple_variants', $statusCodes)) {
-            $template = "Stand der Adressprüfung vom %s";
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = "Lieferadresse ist mehrdeutig.";
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsMainERP');
             if (0 < count($predictions)) {
-                $commentBody .= " Varianten: \n";
+                $commentBody .= " " . Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsSecondaryERP') . " \n";
                 $variants = [];
                 foreach ($predictions as $prediction) {
                     $variants[] = sprintf(
-                        "  %s %s,  %s %s,  %s",
+                        "  %s %s,  %s %s,  %s", // TODO: country specific formats.
                         $prediction['streetName'],
                         $prediction['buildingNumber'],
                         $prediction['postalCode'],
@@ -201,9 +201,9 @@ class Frontend implements SubscriberInterface
         }
         // Case #5: Address is of not supported type.
         if (in_array('address_of_not_supported_type', $statusCodes)) {
-            $template = "Stand der Adressprüfung vom %s";
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = "Adresse ist von nicht unterstütztem Typ und wurde nicht geprüft.";
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotSupportedTypeMainERP');
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
