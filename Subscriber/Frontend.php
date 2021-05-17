@@ -125,6 +125,10 @@ class Frontend implements SubscriberInterface
             return $returnValue;
         }
 
+        if (!$this->config['addInternalComment']) {
+            return $returnValue;
+        }
+
         $statusCodes = explode(',', $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']);
 
         if (!empty($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'])) {
@@ -207,7 +211,6 @@ class Frontend implements SubscriberInterface
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
-
 
         return $returnValue;
     }

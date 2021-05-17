@@ -373,6 +373,13 @@
         </element>
 
         <element type="boolean" scope="shop">
+            <name>addInternalComment</name>
+            <label lang="de">Status der Prüfung im internen Kommentar der Bestellung hinterlegen (BETA)</label>
+            <label lang="en">Store the status of the check in the internal comment of the order (BETA)</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
             <name>emailCheckActive</name>
             <label lang="de">E-Mail Adressprüfung aktivieren</label>
             <label lang="en">Activate e-mail address verification</label>
