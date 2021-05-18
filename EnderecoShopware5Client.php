@@ -90,6 +90,14 @@ class EnderecoShopware5Client extends Plugin
             $service->delete('s_user_addresses_attributes', 'enderecoamsapredictions');
         }
 
+        // Attributes for street name and building number.
+        if ($service->get('s_user_addresses_attributes', 'enderecostreetname')) {
+            $service->delete('s_user_addresses_attributes', 'enderecostreetname');
+        }
+        if ($service->get('s_user_addresses_attributes', 'enderecobuildingnumber')) {
+            $service->delete('s_user_addresses_attributes', 'enderecobuildingnumber');
+        }
+
         // Attribute sin the order.
         if ($service->get('s_order_attributes', 'endereco_order_billingamsts')) {
             $service->delete('s_order_attributes', 'endereco_order_billingamsts');
@@ -163,6 +171,20 @@ class EnderecoShopware5Client extends Plugin
         if (!$service->get('s_order_attributes', 'endereco_order_shippingamsstatus')) {
             $service->update('s_order_attributes', 'endereco_order_shippingamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
                 'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+
+        // Attributes for street name and building number.
+        if (!$service->get('s_user_addresses_attributes', 'enderecostreetname')) {
+            $service->update('s_user_addresses_attributes', 'enderecostreetname', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_user_addresses_attributes', 'enderecobuildingnumber')) {
+            $service->update('s_user_addresses_attributes', 'enderecobuildingnumber', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'displayInBackend' => true,
                 'custom' => true
             ]);
         }

@@ -70,22 +70,22 @@
                 </style>
                 <div class="register--street-name-number">
                     <input autocomplete="section-billing billing street-address-name"
-                           name="register[billing][streetname]"
+                           name="register[billing][attribute][enderecostreetname]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetName' namespace='EnderecoShopware5Client'}Straße{/s}{s name='RequiredField' namespace='frontend/register/index'}{/s}"
                            id="billing_streetname"
-                           value=""
+                           value="{$form_data.attribute.enderecostreetname|escape}"
                            class="register--field register--spacer register--field-streetname register--field-city is--required{if isset($error_flags.street)} has--error{/if}" />
                     <input autocomplete="section-billing billing street-address-number"
-                           name="register[billing][streetnumber]"
+                           name="register[billing][attribute][enderecobuildingnumber]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetNumber' namespace='EnderecoShopware5Client'}Hausnummer{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="billing_streetnumber"
-                           value=""
+                           value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
             {/if}
@@ -252,22 +252,22 @@
 
                 <div class="register--street-name-number">
                     <input autocomplete="section-shipping shipping street-address-name"
-                           name="register[shipping][streetname]"
+                           name="register[shipping][attribute][enderecostreetname]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetName' namespace='EnderecoShopware5Client'}Street{/s}{s name='RequiredField' namespace='frontend/register/index'}{/s}"
                            id="shipping_streetname"
-                           value=""
+                           value="{$form_data.attribute.enderecostreetname|escape}"
                            class="register--field register--spacer register--field-streetname register--field-city is--required{if isset($error_flags.street)} has--error{/if}" />
                     <input autocomplete="section-shipping shipping street-address-number"
-                           name="register[shipping][streetnumber]"
+                           name="register[shipping][attribute][enderecobuildingnumber]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetNumber' namespace='EnderecoShopware5Client'}Number{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="shipping_streetnumber"
-                           value=""
+                           value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
             {/if}

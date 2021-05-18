@@ -80,22 +80,22 @@
                 <input type="hidden" name="address_form_prefix" value="{$inputPrefix}"/>
                 <div class="address--zip-city address--street-name-number">
                     <input autocomplete="section-billing billing street-address"
-                           name="{$inputPrefix}[streetname]"
+                           name="{$inputPrefix}[attribute][enderecostreetname]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetName' namespace='EnderecoShopware5Client'}Straße{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="address_streetname"
-                           value=""
+                           value="{$formData.attribute.enderecostreetname}"
                            class="address--field address--spacer address--field-streetname address--field-city is--required{if $error_flags.street} has--error{/if}"/>
                     <input autocomplete="section-billing billing street-address"
-                           name="{$inputPrefix}[streetnumber]"
+                           name="{$inputPrefix}[attribute][enderecobuildingnumber]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetNumber' namespace='EnderecoShopware5Client'}Hausnummer{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="address_streetnumber"
-                           value=""
+                           value="{$formData.attribute.enderecobuildingnumber}"
                            class="address--field address--field-streetnumber address--field-zipcode is--required"/>
                 </div>
             {/if}
