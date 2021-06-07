@@ -130,22 +130,40 @@ class Frontend implements SubscriberInterface
             return;
         }
 
-        if (!$this->config['checkExisting']) {
-            return;
+        $sUserData = $view->getAssign('sUserData');
+        $currentPaymentMethod = $sUserData['additional']['payment']['name'];
+        $continue = false;
+
+        /**
+         * If existing customers can be checked and the payment method is whitelisted -> check it.
+         */
+        if ($this->config['checkExisting'] &&
+            in_array($currentPaymentMethod, [
+                'prepayment',
+                'cash',
+                'invoice',
+                'debit',
+                'sepa'
+            ])
+        ) {
+            $continue = true;
         }
 
-        $sUserData = $view->getAssign('sUserData');
+        /**
+         * If paypal express check is active and payment method is paypalexpress -> check it.
+         */
+        if ($this->config['checkPayPalExpress'] &&
+            in_array($currentPaymentMethod, [
+                'SwagPaymentPayPalUnified',
+            ])
+        ) {
+            $continue = true;
+        }
 
-        // Payments whitelist. Payments not in the list will have no adresscheck.
-        $currentPaymentMethod = $sUserData['additional']['payment']['name'];
-        $whitelistetPaymentMethods = [
-            'prepayment',
-            'cash',
-            'invoice',
-            'debit',
-            'sepa'
-        ];
-        if (!in_array($currentPaymentMethod, $whitelistetPaymentMethods)) {
+        /**
+         * If none of the conditions above were met, abort the operation.
+         */
+        if (!$continue) {
             return;
         }
 

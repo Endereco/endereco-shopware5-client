@@ -350,6 +350,15 @@
         </element>
 
         <element type="boolean" scope="shop">
+            <name>checkPayPalExpress</name>
+            <label lang="de">PayPal Express Checkout Adressen prüfen (BETA)</label>
+            <label lang="en">Check addresses from PayPal Express Checkout (BETA)</label>
+            <value>false</value>
+            <description lang="de">Prüft Kunden, die über PayPal Express Checkout bestellen. Da ihre Adresse von Paypal kommt, werden sie standardweise nicht geprüft.</description>
+            <description lang="en">Checks customers that order via paypal express checkout. Their address is normally not checked, because it comes from paypal.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
             <name>checkOnBlur</name>
             <label lang="de">Adressprüfung sofort nach Verlassen der Adressfelder ausführen</label>
             <label lang="en">Trigger address check immediately after leaving the address fields</label>
