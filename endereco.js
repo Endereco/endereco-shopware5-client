@@ -1,7 +1,7 @@
 import Promise from 'promise-polyfill';
 import merge from 'lodash.merge';
 import axios from 'axios';
-import EnderecoIntegrator from '../js-sdk/modules/integrator';
+import EnderecoIntegrator from '../js-sdk/modules/integrator'; // Version 1.1.0-rc.3
 import css from '../js-sdk/themes/default-theme.scss'
 import 'polyfill-array-includes';
 

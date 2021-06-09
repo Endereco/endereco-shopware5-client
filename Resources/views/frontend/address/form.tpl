@@ -98,6 +98,9 @@
                            value="{$formData.attribute.enderecobuildingnumber}"
                            class="address--field address--field-streetnumber address--field-zipcode is--required"/>
                 </div>
+            {else}
+                <input type="hidden" name="{$inputPrefix}[attribute][enderecostreetname]" value="{$formData.attribute.enderecostreetname}" />
+                <input type="hidden" name="{$inputPrefix}[attribute][enderecobuildingnumber]" value="{$formData.attribute.enderecobuildingnumber}" />
             {/if}
 
             <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsstatus]" value="{$formData.attribute.enderecoamsstatus|escape}" />
@@ -209,7 +212,12 @@
                                 addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if}
                             }
                         );
-                        window.EnderecoIntegrator.initPersonServices('{$inputPrefix}');
+                        window.EnderecoIntegrator.initPersonServices(
+                            '{$inputPrefix}',
+                            {
+                                'name': {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing'{else}'general'{/if}
+                            }
+                        );
                         clearInterval($interval);
                     }
                 }, 100);

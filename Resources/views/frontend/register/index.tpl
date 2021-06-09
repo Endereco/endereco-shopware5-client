@@ -88,6 +88,9 @@
                            value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
+            {else}
+                <input type="hidden" name="register[billing][attribute][enderecostreetname]" value="{$form_data.attribute.enderecostreetname|escape}" />
+                <input type="hidden" name="register[billing][attribute][enderecobuildingnumber]" value="{$form_data.attribute.enderecobuildingnumber|escape}" />
             {/if}
             <input type="hidden" name="register[billing][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[billing][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
@@ -270,6 +273,9 @@
                            value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
+            {else}
+                <input type="hidden" name="register[shipping][attribute][enderecostreetname]" value="{$form_data.attribute.enderecostreetname|escape}" />
+                <input type="hidden" name="register[shipping][attribute][enderecobuildingnumber]" value="{$form_data.attribute.enderecobuildingnumber|escape}" />
             {/if}
             <input type="hidden" name="register[shipping][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[shipping][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />

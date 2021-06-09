@@ -376,8 +376,22 @@
 
         <element type="boolean" scope="shop">
             <name>smartFill</name>
-            <label lang="de">(beta) Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
-            <label lang="en">(beta) Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
+            <label lang="de">Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
+            <label lang="en">Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>allowCloseModal</name>
+            <label lang="de">Das Schließen des Modals erlauben</label>
+            <label lang="en">Allow customer to close address selection modal</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>confirmWithCheckbox</name>
+            <label lang="de">Kunde muss eine fehlerhafte Adresse mit einer Checkbox bestätigen</label>
+            <label lang="en">Customer has to confirm a faulty address with a checkbox</label>
             <value>false</value>
         </element>
 

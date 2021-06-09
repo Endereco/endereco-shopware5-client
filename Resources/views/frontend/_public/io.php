@@ -77,6 +77,7 @@ if ('POST' === $_SERVER['REQUEST_METHOD']) {
     $result = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $errorCode = curl_errno($ch);
+    curl_close($ch);
     header('Content-Type: application/json');
 
     if (0 === $errorCode) {

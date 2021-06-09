@@ -7,7 +7,9 @@
             ( function() {
                 var $interval = setInterval( function() {
                     if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
-                        window.EnderecoIntegrator.initPersonServices('register[personal]');
+                        window.EnderecoIntegrator.initPersonServices('register[personal]', {
+                            name: 'general',
+                        });
                         clearInterval($interval);
                     }
                 }, 100);

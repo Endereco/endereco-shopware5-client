@@ -20,6 +20,7 @@ class Frontend implements SubscriberInterface
 	private $http;
 	private $enderecoService;
     private $config;
+    private $themeName;
 
     /**
      * @var CacheManager
@@ -44,6 +45,8 @@ class Frontend implements SubscriberInterface
         if (!$shop) {
             $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
         }
+
+        $this->themeName = strtolower($shop->getTemplate()->getTemplate());
         $this->config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
 	}
 
@@ -401,6 +404,18 @@ class Frontend implements SubscriberInterface
         $view = $controller->View();
         $view->assign('endereco_split_street', $splitStreet);
         $view->assign('endereco_plugin_version', $enderecoService->getVersion());
+        $view->assign('endereco_theme_name', $this->themeName);
+
+        // Get country mapping.
+        $countryRepository = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Country\Country::class);
+        $countries = $countryRepository->findBy(['active' => 1]);
+
+        $countryMapping = [];
+        foreach($countries as $country) {
+            $countryMapping[$country->getIso()] = $country->getName();
+        }
+
+        $view->assign('endereco_country_mapping', json_encode($countryMapping));
 
         // Create whitelist.
         // 1. These classes are always in the list.
