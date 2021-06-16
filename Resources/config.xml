@@ -350,6 +350,15 @@
         </element>
 
         <element type="boolean" scope="shop">
+            <name>checkPayPalExpress</name>
+            <label lang="de">PayPal Express Checkout Adressen prüfen (BETA)</label>
+            <label lang="en">Check addresses from PayPal Express Checkout (BETA)</label>
+            <value>false</value>
+            <description lang="de">Prüft Kunden, die über PayPal Express Checkout bestellen. Da ihre Adresse von Paypal kommt, werden sie standardweise nicht geprüft.</description>
+            <description lang="en">Checks customers that order via paypal express checkout. Their address is normally not checked, because it comes from paypal.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
             <name>checkOnBlur</name>
             <label lang="de">Adressprüfung sofort nach Verlassen der Adressfelder ausführen</label>
             <label lang="en">Trigger address check immediately after leaving the address fields</label>
@@ -367,8 +376,29 @@
 
         <element type="boolean" scope="shop">
             <name>smartFill</name>
-            <label lang="de">(beta) Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
-            <label lang="en">(beta) Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
+            <label lang="de">Felder bei nur einem verbleibenden Adressvorschlag automatisch ausfüllen (SmartAutocomplete)</label>
+            <label lang="en">Automatically fill in fields with only one remaining address suggestion (SmartAutocomplete)</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>allowCloseModal</name>
+            <label lang="de">Das Schließen des Modals erlauben</label>
+            <label lang="en">Allow customer to close address selection modal</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>confirmWithCheckbox</name>
+            <label lang="de">Kunde muss eine fehlerhafte Adresse mit einer Checkbox bestätigen</label>
+            <label lang="en">Customer has to confirm a faulty address with a checkbox</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>addInternalComment</name>
+            <label lang="de">Status der Prüfung im internen Kommentar der Bestellung hinterlegen (BETA)</label>
+            <label lang="en">Store the status of the check in the internal comment of the order (BETA)</label>
             <value>false</value>
         </element>
 

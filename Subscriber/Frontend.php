@@ -20,6 +20,7 @@ class Frontend implements SubscriberInterface
 	private $http;
 	private $enderecoService;
     private $config;
+    private $themeName;
 
     /**
      * @var CacheManager
@@ -44,6 +45,8 @@ class Frontend implements SubscriberInterface
         if (!$shop) {
             $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
         }
+
+        $this->themeName = strtolower($shop->getTemplate()->getTemplate());
         $this->config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
 	}
 
@@ -66,6 +69,7 @@ class Frontend implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
 
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
+            'Shopware_Modules_Order_SaveOrder_FilterParams' => 'addCommentToOrder',
 		];
 	}
 
@@ -116,6 +120,104 @@ class Frontend implements SubscriberInterface
         return $returnValue;
     }
 
+    public function addCommentToOrder($args) {
+        $sOrder = $args->get('subject');
+        $returnValue = $args->getReturn();
+
+        if (!$this->config['isPluginActive']) {
+            return $returnValue;
+        }
+
+        if (!$this->config['addInternalComment']) {
+            return $returnValue;
+        }
+
+        $statusCodes = explode(',', $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']);
+
+        if (!empty($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'])) {
+            $predictions = json_decode($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'], true);
+        } else {
+            $predictions = [];
+        }
+
+        $curDate = date('d.m.Y H:i:s', time());
+
+        // Write internal comment for specific case.
+        // Case #1: Address was not found
+        if (in_array('address_not_found', $statusCodes)) {
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotFoundMainERP');
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+        // Case #2: Address is correct
+        if (in_array('address_correct', $statusCodes)) {
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressCorrectMainERP');
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+        // Case #3: Address needs correction
+        if (in_array('address_needs_correction', $statusCodes)) {
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionMainERP');
+            if (!empty($predictions[0])) {
+                $commentBody .= " ". Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionSecondaryERP') ." \n";
+                $commentCorrection = sprintf(
+                    "  %s %s,  %s %s,  %s", // TODO: country specific formats.
+                    $predictions[0]['streetName'],
+                    $predictions[0]['buildingNumber'],
+                    $predictions[0]['postalCode'],
+                    $predictions[0]['locality'],
+                    strtoupper($predictions[0]['countryCode'])
+                );
+            } else {
+                $commentCorrection = null;
+            }
+
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody, $commentCorrection]);
+            return $returnValue;
+        }
+        // Case #4: Address has multiple variants
+        if (in_array('address_multiple_variants', $statusCodes)) {
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsMainERP');
+            if (0 < count($predictions)) {
+                $commentBody .= " " . Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsSecondaryERP') . " \n";
+                $variants = [];
+                foreach ($predictions as $prediction) {
+                    $variants[] = sprintf(
+                        "  %s %s,  %s %s,  %s", // TODO: country specific formats.
+                        $prediction['streetName'],
+                        $prediction['buildingNumber'],
+                        $prediction['postalCode'],
+                        $prediction['locality'],
+                        strtoupper($prediction['countryCode'])
+                    );
+                }
+                $commentCorrection = implode("\n", $variants);
+            } else {
+                $commentCorrection = null;
+            }
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody, $commentCorrection]);
+            return $returnValue;
+        }
+        // Case #5: Address is of not supported type.
+        if (in_array('address_of_not_supported_type', $statusCodes)) {
+            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotSupportedTypeMainERP');
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
+
+        return $returnValue;
+    }
+
 	public function checkAdressesOrOpenModals($args) {
         if (!$this->config['isPluginActive']) {
             return;
@@ -130,22 +232,40 @@ class Frontend implements SubscriberInterface
             return;
         }
 
-        if (!$this->config['checkExisting']) {
-            return;
+        $sUserData = $view->getAssign('sUserData');
+        $currentPaymentMethod = $sUserData['additional']['payment']['name'];
+        $continue = false;
+
+        /**
+         * If existing customers can be checked and the payment method is whitelisted -> check it.
+         */
+        if ($this->config['checkExisting'] &&
+            in_array($currentPaymentMethod, [
+                'prepayment',
+                'cash',
+                'invoice',
+                'debit',
+                'sepa'
+            ])
+        ) {
+            $continue = true;
         }
 
-        $sUserData = $view->getAssign('sUserData');
+        /**
+         * If paypal express check is active and payment method is paypalexpress -> check it.
+         */
+        if ($this->config['checkPayPalExpress'] &&
+            in_array($currentPaymentMethod, [
+                'SwagPaymentPayPalUnified',
+            ])
+        ) {
+            $continue = true;
+        }
 
-        // Payments whitelist. Payments not in the list will have no adresscheck.
-        $currentPaymentMethod = $sUserData['additional']['payment']['name'];
-        $whitelistetPaymentMethods = [
-            'prepayment',
-            'cash',
-            'invoice',
-            'debit',
-            'sepa'
-        ];
-        if (!in_array($currentPaymentMethod, $whitelistetPaymentMethods)) {
+        /**
+         * If none of the conditions above were met, abort the operation.
+         */
+        if (!$continue) {
             return;
         }
 
@@ -284,6 +404,18 @@ class Frontend implements SubscriberInterface
         $view = $controller->View();
         $view->assign('endereco_split_street', $splitStreet);
         $view->assign('endereco_plugin_version', $enderecoService->getVersion());
+        $view->assign('endereco_theme_name', $this->themeName);
+
+        // Get country mapping.
+        $countryRepository = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Country\Country::class);
+        $countries = $countryRepository->findBy(['active' => 1]);
+
+        $countryMapping = [];
+        foreach($countries as $country) {
+            $countryMapping[$country->getIso()] = $country->getName();
+        }
+
+        $view->assign('endereco_country_mapping', json_encode($countryMapping));
 
         // Create whitelist.
         // 1. These classes are always in the list.

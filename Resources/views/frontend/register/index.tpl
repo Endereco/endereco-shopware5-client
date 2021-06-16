@@ -70,24 +70,27 @@
                 </style>
                 <div class="register--street-name-number">
                     <input autocomplete="section-billing billing street-address-name"
-                           name="register[billing][streetname]"
+                           name="register[billing][attribute][enderecostreetname]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetName' namespace='EnderecoShopware5Client'}Straße{/s}{s name='RequiredField' namespace='frontend/register/index'}{/s}"
                            id="billing_streetname"
-                           value=""
+                           value="{$form_data.attribute.enderecostreetname|escape}"
                            class="register--field register--spacer register--field-streetname register--field-city is--required{if isset($error_flags.street)} has--error{/if}" />
                     <input autocomplete="section-billing billing street-address-number"
-                           name="register[billing][streetnumber]"
+                           name="register[billing][attribute][enderecobuildingnumber]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetNumber' namespace='EnderecoShopware5Client'}Hausnummer{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="billing_streetnumber"
-                           value=""
+                           value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
+            {else}
+                <input type="hidden" name="register[billing][attribute][enderecostreetname]" value="{$form_data.attribute.enderecostreetname|escape}" />
+                <input type="hidden" name="register[billing][attribute][enderecobuildingnumber]" value="{$form_data.attribute.enderecobuildingnumber|escape}" />
             {/if}
             <input type="hidden" name="register[billing][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[billing][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
@@ -252,24 +255,27 @@
 
                 <div class="register--street-name-number">
                     <input autocomplete="section-shipping shipping street-address-name"
-                           name="register[shipping][streetname]"
+                           name="register[shipping][attribute][enderecostreetname]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetName' namespace='EnderecoShopware5Client'}Street{/s}{s name='RequiredField' namespace='frontend/register/index'}{/s}"
                            id="shipping_streetname"
-                           value=""
+                           value="{$form_data.attribute.enderecostreetname|escape}"
                            class="register--field register--spacer register--field-streetname register--field-city is--required{if isset($error_flags.street)} has--error{/if}" />
                     <input autocomplete="section-shipping shipping street-address-number"
-                           name="register[shipping][streetnumber]"
+                           name="register[shipping][attribute][enderecobuildingnumber]"
                            type="text"
                            required="required"
                            aria-required="true"
                            placeholder="{s name='RegisterPlaceholderStreetNumber' namespace='EnderecoShopware5Client'}Number{/s}{s name="RequiredField" namespace="frontend/register/index"}{/s}"
                            id="shipping_streetnumber"
-                           value=""
+                           value="{$form_data.attribute.enderecobuildingnumber|escape}"
                            class="register--field register--field-streetnumber address--field-zipcode is--required" />
                 </div>
+            {else}
+                <input type="hidden" name="register[shipping][attribute][enderecostreetname]" value="{$form_data.attribute.enderecostreetname|escape}" />
+                <input type="hidden" name="register[shipping][attribute][enderecobuildingnumber]" value="{$form_data.attribute.enderecobuildingnumber|escape}" />
             {/if}
             <input type="hidden" name="register[shipping][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[shipping][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
@@ -343,8 +349,8 @@
                         if ('address' === wunschSelector.value) {
                             if (streetNameBlock) {
                                 streetNameBlock.classList.remove('endereco-hide-fields');
-                                streetNameBlock.querySelector('[name="register[shipping][streetname]"]').required = true;
-                                streetNameBlock.querySelector('[name="register[shipping][streetnumber]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecostreetname]"]').required = true;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]').required = false;
                             }
                             if (streetNamefullBlock) {
                                 streetNamefullBlock.classList.add('endereco-hide-fields');
@@ -361,8 +367,8 @@
                                 if (window.EnderecoIntegrator.integratedObjects.shipping_ams) {
                                     window.EnderecoIntegrator.integratedObjects.shipping_ams.addressStatus = [""];
                                 }
-                                streetNameBlock.querySelector('[name="register[shipping][streetname]"]').required = false;
-                                streetNameBlock.querySelector('[name="register[shipping][streetnumber]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecostreetname]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]').required = false;
                             }
                             if (streetNamefullBlock) {
                                 streetNamefullBlock.classList.remove('endereco-hide-fields');
@@ -431,12 +437,12 @@
 
                         // Add advanced required toggler to street inputs.
                         addRequiredToggler(document.querySelector('[name="register[shipping][street]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[shipping][streetname]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[shipping][streetnumber]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[shipping][attribute][enderecostreetname]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]'));
 
                         addRequiredToggler(document.querySelector('[name="register[billing][street]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[billing][streetname]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[billing][streetnumber]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[billing][attribute][enderecostreetname]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[billing][attribute][enderecobuildingnumber]"]'));
 
                         clearInterval(waitForComplete);
                     }

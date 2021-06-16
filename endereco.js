@@ -1,7 +1,7 @@
 import Promise from 'promise-polyfill';
 import merge from 'lodash.merge';
 import axios from 'axios';
-import EnderecoIntegrator from '../js-sdk/modules/integrator';
+import EnderecoIntegrator from '../js-sdk/modules/integrator'; // Version 1.1.0-rc.5
 import css from '../js-sdk/themes/default-theme.scss'
 import 'polyfill-array-includes';
 
@@ -24,8 +24,8 @@ EnderecoIntegrator.postfix = {
         postalCode: '[zipcode]',
         locality: '[city]',
         streetFull: '[street]',
-        streetName: '[streetname]',
-        buildingNumber: '[streetnumber]',
+        streetName: '[attribute][enderecostreetname]',
+        buildingNumber: '[attribute][enderecobuildingnumber]',
         addressStatus: '[attribute][enderecoamsstatus]',
         addressTimestamp: '[attribute][enderecoamsts]',
         addressPredictions: '[attribute][enderecoamsapredictions]',
