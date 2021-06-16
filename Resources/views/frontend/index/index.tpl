@@ -26,7 +26,7 @@
                         window.EnderecoIntegrator.config.ux.useStandardCss = !!('{config name='useDefaultCss' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.allowCloseModal = !!('{config name='allowCloseModal' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.confirmWithCheckbox = !!('{config name='confirmWithCheckbox' namespace="EnderecoShopware5Client"}');
-                        window.EnderecoIntegrator.config.ux.changeFieldsOrder = true;
+                        window.EnderecoIntegrator.config.ux.changeFieldsOrder = false;
                         window.EnderecoIntegrator.countryMappingUrl = '{url controller='EnderecoShopware5Client' action='country' _seo=false}';
                         window.EnderecoIntegrator.config.templates.primaryButtonClasses = 'btn is--primary is--large';
                         window.EnderecoIntegrator.config.templates.secondaryButtonClasses = 'btn is--secondary is--large';

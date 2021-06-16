@@ -349,8 +349,8 @@
                         if ('address' === wunschSelector.value) {
                             if (streetNameBlock) {
                                 streetNameBlock.classList.remove('endereco-hide-fields');
-                                streetNameBlock.querySelector('[name="register[shipping][streetname]"]').required = true;
-                                streetNameBlock.querySelector('[name="register[shipping][streetnumber]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecostreetname]"]').required = true;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]').required = false;
                             }
                             if (streetNamefullBlock) {
                                 streetNamefullBlock.classList.add('endereco-hide-fields');
@@ -367,8 +367,8 @@
                                 if (window.EnderecoIntegrator.integratedObjects.shipping_ams) {
                                     window.EnderecoIntegrator.integratedObjects.shipping_ams.addressStatus = [""];
                                 }
-                                streetNameBlock.querySelector('[name="register[shipping][streetname]"]').required = false;
-                                streetNameBlock.querySelector('[name="register[shipping][streetnumber]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecostreetname]"]').required = false;
+                                streetNameBlock.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]').required = false;
                             }
                             if (streetNamefullBlock) {
                                 streetNamefullBlock.classList.remove('endereco-hide-fields');
@@ -437,12 +437,12 @@
 
                         // Add advanced required toggler to street inputs.
                         addRequiredToggler(document.querySelector('[name="register[shipping][street]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[shipping][streetname]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[shipping][streetnumber]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[shipping][attribute][enderecostreetname]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[shipping][attribute][enderecobuildingnumber]"]'));
 
                         addRequiredToggler(document.querySelector('[name="register[billing][street]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[billing][streetname]"]'));
-                        addRequiredToggler(document.querySelector('[name="register[billing][streetnumber]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[billing][attribute][enderecostreetname]"]'));
+                        addRequiredToggler(document.querySelector('[name="register[billing][attribute][enderecobuildingnumber]"]'));
 
                         clearInterval(waitForComplete);
                     }
