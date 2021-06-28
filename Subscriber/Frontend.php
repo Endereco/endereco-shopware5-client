@@ -151,14 +151,9 @@ class Frontend implements SubscriberInterface
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
-        // Case #2: Address is correct
-        if (in_array('address_correct', $statusCodes)) {
-            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
-            $commentHeadline = sprintf($template, $curDate);
-            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressCorrectMainERP');
-            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
-            return $returnValue;
-        }
+        // Case #2: Address is correct -- dont save anything
+        // Code removed
+
         // Case #3: Address needs correction
         if (in_array('address_needs_correction', $statusCodes)) {
             $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
@@ -206,14 +201,9 @@ class Frontend implements SubscriberInterface
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody, $commentCorrection]);
             return $returnValue;
         }
-        // Case #5: Address is of not supported type.
-        if (in_array('address_of_not_supported_type', $statusCodes)) {
-            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
-            $commentHeadline = sprintf($template, $curDate);
-            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotSupportedTypeMainERP');
-            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
-            return $returnValue;
-        }
+
+        // Case #5: Address is of not supported type. Should not be commented.
+        // Code removed.
 
         return $returnValue;
     }
