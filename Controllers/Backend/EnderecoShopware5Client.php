@@ -3,6 +3,7 @@
 use Shopware\Components\Logger;
 use Shopware\Components\CSRFWhitelistAware;
 use Symfony\Component\HttpFoundation\Response;
+use Shopware\Components\HttpClient\RequestException;
 
 class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Controllers_Backend_ExtJs implements CSRFWhitelistAware
 {
@@ -44,8 +45,8 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
         }
 
         if (!$apiKey) {
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            $this->logger->addError(Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
+            $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
+            $this->logger->addRecord(Logger::WARNING, Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
             $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
             return;
         }
@@ -70,15 +71,27 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
             if ('ready' === $status['result']['status']) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiOK'));
             } else {
-                $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+                $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
+            }
+        } catch (RequestException $e) {
+            $errorMessage = json_decode($e->getBody(), true);
+            if (!empty($errorMessage['error'])) {
+                $this->logger->addRecord(Logger::WARNING, $errorMessage['error']['message']);
+            } else {
+                $this->logger->addRecord(Logger::ERROR, $e->getMessage());
+            }
+            $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
+            if (strpos($errorMessage, '400') !== false) {
+                $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
+            } else {
+                $this->View()->assign('response', $e->getMessage());
             }
         } catch (\Exception $exception) {
             $errorMessage = $exception->getMessage();
             // Log it.
-            $this->logger->addError($exception->getMessage());
-
-            $this->response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            $this->logger->addRecord(Logger::ERROR, $errorMessage);
+            $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
 
             if (strpos($errorMessage, '400') !== false) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));

@@ -6,6 +6,7 @@ use Shopware\Models\Country\Country;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\AddressRepository;
 use GuzzleHttp\Exception\RequestException;
+use Shopware\Components\Logger;
 
 class EnderecoService {
     private $logger;
@@ -81,7 +82,7 @@ class EnderecoService {
                 $locale = Shopware()->Container()->get('shop')->getLocale()->getLocale();
                 $languageCode = explode('_', $locale)[0];
             } catch(\Exception $e) {
-                $this->logger->addError($e->getMessage());
+                $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 continue;
             }
 
@@ -191,11 +192,11 @@ class EnderecoService {
                     if ($e->hasResponse()) {
                         $response = $e->getResponse();
                         if (500 <= $response->getStatusCode()) {
-                            $this->logger->addError($e->getMessage());
+                            $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                         }
                     }
                 } catch(\Exception $e) {
-                    $this->logger->addError($e->getMessage());
+                    $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 }
             }
         }
@@ -242,11 +243,11 @@ class EnderecoService {
                 if ($e->hasResponse()) {
                     $response = $e->getResponse();
                     if (500 <= $response->getStatusCode()) {
-                        $this->logger->addError($e->getMessage());
+                        $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                     }
                 }
             } catch(\Exception $e) {
-                $this->logger->addError($e->getMessage());
+                $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
         }
 
@@ -276,11 +277,11 @@ class EnderecoService {
                 if ($e->hasResponse()) {
                     $response = $e->getResponse();
                     if (500 <= $response->getStatusCode()) {
-                        $this->logger->addError($e->getMessage());
+                        $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                     }
                 }
             } catch(\Exception $e) {
-                $this->logger->addError($e->getMessage());
+                $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
         }
     }
