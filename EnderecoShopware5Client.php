@@ -114,7 +114,7 @@ class EnderecoShopware5Client extends Plugin
 
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
         $uninstallContext->scheduleClearCache(DeactivateContext::CACHE_LIST_ALL);
     }
 
@@ -222,6 +222,6 @@ class EnderecoShopware5Client extends Plugin
 
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         $metaDataCache->deleteAll();
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
     }
 }
