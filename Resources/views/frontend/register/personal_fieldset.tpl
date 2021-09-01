@@ -2,7 +2,7 @@
 
 {block name='frontend_register_personal_fieldset_input_firstname'}
     {$smarty.block.parent}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <script>
             ( function() {
                 var $interval = setInterval( function() {
@@ -21,7 +21,7 @@
 
 {block name='frontend_register_personal_fieldset_input_mail'}
     {$smarty.block.parent}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <script>
             ( function() {
                 var $interval = setInterval( function() {

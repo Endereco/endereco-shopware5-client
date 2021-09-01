@@ -2,7 +2,7 @@
 
 {block name='frontend_checkout_confirm_form'}
     {$smarty.block.parent}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {if $endereco_need_to_reload}
             <script>
                 location.reload();

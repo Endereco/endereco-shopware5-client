@@ -1,7 +1,7 @@
 {extends file="parent:frontend/address/form.tpl"}
 
 {block name='frontend_address_form_input_salutation'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_salutation'}
             {$smarty.block.parent}
         {/capture}
@@ -10,7 +10,7 @@
     {/if}
 {/block}
 {block name='frontend_register_personal_fieldset_input_title'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_personal_fieldset_input_title'}
             {$smarty.block.parent}
         {/capture}
@@ -20,7 +20,7 @@
 
 {/block}
 {block name='frontend_address_form_input_firstname'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_firstname'}
             {$smarty.block.parent}
         {/capture}
@@ -29,7 +29,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_lastname'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_lastname'}
             {$smarty.block.parent}
         {/capture}
@@ -38,7 +38,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_street'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_street'}
             {$smarty.block.parent}
 
@@ -112,7 +112,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_addition_address_line1'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_addition_address_line1'}
             {$smarty.block.parent}
         {/capture}
@@ -121,7 +121,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_addition_address_line2'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_addition_address_line2'}
             {$smarty.block.parent}
         {/capture}
@@ -130,7 +130,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_zip_and_city'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_zip_and_city'}
             {$smarty.block.parent}
         {/capture}
@@ -139,7 +139,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_country'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_country'}
             {$smarty.block.parent}
         {/capture}
@@ -148,7 +148,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_country_states'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_country_states'}
             {$smarty.block.parent}
         {/capture}
@@ -157,7 +157,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_phone'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_phone'}
             {$smarty.block.parent}
         {/capture}
@@ -166,7 +166,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_set_default_shipping'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_set_default_shipping'}
             {$smarty.block.parent}
         {/capture}
@@ -175,7 +175,7 @@
     {/if}
 {/block}
 {block name='frontend_address_form_input_set_default_billing'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_address_form_input_set_default_billing'}
             {$smarty.block.parent}
         {/capture}
@@ -186,7 +186,7 @@
 
 {block name='frontend_address_form_fieldset_address'}
     {$smarty.block.parent}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {$smarty.capture.c_frontend_address_form_input_salutation}
         {$smarty.capture.c_frontend_register_personal_fieldset_input_title}
         {$smarty.capture.c_frontend_address_form_input_firstname}

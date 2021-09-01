@@ -405,7 +405,7 @@ class Frontend implements SubscriberInterface
             $countryMapping[$country->getIso()] = $country->getName();
         }
 
-        $view->assign('endereco_country_mapping', json_encode($countryMapping));
+        $view->assign('endereco_country_mapping', addslashes(json_encode($countryMapping)));
 
         // Create whitelist.
         // 1. These classes are always in the list.

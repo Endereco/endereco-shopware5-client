@@ -1,7 +1,7 @@
 {extends file="parent:frontend/register/index.tpl"}
 
 {block name='frontend_register_billing_fieldset_input_country'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_country'}
             {$smarty.block.parent}
         {/capture}
@@ -10,7 +10,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_input_country_states'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_country_states'}
             {$smarty.block.parent}
         {/capture}
@@ -19,7 +19,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_input_zip_and_city'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_zip_and_city'}
             {$smarty.block.parent}
         {/capture}
@@ -28,7 +28,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_different_shipping'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_different_shipping'}
             {$smarty.block.parent}
         {/capture}
@@ -37,7 +37,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_input_street'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_street'}
             {$smarty.block.parent}
             {if $endereco_split_street}
@@ -101,7 +101,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_input_addition_address_line1'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_addition_address_line1'}
             {$smarty.block.parent}
         {/capture}
@@ -110,7 +110,7 @@
     {/if}
 {/block}
 {block name='frontend_register_billing_fieldset_input_addition_address_line2'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_addition_address_line2'}
             {$smarty.block.parent}
         {/capture}
@@ -120,7 +120,7 @@
 {/block}
 
 {block name='frontend_register_billing_fieldset_body'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <div hidden="true">
             {$smarty.block.parent}
         </div>
@@ -157,7 +157,7 @@
 
 
 {block name='frontend_register_shipping_fieldset_input_salutation'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_salutation'}
             {$smarty.block.parent}
         {/capture}
@@ -166,7 +166,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_firstname'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_firstname'}
             {$smarty.block.parent}
         {/capture}
@@ -175,7 +175,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_lastname'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_lastname'}
             {$smarty.block.parent}
         {/capture}
@@ -184,7 +184,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_country'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_country'}
             {$smarty.block.parent}
         {/capture}
@@ -193,7 +193,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_country_states'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_country_states'}
             {$smarty.block.parent}
         {/capture}
@@ -202,7 +202,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_zip_and_city'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_zip_and_city'}
             {$smarty.block.parent}
         {/capture}
@@ -211,7 +211,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_different_shipping'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_different_shipping'}
             {$smarty.block.parent}
         {/capture}
@@ -220,7 +220,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_street'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_street'}
             {$smarty.block.parent}
 
@@ -286,7 +286,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_addition_address_line1'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_addition_address_line1'}
             {$smarty.block.parent}
         {/capture}
@@ -295,7 +295,7 @@
     {/if}
 {/block}
 {block name='frontend_register_shipping_fieldset_input_addition_address_line2'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_shipping_fieldset_input_addition_address_line2'}
             {$smarty.block.parent}
         {/capture}
@@ -305,7 +305,7 @@
 {/block}
 
 {block name='frontend_register_shipping_fieldset_body'}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <div>
             {$smarty.block.parent}
         </div>

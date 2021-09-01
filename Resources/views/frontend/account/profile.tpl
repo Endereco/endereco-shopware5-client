@@ -2,7 +2,7 @@
 
 {block name='frontend_account_profile_profile_input_firstname'}
     {$smarty.block.parent}
-    {if $endereco_is_active}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <script>
             ( function() {
                 var $interval = setInterval( function() {
