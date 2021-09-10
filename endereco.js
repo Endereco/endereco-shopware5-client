@@ -127,6 +127,17 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
         });
     }
 
+    if (!!EAO.onConfirmAddress) {
+        EAO.onConfirmAddress.push(function(AddressObject) {
+            if ($('.register--submit') && $('.register--submit').data('plugin_swPreloaderButton')) {
+                $('.register--submit').data('plugin_swPreloaderButton').reset();
+            }
+            if ($('.address--form-submit') && $('.address--form-submit').data('plugin_swPreloaderButton')) {
+                $('.address--form-submit').data('plugin_swPreloaderButton').reset();
+            }
+        });
+    }
+
     EAO.forms.forEach( function(form) {
         var $actionPanel = form.querySelector('.address--form-actions');
         if (!$actionPanel) {
