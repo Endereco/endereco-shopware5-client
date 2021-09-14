@@ -1,7 +1,7 @@
 import Promise from 'promise-polyfill';
 import merge from 'lodash.merge';
 import axios from 'axios';
-import EnderecoIntegrator from '../js-sdk/modules/integrator'; // Version 1.1.0-rc.5
+import EnderecoIntegrator from '../js-sdk/modules/integrator'; // Version 1.1.0-rc.6
 import css from '../js-sdk/themes/default-theme.scss'
 import 'polyfill-array-includes';
 
@@ -96,44 +96,95 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
     // Dirty hack for shopware register button.
     if (!!EAO.onCloseModal) {
         EAO.onCloseModal.push(function(AddressObject) {
-            if ($('.register--submit') && $('.register--submit').data('plugin_swPreloaderButton')) {
-                $('.register--submit').data('plugin_swPreloaderButton').reset();
+            if ($('.register--submit')) {
+                $('.register--submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
-            if ($('.address--form-submit') && $('.address--form-submit').data('plugin_swPreloaderButton')) {
-                $('.address--form-submit').data('plugin_swPreloaderButton').reset();
+            if ($('.address--form-submit')) {
+                $('.address--form-submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
         });
     }
 
     if (!!EAO.onAfterAddressCheckSelected) {
         EAO.onAfterAddressCheckSelected.push(function(AddressObject) {
-            if ($('.register--submit') && $('.register--submit').data('plugin_swPreloaderButton')) {
-                $('.register--submit').data('plugin_swPreloaderButton').reset();
+            if ($('.register--submit')) {
+                $('.register--submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
-            if ($('.address--form-submit') && $('.address--form-submit').data('plugin_swPreloaderButton')) {
-                $('.address--form-submit').data('plugin_swPreloaderButton').reset();
+            if ($('.address--form-submit')) {
+                $('.address--form-submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
         });
     }
 
     if (!!EAO.onAfterAddressCheckNoAction) {
         EAO.onAfterAddressCheckNoAction.push(function(AddressObject) {
-            if ($('.register--submit') && $('.register--submit').data('plugin_swPreloaderButton')) {
-                $('.register--submit').data('plugin_swPreloaderButton').reset();
+            if ($('.register--submit')) {
+                $('.register--submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
-            if ($('.address--form-submit') && $('.address--form-submit').data('plugin_swPreloaderButton')) {
-                $('.address--form-submit').data('plugin_swPreloaderButton').reset();
+            if ($('.address--form-submit')) {
+                $('.address--form-submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
         });
     }
 
     if (!!EAO.onConfirmAddress) {
         EAO.onConfirmAddress.push(function(AddressObject) {
-            if ($('.register--submit') && $('.register--submit').data('plugin_swPreloaderButton')) {
-                $('.register--submit').data('plugin_swPreloaderButton').reset();
+            if ($('.register--submit')) {
+                $('.register--submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
-            if ($('.address--form-submit') && $('.address--form-submit').data('plugin_swPreloaderButton')) {
-                $('.address--form-submit').data('plugin_swPreloaderButton').reset();
+            if ($('.address--form-submit')) {
+                $('.address--form-submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
+            }
+        });
+    }
+
+    if (!!EAO.onSubmitUnblock) {
+        EAO.onSubmitUnblock.push(function(AddressObject) {
+            if ($('.register--submit')) {
+                $('.register--submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
+            }
+            if ($('.address--form-submit')) {
+                $('.address--form-submit').each(function(i,e) {
+                    if ($(e).data('plugin_swPreloaderButton')) {
+                        $(e).data('plugin_swPreloaderButton').reset();
+                    }
+                });
             }
         });
     }
@@ -165,7 +216,6 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
                     // First. Block.
                     e.preventDefault();
                     e.stopPropagation();
-
                     if (window.EnderecoIntegrator && !window.EnderecoIntegrator.submitResume) {
                         window.EnderecoIntegrator.submitResume = function() {
                             if(form.dispatchEvent(
