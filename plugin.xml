@@ -31,6 +31,23 @@
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
 
+    <changelog version="3.6.6">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/29">Issue #29</a> Kommentare für fehlende oder nicht existierende Hausnummern als Kommentare bei Bestellung</li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/29">Issue #29</a> Comments for missing or non-existent house numbers as comments when ordering</li>
+            </ul>
+        ]]>
+        </changes>
+    </changelog>
+
     <changelog version="3.6.5">
         <changes lang="de">
             <![CDATA[

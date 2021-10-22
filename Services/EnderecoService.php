@@ -175,6 +175,9 @@ class EnderecoService {
                             $statuses[] = 'address_is_packstation';
                         }
 
+                        // Remove duplicates.
+                        $statuses = array_values(array_unique($statuses));
+
                         // Create timestamp.
                         $timestamp = time();
 

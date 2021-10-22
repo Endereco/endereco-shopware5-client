@@ -141,26 +141,53 @@ class Frontend implements SubscriberInterface
         }
 
         $curDate = date('d.m.Y H:i:s', time());
+        $Snipt = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client');
 
         // Write internal comment for specific case.
         // Case #1: Address was not found
-        if (in_array('address_not_found', $statusCodes)) {
-            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+        if (in_array('address_not_found', $statusCodes)
+            && !empty($Snipt->get('statusAddressNotFoundMainERP'))
+        ) {
+            $template = $Snipt->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNotFoundMainERP');
+            $commentBody = $Snipt->get('statusAddressNotFoundMainERP');
             $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
             return $returnValue;
         }
+
         // Case #2: Address is correct -- dont save anything
-        // Code removed
+        if (in_array('address_correct', $statusCodes)
+            && !empty($Snipt->get('statusAddressCorrectMainERP'))
+        ) {
+            $template = $Snipt->get('statusAddressTimestampCheckERP');
+            $commentHeadline = sprintf($template, $curDate);
+            $commentBody = $Snipt->get('statusAddressCorrectMainERP');
+            $returnValue['internalcomment'] = implode("\n", [$commentHeadline, $commentBody]);
+            return $returnValue;
+        }
 
         // Case #3: Address needs correction
-        if (in_array('address_needs_correction', $statusCodes)) {
-            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+        if (in_array('address_needs_correction', $statusCodes) &&
+            !empty($Snipt->get('statusAddressNeedsCorrectionMainERP'))
+        ) {
+            $template = $Snipt->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionMainERP');
+            $commentBody = $Snipt->get('statusAddressNeedsCorrectionMainERP');
+
+            if (in_array('building_number_not_found', $statusCodes) &&
+                !empty($Snipt->get('statusAddressNeedsCorrectionBuildingNotFoundERP'))
+            ) {
+                $commentBody .= ' ' . $Snipt->get('statusAddressNeedsCorrectionBuildingNotFoundERP');
+            }
+
+            if (in_array('building_number_missing', $statusCodes) &&
+                !empty($Snipt->get('statusAddressNeedsCorrectionBuildingIsMissingERP'))
+            ) {
+                $commentBody .= ' ' . $Snipt->get('statusAddressNeedsCorrectionBuildingIsMissingERP');
+            }
+
             if (!empty($predictions[0])) {
-                $commentBody .= " ". Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressNeedsCorrectionSecondaryERP') ." \n";
+                $commentBody .= " ". $Snipt->get('statusAddressNeedsCorrectionSecondaryERP') ." \n";
                 $commentCorrection = sprintf(
                     "  %s %s,  %s %s,  %s", // TODO: country specific formats.
                     $predictions[0]['streetName'],
@@ -177,12 +204,14 @@ class Frontend implements SubscriberInterface
             return $returnValue;
         }
         // Case #4: Address has multiple variants
-        if (in_array('address_multiple_variants', $statusCodes)) {
-            $template = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressTimestampCheckERP');
+        if (in_array('address_multiple_variants', $statusCodes) &&
+            !empty($Snipt->get('statusAddressMultipleVariantsMainERP'))
+        ) {
+            $template = $Snipt->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
-            $commentBody = Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsMainERP');
+            $commentBody = $Snipt->get('statusAddressMultipleVariantsMainERP');
             if (0 < count($predictions)) {
-                $commentBody .= " " . Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('statusAddressMultipleVariantsSecondaryERP') . " \n";
+                $commentBody .= " " . $Snipt->get('statusAddressMultipleVariantsSecondaryERP') . " \n";
                 $variants = [];
                 foreach ($predictions as $prediction) {
                     $variants[] = sprintf(
