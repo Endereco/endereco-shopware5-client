@@ -197,6 +197,7 @@ class Frontend implements SubscriberInterface
                     strtoupper($predictions[0]['countryCode'])
                 );
             } else {
+                $commentBody .= " ". $Snipt->get('statusAddressNoPredictions') ." \n";
                 $commentCorrection = null;
             }
 
