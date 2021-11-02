@@ -5,7 +5,7 @@
     <label lang="en">Endereco Address-Services for Shopware (Download)</label>
     <label lang="de">Endereco Adress-Services für Shopware (Download)</label>
 
-    <version>3.6.6</version>
+    <version>3.6.7</version>
 
     <link>https://www.endereco.de/shopware</link>
 
@@ -30,6 +30,23 @@
     </description>
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
+
+    <changelog version="3.6.7">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/30">Issue #30</a> Doppelte Adressprüfung bei AJAX-Formularen</li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li><a href="https://github.com/Endereco/endereco-shopware5-client/issues/30">Issue #30</a> Double addresscheck on submit of ajax forms</li>
+            </ul>
+        ]]>
+        </changes>
+    </changelog>
 
     <changelog version="3.6.6">
         <changes lang="de">

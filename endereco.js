@@ -232,7 +232,7 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
                             window.EnderecoIntegrator.submitResume = undefined;
                         }
                     }
-
+                    window.EnderecoIntegrator.hasSubmit = true
                     setTimeout(function() {
                         EAO.util.checkAddress()
                             .catch(function() {
@@ -241,7 +241,9 @@ EnderecoIntegrator.afterAMSActivation.push( function(EAO) {
                                         window.EnderecoIntegrator.submitResume();
                                     }
                                 }).catch()
-                            });
+                            }).finally( function() {
+                                window.EnderecoIntegrator.hasSubmit = false
+                        });
                     }, 300);
 
                     return false;
