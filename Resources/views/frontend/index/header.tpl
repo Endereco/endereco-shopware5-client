@@ -84,7 +84,10 @@
                         window.EnderecoIntegrator.config.ux.useStandardCss = !!('{config name='useDefaultCss' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.allowCloseModal = !!('{config name='allowCloseModal' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.confirmWithCheckbox = !!('{config name='confirmWithCheckbox' namespace="EnderecoShopware5Client"}');
+                        window.EnderecoIntegrator.config.ux.correctTranspositionedNames = !!('{config name='exchangeNamesAutomatically' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.changeFieldsOrder = false;
+                        window.EnderecoIntegrator.config.ux.showPhoneErrors = !!('{config name='showPhoneErrors' namespace="EnderecoShopware5Client"}');
+                        window.EnderecoIntegrator.config.phoneFormat = '{config name='phsUseFormat' namespace="EnderecoShopware5Client"}';
                         window.EnderecoIntegrator.countryMappingUrl = '{url controller='EnderecoShopware5Client' action='country' _seo=false}';
                         window.EnderecoIntegrator.config.templates.primaryButtonClasses = 'btn is--primary is--large';
                         window.EnderecoIntegrator.config.templates.secondaryButtonClasses = 'btn is--secondary is--large';
@@ -117,14 +120,29 @@
                                 "locality_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusAddressLocalityNeedsCorrection'}{/s}",
                                 "postal_code_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusAddressPostalCodeNeedsCorrection'}{/s}",
                                 "country_code_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusAddressCountryCodeNeedsCorrection'}{/s}",
+                                "phone_invalid": "{s namespace='EnderecoShopware5Client' name='statusPhoneInvalid'}{/s}",
+                                "phone_format_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusPhoneFormatNeedsCorrection'}{/s}",
+                            },
+                            "requiredFormat": {
+                              "E164": "{s namespace='EnderecoShopware5Client' name='hintFormatE164'}{/s}",
+                              "INTERNATIONAL": "{s namespace='EnderecoShopware5Client' name='hintFormatInternational'}{/s}",
+                              "NATIONAL": "{s namespace='EnderecoShopware5Client' name='hintFormatNational'}{/s}",
                             }
                         };
                         window.EnderecoIntegrator.activeServices = {
                             ams: !!('{config name='amsActive' namespace="EnderecoShopware5Client"}'),
                             emailService: !!('{config name='emailCheckActive' namespace="EnderecoShopware5Client"}'),
-                            personService: !!('{config name='salutationCheckActive' namespace="EnderecoShopware5Client"}')
+                            personService: !!('{config name='salutationCheckActive' namespace="EnderecoShopware5Client"}'),
+                            phs: !!('{config name='phsActive' namespace="EnderecoShopware5Client"}'),
                         }
                         window.EnderecoIntegrator.countryCodeToNameMapping = JSON.parse('{$endereco_country_mapping}');
+                        window.EnderecoIntegrator.countryMapping = JSON.parse('{$endereco_country_code2id_mapping}');
+                        window.EnderecoIntegrator.countryMappingReverse = JSON.parse('{$endereco_country_id2code_mapping}');
+
+                        window.EnderecoIntegrator.subdivisionCodeToNameMapping = JSON.parse('{$endereco_subdivision_mapping}');
+                        window.EnderecoIntegrator.subdivisionMapping = JSON.parse('{$endereco_subdivision_code2id_mapping}');
+                        window.EnderecoIntegrator.subdivisionMappingReverse = JSON.parse('{$endereco_subdivision_id2code_mapping}');
+
                         window.EnderecoIntegrator.ready = true;
                         clearInterval($interval);
                     }

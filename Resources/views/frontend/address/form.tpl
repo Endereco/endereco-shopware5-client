@@ -209,7 +209,20 @@
                             '{$inputPrefix}',
                             {
                                 name: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing'{else}'general'{/if},
-                                addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if}
+                                addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if},
+                                postfixCollection: {
+                                    countryCode: '{$inputPrefix}[country]',
+                                    subdivisionCode: '{$inputPrefix}[state]',
+                                    postalCode: '{$inputPrefix}[zipcode]',
+                                    locality: '{$inputPrefix}[city]',
+                                    streetFull: '{$inputPrefix}[street]',
+                                    streetName: '{$inputPrefix}[attribute][enderecostreetname]',
+                                    buildingNumber: '{$inputPrefix}[attribute][enderecobuildingnumber]',
+                                    addressStatus: '{$inputPrefix}[attribute][enderecoamsstatus]',
+                                    addressTimestamp: '{$inputPrefix}[attribute][enderecoamsts]',
+                                    addressPredictions: '{$inputPrefix}[attribute][enderecoamsapredictions]',
+                                    additionalInfo: '{$inputPrefix}[additionalAddressLine2]',
+                                }
                             }
                         );
                         window.EnderecoIntegrator.initPersonServices(
@@ -291,6 +304,27 @@
                     }
                 }, 100);
             })();
+        </script>
+    {/if}
+{/block}
+
+{block name='frontend_address_form_input_phone'}
+    {$smarty.block.parent}
+    {if {config name="showPhoneNumberField"}}
+        <script>
+          ( function() {
+            var $interval = setInterval( function() {
+              if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
+                window.EnderecoIntegrator.initPhoneServices(
+                  '{$inputPrefix}',
+                  {
+                    'name': 'general'
+                  }
+                );
+                clearInterval($interval);
+              }
+            }, 100);
+          })();
         </script>
     {/if}
 {/block}

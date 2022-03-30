@@ -319,8 +319,8 @@ class Frontend implements SubscriberInterface
             }
         }
 
-        $needToCheckBilling = false;
-        $needToCheckShipping = false;
+        $needToCheckBilling = '';
+        $needToCheckShipping = '';
 
         // Check if users billing address is alright.
         if (
@@ -328,13 +328,15 @@ class Frontend implements SubscriberInterface
             $sUserData['billingaddress'] &&
             array_key_exists('enderecoamsstatus', $sUserData['billingaddress']['attributes']) &&
             !in_array('address_selected_by_customer', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) &&
+            !in_array('address_selected_automatically', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) &&
             (
                 in_array('address_needs_correction', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_multiple_variants', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus']))
+                in_array('address_multiple_variants', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) ||
+                in_array('address_not_found', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus']))
             )
 
         ) {
-            $needToCheckBilling = true;
+            $needToCheckBilling = '1';
         }
         // Check if users billing address is alright.
         if (
@@ -343,13 +345,15 @@ class Frontend implements SubscriberInterface
             $sUserData['billingaddress']['id'] !== $sUserData['shippingaddress']['id'] &&
             array_key_exists('enderecoamsstatus', $sUserData['shippingaddress']['attributes']) &&
             !in_array('address_selected_by_customer', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) &&
+            !in_array('address_selected_automatically', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) &&
             (
                 in_array('address_needs_correction', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_multiple_variants', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus']))
+                in_array('address_multiple_variants', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) ||
+                in_array('address_not_found', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus']))
             )
 
         ) {
-            $needToCheckShipping = true;
+            $needToCheckShipping = '1';
         }
 
         $view->assign('endereco_need_to_check_billing', $needToCheckBilling);
@@ -431,11 +435,40 @@ class Frontend implements SubscriberInterface
         $countries = $countryRepository->findBy(['active' => 1]);
 
         $countryMapping = [];
+        $countryMappingId2Code = [];
+        $countryMappingCode2Id = [];
         foreach($countries as $country) {
             $countryMapping[$country->getIso()] = $country->getName();
+            $countryMappingId2Code[$country->getId()] = $country->getIso();
+            $countryMappingCode2Id[$country->getIso()] = $country->getId();
         }
 
         $view->assign('endereco_country_mapping', addslashes(json_encode($countryMapping)));
+        $view->assign('endereco_country_id2code_mapping', addslashes(json_encode($countryMappingId2Code)));
+        $view->assign('endereco_country_code2id_mapping', addslashes(json_encode($countryMappingCode2Id)));
+
+        $subdivisionRepository = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Country\State::class);
+        $subdivisions = $subdivisionRepository->findBy(['active' => 1]);
+
+        $subdivisionMapping = [];
+        $subdivisionMappingId2Code = [];
+        $subdivisionMappingCode2Id = [];
+        foreach($subdivisions as $subdivision) {
+            $subdisivionCode = implode(
+                '-',
+                [
+                    $countryMappingId2Code[$subdivision->getCountry()->getId()],
+                    $subdivision->getShortCode()
+                ]
+            );
+            $subdivisionMapping[$subdisivionCode] = $subdivision->getName();
+            $subdivisionMappingId2Code[$subdivision->getId()] = $subdisivionCode;
+            $subdivisionMappingCode2Id[$subdisivionCode] = $subdivision->getId();
+        }
+
+        $view->assign('endereco_subdivision_mapping', addslashes(json_encode($subdivisionMapping)));
+        $view->assign('endereco_subdivision_id2code_mapping', addslashes(json_encode($subdivisionMappingId2Code)));
+        $view->assign('endereco_subdivision_code2id_mapping', addslashes(json_encode($subdivisionMappingCode2Id)));
 
         // Create whitelist.
         // 1. These classes are always in the list.

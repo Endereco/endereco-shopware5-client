@@ -3,6 +3,7 @@ namespace EnderecoShopware5Client\Services;
 
 use GuzzleHttp\Client;
 use Shopware\Models\Country\Country;
+use Shopware\Models\Country\State;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\AddressRepository;
 use GuzzleHttp\Exception\RequestException;
@@ -64,6 +65,8 @@ class EnderecoService {
          * @var AddressRepository
          */
         $addressRepository = Shopware()->Models()->getRepository(Address::class);
+        $countryRepository = Shopware()->Models()->getRepository(Country::class);
+        $stateRepository = Shopware()->Models()->getRepository(State::class);
         // For each address.
         foreach ($addressIdArray as $addressId) {
 
@@ -75,9 +78,15 @@ class EnderecoService {
             try {
                 $address = $addressRepository->getOne($addressId)->getOneOrNullResult();
                 $addressArray = Shopware()->Models()->toArray($address);
+                $countryCode = strtoupper($countryRepository->find($addressArray['country'])->getIso());
+                $stateCode = '';
 
-                $countryRepository = Shopware()->Models()->getRepository(Country::class);
-                $countryCode = strtolower($countryRepository->find($addressArray['country'])->getIso());
+                if (!empty($addressArray['stateId']) && $stateRepository->find($addressArray['stateId'])) {
+                    $stateCode = $stateRepository->find($addressArray['stateId'])->getShortCode();
+                    if (strpos($stateCode, '-') === false) {
+                        $stateCode = trim($countryCode) . '-' . trim($stateCode);
+                    }
+                }
 
                 $locale = Shopware()->Container()->get('shop')->getLocale()->getLocale();
                 $languageCode = explode('_', $locale)[0];
@@ -101,6 +110,10 @@ class EnderecoService {
                             'streetFull' => $addressArray['street']
                         )
                     );
+
+                    if (!empty($stateCode)) {
+                        $message['params']['subdivisionCode'] = $stateCode;
+                    }
 
                     $newHeaders = array(
                         'Content-Type' => 'application/json',
@@ -134,8 +147,13 @@ class EnderecoService {
                                 'streetName' => $prediction['street'],
                                 'buildingNumber' => $prediction['houseNumber']
                             );
+
                             if (array_key_exists('additionalInfo', $prediction)) {
                                 $tempAddress['additionalInfo'] = $prediction['additionalInfo'];
+                            }
+
+                            if (array_key_exists('subdivisionCode', $prediction)) {
+                                $tempAddress['subdivisionCode'] = $prediction['subdivisionCode'];
                             }
 
                             $predictions[] = $tempAddress;
@@ -146,34 +164,7 @@ class EnderecoService {
                         }
 
                         // Create an array of statuses.
-                        $statuses = array();
-                        if (
-                            in_array('A1000', $result['result']['status']) &&
-                            !in_array('A1100', $result['result']['status'])
-                        ) {
-                            $statuses[] = 'address_correct';
-                        }
-                        if (
-                            in_array('A1000', $result['result']['status']) &&
-                            in_array('A1100', $result['result']['status'])
-                        ) {
-                            $statuses[] = 'address_needs_correction';
-                        }
-                        if (
-                            in_array('A2000', $result['result']['status'])
-                        ) {
-                            $statuses[] = 'address_multiple_variants';
-                        }
-                        if (
-                            in_array('A3000', $result['result']['status'])
-                        ) {
-                            $statuses[] = 'address_not_found';
-                        }
-                        if (
-                            in_array('A3100', $result['result']['status'])
-                        ) {
-                            $statuses[] = 'address_is_packstation';
-                        }
+                        $statuses = $result['result']['status'];
 
                         // Remove duplicates.
                         $statuses = array_values(array_unique($statuses));
@@ -188,6 +179,8 @@ class EnderecoService {
                             $attribute->setEnderecoamsstatus(implode(',', $statuses));
                             $attribute->setEnderecoamsapredictions(json_encode($predictions));
                             Shopware()->Container()->get('shopware_account.address_service')->update($address);
+
+                            // Save address if has minor correction?
                         }
                         $checkedAddressesCounter++;
                     }

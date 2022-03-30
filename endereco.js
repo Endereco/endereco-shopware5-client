@@ -21,6 +21,7 @@ if (!window.Promise) {
 EnderecoIntegrator.postfix = {
     ams: {
         countryCode: '[country]',
+        subdivisionCode: '[country_state_2]',
         postalCode: '[zipcode]',
         locality: '[city]',
         streetFull: '[street]',
@@ -33,49 +34,72 @@ EnderecoIntegrator.postfix = {
     },
     personServices: {
         salutation: '[salutation]',
-        firstName: '[firstname]'
+        firstName: '[firstname]',
+        lastName: '[lastname]',
+        title: '[title]'
     },
     emailServices: {
         email: '[email]'
+    },
+    phs: {
+        phone: '[phone]'
     }
 };
 
 EnderecoIntegrator.css = css[0][1];
 EnderecoIntegrator.resolvers.countryCodeWrite = function (value) {
     return new Promise(function (resolve, reject) {
-
-        var countyCodeEndpoint = EnderecoIntegrator.countryMappingUrl + '?countryCode=' + value;
-        new axios.get(countyCodeEndpoint, {
-            timeout: 3000
-        })
-            .then(function (response) {
-                resolve(response.data);
-            })
-            .catch(function (e) {
-                resolve(value);
-            }).finally(function () {
-        });
+        var key = window.EnderecoIntegrator.countryMapping[value.toUpperCase()];
+        if (key !== undefined) {
+            resolve(window.EnderecoIntegrator.countryMapping[value.toUpperCase()]);
+        } else {
+            resolve('');
+        }
     });
 }
 EnderecoIntegrator.resolvers.countryCodeRead = function (value) {
     return new Promise(function (resolve, reject) {
-        var countyEndpoint = EnderecoIntegrator.countryMappingUrl + '?countryId=' + value;
-        new axios.get(countyEndpoint, {
-            timeout: 3000
-        })
-            .then(function (response) {
-                resolve(response.data);
-            })
-            .catch(function (e) {
-                resolve(value);
-            }).finally(function () {
-        });
+        var key = window.EnderecoIntegrator.countryMappingReverse[value.toUpperCase()];
+        if (key !== undefined) {
+            resolve(window.EnderecoIntegrator.countryMappingReverse[value.toUpperCase()]);
+        } else {
+            resolve('');
+        }
     });
 }
+EnderecoIntegrator.resolvers.countryCodeSetValue = function (subscriber, value) {
+    subscriber.object.value = value;
+
+    if (!!$) {
+        $(subscriber.object).trigger('change');
+    }
+}
+
+EnderecoIntegrator.resolvers.subdivisionCodeWrite = function (value) {
+    return new Promise(function (resolve, reject) {
+        var key = window.EnderecoIntegrator.subdivisionMapping[value];
+        if (key !== undefined) {
+            resolve(window.EnderecoIntegrator.subdivisionMapping[value]);
+        } else {
+            resolve('');
+        }
+    });
+}
+EnderecoIntegrator.resolvers.subdivisionCodeRead = function (value) {
+    return new Promise(function (resolve, reject) {
+        var key = window.EnderecoIntegrator.subdivisionMappingReverse[value.toUpperCase()];
+        if (key !== undefined) {
+            resolve(window.EnderecoIntegrator.subdivisionMappingReverse[value.toUpperCase()]);
+        } else {
+            resolve('');
+        }
+    });
+}
+
 EnderecoIntegrator.resolvers.salutationWrite = function (value) {
     var mapping = {
-        'F': 'ms',
-        'M': 'mr'
+        'f': 'ms',
+        'm': 'mr'
     };
     return new Promise(function (resolve, reject) {
         resolve(mapping[value]);
@@ -83,8 +107,8 @@ EnderecoIntegrator.resolvers.salutationWrite = function (value) {
 }
 EnderecoIntegrator.resolvers.salutationRead = function (value) {
     var mapping = {
-        'ms': 'F',
-        'mr': 'M'
+        'ms': 'f',
+        'mr': 'm'
     };
     return new Promise(function (resolve, reject) {
         resolve(mapping[value]);

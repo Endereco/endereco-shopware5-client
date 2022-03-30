@@ -418,8 +418,41 @@
 
         <element type="boolean" scope="shop">
             <name>salutationCheckActive</name>
-            <label lang="de">Anredeprüfung basierend auf dem Vornamen aktivieren und Anrede automatisch setzen</label>
-            <label lang="en">Activate salutation check based on first name and set salutation automatically</label>
+            <label lang="de">Namensprüfung aktivieren und Anrede automatisch setzen</label>
+            <label lang="en">Activate name check and set salutation automatically</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>exchangeNamesAutomatically</name>
+            <label lang="de">Vertauschten Vor- und Nachnamen korrigieren (BETA)</label>
+            <label lang="en">Correct transpositioned first- and lastname (BETA)</label>
+            <value>false</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>phsActive</name>
+            <label lang="de">Rufnummernprüfung aktivieren</label>
+            <label lang="en">Activate phone number check</label>
+            <value>true</value>
+        </element>
+
+        <element type="select" scope="shop">
+            <name>phsUseFormat</name>
+            <label lang="de">Folgendes Format wird erwartet</label>
+            <label lang="en">Following format is expected</label>
+            <store>
+                <option><value></value><label lang="de">Alles zulassen</label><label lang="en">Germany</label></option>
+                <option><value>E164</value><label lang="de">E.164 (+4912345678901)</label><label lang="en">E.164 (+4912345678901)</label></option>
+                <option><value>INTERNATIONAL</value><label lang="de">International (+49 1234 5678901)</label><label lang="en">International (+49 1234 5678901)</label></option>
+                <option><value>NATIONAL</value><label lang="de">National (01234 5678901)</label><label lang="en">National (01234 5678901)</label></option>
+            </store>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>showPhoneErrors</name>
+            <label lang="de">Rufnummer Statusmeldungen anzeigen</label>
+            <label lang="en">Display phone status messages</label>
             <value>true</value>
         </element>
 
