@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shopware
+      MYSQL_USER: shopware
+      MYSQL_PASSWORD: shopware
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+  shopware:
+    image: endereco/shopware:5.7.10
+    environment:
+      SHOP_URL: http://localhost
+    volumes:
+      - ./:/var/www/html/custom/plugins/EnderecoShopware5Client
+    ports:
+      - 80:80
+    depends_on:
+      mysql:
+        condition: service_healthy
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
