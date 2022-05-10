@@ -80,6 +80,8 @@ class EnderecoShopware5Client extends Plugin
     public function uninstall(UninstallContext $uninstallContext)
     {
         $service = $this->container->get('shopware_attribute.crud_service');
+
+        // Standard address table attributes.
         if ($service->get('s_user_addresses_attributes', 'enderecoamsts')) {
             $service->delete('s_user_addresses_attributes', 'enderecoamsts');
         }
@@ -89,14 +91,47 @@ class EnderecoShopware5Client extends Plugin
         if ($service->get('s_user_addresses_attributes', 'enderecoamsapredictions')) {
             $service->delete('s_user_addresses_attributes', 'enderecoamsapredictions');
         }
-
-        // Attributes for street name and building number.
         if ($service->get('s_user_addresses_attributes', 'enderecostreetname')) {
             $service->delete('s_user_addresses_attributes', 'enderecostreetname');
         }
         if ($service->get('s_user_addresses_attributes', 'enderecobuildingnumber')) {
             $service->delete('s_user_addresses_attributes', 'enderecobuildingnumber');
         }
+
+        // Order billing address table attributes.
+        if ($service->get('s_order_billingaddress_attributes', 'enderecoamsts')) {
+            $service->delete('s_order_billingaddress_attributes', 'enderecoamsts');
+        }
+        if ($service->get('s_order_billingaddress_attributes', 'enderecoamsstatus')) {
+            $service->delete('s_order_billingaddress_attributes', 'enderecoamsstatus');
+        }
+        if ($service->get('s_order_billingaddress_attributes', 'enderecoamsapredictions')) {
+            $service->delete('s_order_billingaddress_attributes', 'enderecoamsapredictions');
+        }
+        if ($service->get('s_order_billingaddress_attributes', 'enderecostreetname')) {
+            $service->delete('s_order_billingaddress_attributes', 'enderecostreetname');
+        }
+        if ($service->get('s_order_billingaddress_attributes', 'enderecobuildingnumber')) {
+            $service->delete('s_order_billingaddress_attributes', 'enderecobuildingnumber');
+        }
+
+        // Order shipping address table attributes.
+        if ($service->get('s_order_shippingaddress_attributes', 'enderecoamsts')) {
+            $service->delete('s_order_shippingaddress_attributes', 'enderecoamsts');
+        }
+        if ($service->get('s_order_shippingaddress_attributes', 'enderecoamsstatus')) {
+            $service->delete('s_order_shippingaddress_attributes', 'enderecoamsstatus');
+        }
+        if ($service->get('s_order_shippingaddress_attributes', 'enderecoamsapredictions')) {
+            $service->delete('s_order_shippingaddress_attributes', 'enderecoamsapredictions');
+        }
+        if ($service->get('s_order_shippingaddress_attributes', 'enderecostreetname')) {
+            $service->delete('s_order_shippingaddress_attributes', 'enderecostreetname');
+        }
+        if ($service->get('s_order_shippingaddress_attributes', 'enderecobuildingnumber')) {
+            $service->delete('s_order_shippingaddress_attributes', 'enderecobuildingnumber');
+        }
+
 
         // Attribute sin the order.
         if ($service->get('s_order_attributes', 'endereco_order_billingamsts')) {
@@ -130,6 +165,8 @@ class EnderecoShopware5Client extends Plugin
          * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
          */
         $service = $this->container->get('shopware_attribute.crud_service');
+
+        // Default address attributes.
         if (!$service->get('s_user_addresses_attributes', 'enderecoamsts')) {
             $service->update('s_user_addresses_attributes', 'enderecoamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
                 'label' => 'Zeitpunkt der Adressprüfung',
@@ -146,10 +183,101 @@ class EnderecoShopware5Client extends Plugin
         }
         if (!$service->get('s_user_addresses_attributes', 'enderecoamsapredictions')) {
             $service->update('s_user_addresses_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'JSON mit möglicher Adresskorrekturen',
                 'displayInBackend' => false,
                 'custom' => true
             ]);
         }
+        if (!$service->get('s_user_addresses_attributes', 'enderecostreetname')) {
+            $service->update('s_user_addresses_attributes', 'enderecostreetname', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Straßenname',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_user_addresses_attributes', 'enderecobuildingnumber')) {
+            $service->update('s_user_addresses_attributes', 'enderecobuildingnumber', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Hausnummer',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+
+        // Billing  address attributes.
+        if (!$service->get('s_order_billingaddress_attributes', 'enderecoamsts')) {
+            $service->update('s_order_billingaddress_attributes', 'enderecoamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Zeitpunkt der Adressprüfung',
+                'custom' => true,
+                'displayInBackend' => true
+            ]);
+        }
+        if (!$service->get('s_order_billingaddress_attributes', 'enderecoamsstatus')) {
+            $service->update('s_order_billingaddress_attributes', 'enderecoamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Status der Adressprüfung',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_billingaddress_attributes', 'enderecoamsapredictions')) {
+            $service->update('s_order_billingaddress_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'JSON mit möglicher Adresskorrekturen',
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_billingaddress_attributes', 'enderecostreetname')) {
+            $service->update('s_order_billingaddress_attributes', 'enderecostreetname', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Straßenname',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_billingaddress_attributes', 'enderecobuildingnumber')) {
+            $service->update('s_order_billingaddress_attributes', 'enderecobuildingnumber', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Hausnummer',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+
+        // Shipping address attributes.
+        if (!$service->get('s_order_shippingaddress_attributes', 'enderecoamsts')) {
+            $service->update('s_order_shippingaddress_attributes', 'enderecoamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Zeitpunkt der Adressprüfung',
+                'custom' => true,
+                'displayInBackend' => true
+            ]);
+        }
+        if (!$service->get('s_order_shippingaddress_attributes', 'enderecoamsstatus')) {
+            $service->update('s_order_shippingaddress_attributes', 'enderecoamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Status der Adressprüfung',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_shippingaddress_attributes', 'enderecoamsapredictions')) {
+            $service->update('s_order_shippingaddress_attributes', 'enderecoamsapredictions', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'JSON mit möglicher Adresskorrekturen',
+                'displayInBackend' => false,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_shippingaddress_attributes', 'enderecostreetname')) {
+            $service->update('s_order_shippingaddress_attributes', 'enderecostreetname', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Straßenname',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+        if (!$service->get('s_order_shippingaddress_attributes', 'enderecobuildingnumber')) {
+            $service->update('s_order_shippingaddress_attributes', 'enderecobuildingnumber', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                'label' => 'Hausnummer',
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+
+        // Order attributes.
         if (!$service->get('s_order_attributes', 'endereco_order_billingamsts')) {
             $service->update('s_order_attributes', 'endereco_order_billingamsts', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
                 'displayInBackend' => false,
@@ -171,20 +299,6 @@ class EnderecoShopware5Client extends Plugin
         if (!$service->get('s_order_attributes', 'endereco_order_shippingamsstatus')) {
             $service->update('s_order_attributes', 'endereco_order_shippingamsstatus', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
                 'displayInBackend' => false,
-                'custom' => true
-            ]);
-        }
-
-        // Attributes for street name and building number.
-        if (!$service->get('s_user_addresses_attributes', 'enderecostreetname')) {
-            $service->update('s_user_addresses_attributes', 'enderecostreetname', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                'displayInBackend' => true,
-                'custom' => true
-            ]);
-        }
-        if (!$service->get('s_user_addresses_attributes', 'enderecobuildingnumber')) {
-            $service->update('s_user_addresses_attributes', 'enderecobuildingnumber', \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                'displayInBackend' => true,
                 'custom' => true
             ]);
         }
