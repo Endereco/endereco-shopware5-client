@@ -5,6 +5,8 @@ namespace EnderecoShopware5Client\Subscriber;
 use Enlight\Event\SubscriberInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\CacheManager;
+use Shopware\Components\Logger;
+use Shopware\Models\Country\Country;
 use Shopware\Models\Customer\Address;
 use Shopware\Models\Customer\AddressRepository;
 use Shopware_Controllers_Backend_Config;
@@ -256,6 +258,9 @@ class Frontend implements SubscriberInterface
         $currentPaymentMethod = $sUserData['additional']['payment']['name'];
         $continue = false;
 
+        // This method makes sure the street is saved in split form in attributes.
+        $this->ensureSplitStreet($sUserData);
+
         /**
          * If existing customers can be checked and the payment method is whitelisted -> check it.
          */
@@ -358,6 +363,56 @@ class Frontend implements SubscriberInterface
 
         $view->assign('endereco_need_to_check_billing', $needToCheckBilling);
         $view->assign('endereco_need_to_check_shipping', $needToCheckShipping);
+    }
+
+    /**
+     * This method iterates through all addresses of the existing user, checking if the full street needs to be split.
+     * If it needs to be split, then the spliting request is sent to endereco api.
+     * The parts are then saved in attributes.
+     *
+     * @param array $sUserData Array with the details of the current user.
+     *
+     * @return void
+     */
+    private function ensureSplitStreet($sUserData) {
+        /**
+         * @var AddressRepository
+         */
+        $addressRepository = Shopware()->Models()->getRepository(Address::class);
+
+        /**
+         * @var CountryRepository
+         */
+        $countryRepository = Shopware()->Models()->getRepository(Country::class);
+
+        $addresses = $addressRepository->getListArray($sUserData['additional']['user']['id']);
+
+        foreach ($addresses as $address) {
+
+            // Check if users address is alright.
+            $fullStreet = $address['street'];
+            $countryCode = strtoupper($countryRepository->find($address['countryId'])->getIso()) ?? 'DE';
+
+            if (
+                (strpos($fullStreet, $address['attribute']['enderecostreetname']) === false) ||
+                (strpos($fullStreet, $address['attribute']['enderecobuildingnumber']) === false)
+            ) {
+                list($streetName, $buildingNumber) = $this->enderecoService->splitStreet(
+                    $fullStreet,
+                    $countryCode
+                );
+
+                try {
+                    $address = $addressRepository->find($address['id']);
+                    $attribute = $address->getAttribute();
+                    $attribute->setEnderecostreetname($streetName);
+                    $attribute->setEnderecobuildingnumber($buildingNumber);
+                    Shopware()->Container()->get('shopware_account.address_service')->update($address);
+                } catch( \Exception $e) {
+                    $this->logger->addRecord(Logger::ERROR, $e->getMessage());
+                }
+            }
+        }
     }
 
 	public function checkExistingCustomerAddresses($args) {
