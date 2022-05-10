@@ -1,8 +1,7 @@
 import Promise from 'promise-polyfill';
 import merge from 'lodash.merge';
-import axios from 'axios';
-import EnderecoIntegrator from '../js-sdk/modules/integrator'; // Version 1.1.0
-import css from '../js-sdk/themes/default-theme.scss'
+import EnderecoIntegrator from '/node_modules/@endereco/js-sdk/modules/integrator';
+import css from './node_modules/@endereco/js-sdk/themes/default-theme.scss'
 import 'polyfill-array-includes';
 
 if ('NodeList' in window && !NodeList.prototype.forEach) {
