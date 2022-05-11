@@ -488,6 +488,13 @@
             <value>true</value>
         </element>
 
+        <element type="boolean" scope="shop">
+            <name>disableAutocomplete</name>
+            <label lang="de">Browser autocomplete deaktivieren</label>
+            <label lang="en">Disable browser autocomplete</label>
+            <value>true</value>
+        </element>
+
         <element type="text" scope="shop">
             <name>whitelistController</name>
             <label lang="de">Plugin JavaScript bei folgenden Controllern ausspielen. (kleingeschrieben und mit Komma getrennt, z.B. "index,newsleter,customcontroller")</label>
