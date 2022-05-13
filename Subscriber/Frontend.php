@@ -539,6 +539,8 @@ class Frontend implements SubscriberInterface
         }
         $view->assign('endereco_controller_whitelist', $whitelist);
 
+        $view->assign('endereco_ams_is_active', $this->config['amsActive']);
+
         $view->assign('endereco_is_active', $this->config['isPluginActive']);
 
         $mainColorCode =  $this->config['mainColor'];

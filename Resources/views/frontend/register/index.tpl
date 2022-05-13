@@ -40,7 +40,7 @@
     {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         {capture name='c_frontend_register_billing_fieldset_input_street'}
             {$smarty.block.parent}
-            {if $endereco_split_street}
+            {if $endereco_split_street && $endereco_ams_is_active}
                 <style>
 					.register--street:not(.mopt-wunschpaket-streetwrapper),
 					div.address--street:not(.mopt-wunschpaket-streetwrapper) {
@@ -224,7 +224,7 @@
         {capture name='c_frontend_register_shipping_fieldset_input_street'}
             {$smarty.block.parent}
 
-            {if $endereco_split_street}
+            {if $endereco_split_street && $endereco_ams_is_active}
                 <style>
 					.register--street:not(.mopt-wunschpaket-streetwrapper),
 					div.address--street:not(.mopt-wunschpaket-streetwrapper) {
