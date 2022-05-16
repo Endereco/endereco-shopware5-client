@@ -338,6 +338,8 @@
             <label lang="de">Straße in Straßenname und Hausnummer unterteilen</label>
             <label lang="en">Divide street into street name and house number</label>
             <value>false</value>
+            <description lang="de">Ist automatisch deaktiviert, wenn die Adressprüfung und Eingabe-Assistent deaktiviert ist</description>
+            <description lang="en">Is automatically deactivated, if the address check and input assistant is deactivated</description>
         </element>
 
         <element type="boolean" scope="shop">
