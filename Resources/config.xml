@@ -343,28 +343,24 @@
         </element>
 
         <element type="boolean" scope="shop">
-            <name>checkExisting</name>
-            <label lang="de">Auch Bestandskunden einmalig prüfen</label>
-            <label lang="en">Also check existing customers once</label>
-            <value>false</value>
-            <description lang="de">Bestandskunden, die noch nicht geprüft wurden, werden bei einem Login und Aufruf einer Adressformular-Seite automatisch geprüft.</description>
-            <description lang="en">Existing customers who have not yet been checked are automatically checked when they log in and access an address form page.</description>
+            <name>disableAutocomplete</name>
+            <label lang="de">Browser autocomplete deaktivieren</label>
+            <label lang="en">Disable browser autocomplete</label>
+            <value>true</value>
         </element>
 
         <element type="boolean" scope="shop">
-            <name>checkPayPalExpress</name>
-            <label lang="de">PayPal Express Checkout Adressen prüfen (BETA)</label>
-            <label lang="en">Check addresses from PayPal Express Checkout (BETA)</label>
-            <value>false</value>
-            <description lang="de">Prüft Kunden, die über PayPal Express Checkout bestellen. Da ihre Adresse von Paypal kommt, werden sie standardweise nicht geprüft.</description>
-            <description lang="en">Checks customers that order via paypal express checkout. Their address is normally not checked, because it comes from paypal.</description>
+            <name>checkOnSubmit</name>
+            <label lang="de">Adressprüfung beim Absenden des Formulars auslösen</label>
+            <label lang="en">Check address on submit</label>
+            <value>true</value>
         </element>
 
         <element type="boolean" scope="shop">
             <name>checkOnBlur</name>
             <label lang="de">Adressprüfung sofort nach Verlassen der Adressfelder ausführen</label>
             <label lang="en">Trigger address check immediately after leaving the address fields</label>
-            <value>true</value>
+            <value>false</value>
             <description lang="de">Ist die Funktion aktiv, wird die Adressprüfung sofort nach Eingabe der Adresse angestoßen. Ist die deaktiviert, erfolg die Prüfung beim Klick auf den "Speichern" Button.</description>
             <description lang="en">If the function is active, the address check is triggered immediately after the address is entered. If the function is deactivated, the check is performed by clicking the "Save" button.</description>
         </element>
@@ -394,13 +390,31 @@
             <name>confirmWithCheckbox</name>
             <label lang="de">Kunde muss eine fehlerhafte Adresse mit einer Checkbox bestätigen</label>
             <label lang="en">Customer has to confirm a faulty address with a checkbox</label>
+            <value>true</value>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>checkExisting</name>
+            <label lang="de">Auch Bestandskunden einmalig prüfen</label>
+            <label lang="en">Also check existing customers once</label>
             <value>false</value>
+            <description lang="de">Bestandskunden, die noch nicht geprüft wurden, werden bei einem Login und Aufruf einer Adressformular-Seite automatisch geprüft.</description>
+            <description lang="en">Existing customers who have not yet been checked are automatically checked when they log in and access an address form page.</description>
+        </element>
+
+        <element type="boolean" scope="shop">
+            <name>checkPayPalExpress</name>
+            <label lang="de">PayPal Express Checkout Adressen prüfen</label>
+            <label lang="en">Check addresses from PayPal Express Checkout</label>
+            <value>false</value>
+            <description lang="de">Prüft Kunden, die über PayPal Express Checkout bestellen. Da ihre Adresse von Paypal kommt, werden sie standardweise nicht geprüft.</description>
+            <description lang="en">Checks customers that order via paypal express checkout. Their address is normally not checked, because it comes from paypal.</description>
         </element>
 
         <element type="boolean" scope="shop">
             <name>addInternalComment</name>
-            <label lang="de">Status der Prüfung im internen Kommentar der Bestellung hinterlegen (BETA)</label>
-            <label lang="en">Store the status of the check in the internal comment of the order (BETA)</label>
+            <label lang="de">Status der Prüfung im internen Kommentar der Bestellung hinterlegen</label>
+            <label lang="en">Store the status of the check in the internal comment of the order</label>
             <value>false</value>
         </element>
 
@@ -408,7 +422,7 @@
             <name>emailCheckActive</name>
             <label lang="de">E-Mail Adressprüfung aktivieren</label>
             <label lang="en">Activate e-mail address verification</label>
-            <value>true</value>
+            <value>false</value>
         </element>
 
         <element type="boolean" scope="shop">
@@ -422,7 +436,7 @@
             <name>salutationCheckActive</name>
             <label lang="de">Namensprüfung aktivieren und Anrede automatisch setzen</label>
             <label lang="en">Activate name check and set salutation automatically</label>
-            <value>true</value>
+            <value>false</value>
         </element>
 
         <element type="boolean" scope="shop">
@@ -436,7 +450,7 @@
             <name>phsActive</name>
             <label lang="de">Rufnummernprüfung aktivieren</label>
             <label lang="en">Activate phone number check</label>
-            <value>true</value>
+            <value>false</value>
         </element>
 
         <element type="select" scope="shop">
@@ -444,10 +458,10 @@
             <label lang="de">Folgendes Format wird erwartet</label>
             <label lang="en">Following format is expected</label>
             <store>
-                <option><value></value><label lang="de">Alles zulassen</label><label lang="en">Germany</label></option>
                 <option><value>E164</value><label lang="de">E.164 (+4912345678901)</label><label lang="en">E.164 (+4912345678901)</label></option>
                 <option><value>INTERNATIONAL</value><label lang="de">International (+49 1234 5678901)</label><label lang="en">International (+49 1234 5678901)</label></option>
                 <option><value>NATIONAL</value><label lang="de">National (01234 5678901)</label><label lang="en">National (01234 5678901)</label></option>
+                <option><value></value><label lang="de">Alles zulassen</label><label lang="en">Germany</label></option>
             </store>
         </element>
 
@@ -469,38 +483,30 @@
             <name>mainColor</name>
             <label lang="de">Hauptfarbe im Dropdown</label>
             <label lang="en">Main colour in the dropdown</label>
+            <description lang="de">Farbenwert als Hex Wert, z.B. #f5f1f2</description>
+            <description lang="en">Hex value of the color, e.g. #f5f1f2</description>
         </element>
 
         <element type="text" scope="shop">
             <name>errorColor</name>
             <label lang="de">Fehlerfarbe im Modal</label>
             <label lang="en">Error color in modal</label>
+            <description lang="de">Farbenwert als Hex Wert, z.B. #f5f1f2</description>
+            <description lang="en">Hex value of the color, e.g. #f5f1f2</description>
         </element>
 
         <element type="text" scope="shop">
             <name>successColor</name>
             <label lang="de">Auswahlfarbe im Modal</label>
             <label lang="en">Selection color in modal</label>
-        </element>
-
-        <element type="boolean" scope="shop">
-            <name>checkOnSubmit</name>
-            <label lang="de">Adressprüfung beim Absenden des Formulars auslösen</label>
-            <label lang="en">Check address on submit</label>
-            <value>true</value>
-        </element>
-
-        <element type="boolean" scope="shop">
-            <name>disableAutocomplete</name>
-            <label lang="de">Browser autocomplete deaktivieren</label>
-            <label lang="en">Disable browser autocomplete</label>
-            <value>true</value>
+            <description lang="de">Farbenwert als Hex Wert, z.B. #f5f1f2</description>
+            <description lang="en">Hex value of the color, e.g. #f5f1f2</description>
         </element>
 
         <element type="text" scope="shop">
             <name>whitelistController</name>
             <label lang="de">Plugin JavaScript bei folgenden Controllern ausspielen. (kleingeschrieben und mit Komma getrennt, z.B. "index,newsleter,customcontroller")</label>
-            <label lang="en">Use plugin javascrpt on following controller names. (lowercase and comma separated, e.g. "index,newsletter,customcontroller")</label>
+            <label lang="en">Use plugin javascript on following controller names. (lowercase and comma separated, e.g. "index,newsletter,customcontroller")</label>
             <value></value>
         </element>
 
