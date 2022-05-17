@@ -78,6 +78,7 @@
                         window.EnderecoIntegrator.config.trigger.onblur = !!('{config name='checkOnBlur' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.trigger.onsubmit = !!('{config name='checkOnSubmit' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.smartFill = !!('{config name='smartFill' namespace="EnderecoShopware5Client"}');
+                        window.EnderecoIntegrator.config.ux.disableBrowserAutocomplete = !! ('{config name='disableAutocomplete' namespace="EnderecoShopware5Client"}')
                         window.EnderecoIntegrator.config.ux.checkExisting = !!('{config name='checkExisting' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.resumeSubmit = !!('{config name='resumeSubmit' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.showEmailStatus = !!('{config name='showEmailStatus' namespace="EnderecoShopware5Client"}');

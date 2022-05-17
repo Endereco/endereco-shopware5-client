@@ -55,7 +55,7 @@
 				}
             </style>
 
-            {if $endereco_split_street}
+            {if $endereco_split_street && $endereco_ams_is_active}
                 <style>
 					.register--street:not(.mopt-wunschpaket-streetwrapper),
 					div.address--street:not(.mopt-wunschpaket-streetwrapper) {

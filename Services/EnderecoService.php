@@ -49,6 +49,53 @@ class EnderecoService {
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
+    public function splitStreet($fullStreet, $countryCode) {
+
+        try {
+            $message = array(
+                'jsonrpc' => '2.0',
+                'id' => 1,
+                'method' => 'splitStreet',
+                'params' => array(
+                    'formatCountry' => $countryCode,
+                    'language' => 'de',
+                    'street' => $fullStreet,
+                )
+            );
+
+            $newHeaders = array(
+                'Content-Type' => 'application/json',
+                'X-Auth-Key' => $this->apiKey,
+                'X-Transaction-Id' => 'not_required',
+                'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
+                'X-Agent' => $this->info,
+            );
+
+            $response = $this->httpClient->post(
+                $this->serviceUrl,
+                array(
+                    'headers' => $newHeaders,
+                    'body' => json_encode($message)
+                )
+            );
+            $result = json_decode($response->getBody(), true);
+
+            if (array_key_exists('result', $result)) {
+                return [$result['result']['streetName'], $result['result']['houseNumber']];
+            }
+        } catch (RequestException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                if (500 <= $response->getStatusCode()) {
+                    $this->logger->addRecord(Logger::ERROR, $e->getMessage());
+                }
+            }
+        } catch(\Exception $e) {
+            $this->logger->addRecord(Logger::ERROR, $e->getMessage());
+        }
+        return ["", ""];
+    }
+
     public function checkAddresses($addressIdArray = array()) {
         $checkedAddressesCounter = 0;
         if(!$addressIdArray) {
