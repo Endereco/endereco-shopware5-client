@@ -391,7 +391,12 @@ class Frontend implements SubscriberInterface
 
             // Check if users address is alright.
             $fullStreet = $address['street'];
-            $countryCode = strtoupper($countryRepository->find($address['countryId'])->getIso()) ?? 'DE';
+
+            if (!empty($countryRepository->find($address['countryId'])->getIso())) {
+                $countryCode = strtoupper($countryRepository->find($address['countryId'])->getIso());
+            } else {
+                $countryCode = 'DE';
+            }
 
             if (
                 (strpos($fullStreet, $address['attribute']['enderecostreetname']) === false) ||
