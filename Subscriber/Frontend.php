@@ -410,8 +410,22 @@ class Frontend implements SubscriberInterface
                 try {
                     $address = $addressRepository->find($address['id']);
                     $attribute = $address->getAttribute();
-                    $attribute->setEnderecostreetname($streetName);
-                    $attribute->setEnderecobuildingnumber($buildingNumber);
+
+                    // Some plugins, like amazon pay, don't create attribute entity, when they create address.
+                    // so we check if attribute entity is missing and add it manually.
+                    if (!$attribute) {
+                        $attribute = new \Shopware\Models\Attribute\CustomerAddress();
+                        $address->setAttribute($attribute);
+                    }
+
+                    if ($attribute && method_exists($attribute, 'setEnderecostreetname')) {
+                        $attribute->setEnderecostreetname($streetName);
+                    }
+
+                    if ($attribute && method_exists($attribute, 'setEnderecobuildingnumber')) {
+                        $attribute->setEnderecobuildingnumber($buildingNumber);
+                    }
+
                     Shopware()->Container()->get('shopware_account.address_service')->update($address);
                 } catch( \Exception $e) {
                     $this->logger->addRecord(Logger::ERROR, $e->getMessage());

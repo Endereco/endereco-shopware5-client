@@ -222,12 +222,20 @@ class EnderecoService {
                         // Save the status and predictions.
                         if ($address) {
                             $attribute = $address->getAttribute();
-                            $attribute->setEnderecoamsts($timestamp);
-                            $attribute->setEnderecoamsstatus(implode(',', $statuses));
-                            $attribute->setEnderecoamsapredictions(json_encode($predictions));
+                            if (!$attribute) {
+                                $attribute = new \Shopware\Models\Attribute\CustomerAddress();
+                                $address->setAttribute($attribute);
+                            }
+                            if ($attribute && method_exists($attribute, 'setEnderecoamsts')) {
+                                $attribute->setEnderecoamsts($timestamp);
+                            }
+                            if ($attribute && method_exists($attribute, 'setEnderecoamsstatus')) {
+                                $attribute->setEnderecoamsstatus(implode(',', $statuses));
+                            }
+                            if ($attribute && method_exists($attribute, 'setEnderecoamsapredictions')) {
+                                $attribute->setEnderecoamsapredictions(json_encode($predictions));
+                            }
                             Shopware()->Container()->get('shopware_account.address_service')->update($address);
-
-                            // Save address if has minor correction?
                         }
                         $checkedAddressesCounter++;
                     }
