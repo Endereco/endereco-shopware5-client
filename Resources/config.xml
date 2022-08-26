@@ -465,6 +465,29 @@
             </store>
         </element>
 
+        <element type="select" scope="shop">
+            <name>phsDefaultFieldType</name>
+            <label lang="de">Erlaubte Telefonnummer</label>
+            <label lang="en">Allowed phone number</label>
+            <store>
+                <option>
+                    <value>general</value>
+                    <label lang="de">Mobil- oder Festnetznummer</label>
+                    <label lang="en">Mobile or fixed line number</label>
+                </option>
+                <option>
+                    <value>mobile</value>
+                    <label lang="de">Nur Mobilfunknummer</label>
+                    <label lang="en">Only mobile number</label>
+                </option>
+                <option>
+                    <value>fixedLine</value>
+                    <label lang="de">Nur Festnetznummer</label>
+                    <label lang="en">Only fixed line number</label>
+                </option>
+            </store>
+        </element>
+
         <element type="boolean" scope="shop">
             <name>showPhoneErrors</name>
             <label lang="de">Rufnummer Statusmeldungen anzeigen</label>

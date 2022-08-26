@@ -61,7 +61,40 @@
 {/block}
 
 {block name="frontend_index_header_javascript_tracking"}
+    {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
+        <script>
+            // Konfiguration und spezifische Anpassungen.
+            if (undefined === window.EnderecoIntegrator) {
+                window.EnderecoIntegrator = {};
+            }
+            if (!window.EnderecoIntegrator.onLoad) {
+                window.EnderecoIntegrator.onLoad = [];
+            }
+
+            function enderecoInitAMS(prefix, config) {
+                if (undefined !== window.EnderecoIntegrator.initAMS) {
+                    window.EnderecoIntegrator.initAMS(prefix, config);
+                } else {
+                    window.EnderecoIntegrator.onLoad.push(function () {
+                        window.EnderecoIntegrator.initAMS(prefix, config);
+                    });
+                }
+            }
+
+            function enderecoInitPhoneServices(prefix, config) {
+                if (undefined !== window.EnderecoIntegrator.initPhoneServices) {
+                    window.EnderecoIntegrator.initPhoneServices(prefix, config);
+                } else {
+                    window.EnderecoIntegrator.onLoad.push(function () {
+                        window.EnderecoIntegrator.initPhoneServices(prefix, config);
+                    });
+                }
+            }
+        </script>
+    {/if}
+
     {$smarty.block.parent}
+
     {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}
         <script>
             ( function() {
@@ -87,8 +120,10 @@
                         window.EnderecoIntegrator.config.ux.confirmWithCheckbox = !!('{config name='confirmWithCheckbox' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.correctTranspositionedNames = !!('{config name='exchangeNamesAutomatically' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.ux.changeFieldsOrder = false;
+                        window.EnderecoIntegrator.config.ux.showPhoneFlag = true;
                         window.EnderecoIntegrator.config.ux.showPhoneErrors = !!('{config name='showPhoneErrors' namespace="EnderecoShopware5Client"}');
                         window.EnderecoIntegrator.config.phoneFormat = '{config name='phsUseFormat' namespace="EnderecoShopware5Client"}';
+                        window.EnderecoIntegrator.config.defaultPhoneType = '{config name='phsDefaultFieldType' namespace="EnderecoShopware5Client"}';
                         window.EnderecoIntegrator.countryMappingUrl = '{url controller='EnderecoShopware5Client' action='country' _seo=false}';
                         window.EnderecoIntegrator.config.templates.primaryButtonClasses = 'btn is--primary is--large';
                         window.EnderecoIntegrator.config.templates.secondaryButtonClasses = 'btn is--secondary is--large';
@@ -123,6 +158,8 @@
                                 "country_code_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusAddressCountryCodeNeedsCorrection'}{/s}",
                                 "phone_invalid": "{s namespace='EnderecoShopware5Client' name='statusPhoneInvalid'}{/s}",
                                 "phone_format_needs_correction": "{s namespace='EnderecoShopware5Client' name='statusPhoneFormatNeedsCorrection'}{/s}",
+                                "phone_should_be_fixed": "{s namespace='EnderecoShopware5Client' name='statusPhoneShouldBeFixedLine'}{/s}",
+                                "phone_should_be_mobile":"{s namespace='EnderecoShopware5Client' name='statusPhoneShouldBeMobile'}{/s}",
                             },
                             "requiredFormat": {
                               "E164": "{s namespace='EnderecoShopware5Client' name='hintFormatE164'}{/s}",

@@ -316,7 +316,10 @@
             var $interval = setInterval( function() {
               if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                 window.EnderecoIntegrator.initPhoneServices(
-                  '{$inputPrefix}',
+                    {
+                        'phone': '[name="address[phone]"]',
+                        'countryCode': '[name="address[country]"]',
+                    },
                   {
                     'name': 'general'
                   }

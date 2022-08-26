@@ -44,7 +44,10 @@
             var $interval = setInterval( function() {
               if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                 window.EnderecoIntegrator.initPhoneServices(
-                  'register[personal]',
+                  {
+                      'phone': '[name="register[personal][phone]"]',
+                      'countryCode': '[name="register[billing][country]"]',
+                  },
                   {
                     'name': 'general'
                   }
