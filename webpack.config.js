@@ -55,8 +55,11 @@ module.exports = {
           options: {
             presets: ['@babel/preset-env']
           }
-        },
-        exclude: /node_modules/
+        }
+      },
+      {
+        test: /\.svg$/,
+        use: {loader: 'html-loader'}
       },
       {
         test: /\.(png|jpg|gif)$/,

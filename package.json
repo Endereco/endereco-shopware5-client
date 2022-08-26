@@ -14,7 +14,7 @@
     "@babel/polyfill": "^7.8.7",
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.9.0",
-    "@endereco/js-sdk": "1.2.1",
+    "@endereco/js-sdk": "1.4.2",
     "axios": "^0.18.1",
     "babel-loader": "^8.1.0",
     "babel-preset-env": "^1.7.0",
@@ -43,6 +43,6 @@
     "not ie <= 9"
   ],
   "devDependencies": {
-    "sass-loader": "^10.0.2"
+    "sass-loader": "^10.3.1"
   }
 }

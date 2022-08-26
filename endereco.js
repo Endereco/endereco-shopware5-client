@@ -292,3 +292,10 @@ window.EnderecoIntegrator.asyncCallbacks = [];
 window.EnderecoIntegrator.waitUntilReady().then(function () {
     //
 });
+
+if (!window.EnderecoIntegrator.onLoad) {
+    window.EnderecoIntegrator.onLoad = [];
+}
+window.EnderecoIntegrator.onLoad.push( function() {
+    window.EnderecoIntegrator.config.apiUrl = "https://"+window.location.hostname+"/bundles/enderecoshopware6clientstore/io.php";
+});
