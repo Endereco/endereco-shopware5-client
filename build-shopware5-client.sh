@@ -38,7 +38,7 @@ find ./EnderecoAMS -type f -exec sed -i 's/endereco_order_billingamsstatus/ender
 find ./EnderecoAMS -type f -exec sed -i 's/endereco_order_shippingamsstatus/endereco_order_swshippingamsstatus/g' {} \;
 
 find ./EnderecoAMS -type f -exec rename 's/EnderecoShopware5Client/EnderecoAMS/g' {} \;
-zip -r EnderecoAMS-$branch.zip EnderecoAMS
+zip -r ../EnderecoAMS-$branch.zip EnderecoAMS
 rm -rf EnderecoAMS
 
 
@@ -56,5 +56,5 @@ rm -f EnderecoShopware5Client/webpack.config.js
 rm -f EnderecoShopware5Client/docker-compose.yml
 rm -f EnderecoShopware5Client/build-shopware5-client.sh
 
-zip -r EnderecoShopware5Client-$branch.zip EnderecoShopware5Client
+zip -r ../EnderecoShopware5Client-$branch.zip EnderecoShopware5Client
 rm -rf EnderecoShopware5Client

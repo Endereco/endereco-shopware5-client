@@ -181,6 +181,12 @@
                         window.EnderecoIntegrator.subdivisionMapping = JSON.parse('{$endereco_subdivision_code2id_mapping}');
                         window.EnderecoIntegrator.subdivisionMappingReverse = JSON.parse('{$endereco_subdivision_id2code_mapping}');
 
+
+                        // Execute all function that have been called throughout the page.
+                        window.EnderecoIntegrator.onLoad.forEach(function (callback) {
+                            callback();
+                        });
+
                         window.EnderecoIntegrator.ready = true;
                         clearInterval($interval);
                     }
