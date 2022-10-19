@@ -78,7 +78,7 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: '(none)',
+  devtool: false,
   plugins: [
   ]
 };
