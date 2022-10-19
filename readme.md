@@ -4,4 +4,4 @@
 
 Um den Plugin lokal zu testen, gib in Konsole `docker-compose up -d`. 
 
-Dadurch startet eine lokale Shopware 5 Instanz
+Dadurch startet eine lokale Shopware 5 Instanz.

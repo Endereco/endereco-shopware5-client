@@ -26,7 +26,11 @@
             ( function() {
                 var $interval = setInterval( function() {
                     if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
-                        window.EnderecoIntegrator.initEmailServices('register[personal]');
+                        window.EnderecoIntegrator.initEmailServices({
+                            'email': '[name="register[personal][email]"]'
+                        },{
+                            'name' : 'register'
+                        });
                         clearInterval($interval);
                     }
                 }, 100);
