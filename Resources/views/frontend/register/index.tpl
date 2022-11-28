@@ -139,7 +139,19 @@
                 var $interval = setInterval( function() {
                     if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                         window.EnderecoIntegrator.initAMS(
-                            'register[billing]',
+                            {
+                                countryCode: '[name="register[billing][country]"]',
+                                subdivisionCode: '[data-address-type=\"billing\"] .select--state',
+                                postalCode: '[name="register[billing][zipcode]"]',
+                                locality: '[name="register[billing][city]"]',
+                                streetFull: '[name="register[billing][street]"]',
+                                streetName: '[name="register[billing][attribute][enderecostreetname]"]',
+                                buildingNumber: '[name="register[billing][attribute][enderecobuildingnumber]"]',
+                                addressStatus: '[name="register[billing][attribute][enderecoamsstatus]"]',
+                                addressTimestamp: '[name="register[billing][attribute][enderecoamsts]"]',
+                                addressPredictions: '[name="register[billing][attribute][enderecoamsapredictions]"]',
+                                additionalInfo: '[name="register[billing][additionalAddressLine2]"]',
+                            },
                             {
                                 name: 'billing',
                                 addressType: 'billing_address'
@@ -326,7 +338,19 @@
                 var $interval = setInterval( function() {
                     if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                         window.EnderecoIntegrator.initAMS(
-                            'register[shipping]',
+                            {
+                                countryCode: '[name="register[shipping][country]"]',
+                                subdivisionCode: '[data-address-type=\"shipping\"] .select--state',
+                                postalCode: '[name="register[shipping][zipcode]"]',
+                                locality: '[name="register[shipping][city]"]',
+                                streetFull: '[name="register[shipping][street]"]',
+                                streetName: '[name="register[shipping][attribute][enderecostreetname]"]',
+                                buildingNumber: '[name="register[shipping][attribute][enderecobuildingnumber]"]',
+                                addressStatus: '[name="register[shipping][attribute][enderecoamsstatus]"]',
+                                addressTimestamp: '[name="register[shipping][attribute][enderecoamsts]"]',
+                                addressPredictions: '[name="register[shipping][attribute][enderecoamsapredictions]"]',
+                                additionalInfo: '[name="register[shipping][additionalAddressLine2]"]',
+                            },
                             {
                                 name: 'shipping',
                                 addressType: 'shipping_address'
