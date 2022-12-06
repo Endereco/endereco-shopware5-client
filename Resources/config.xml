@@ -528,8 +528,8 @@
 
         <element type="text" scope="shop">
             <name>whitelistController</name>
-            <label lang="de">Plugin JavaScript bei folgenden Controllern ausspielen. (kleingeschrieben und mit Komma getrennt, z.B. "index,newsleter,customcontroller")</label>
-            <label lang="en">Use plugin javascript on following controller names. (lowercase and comma separated, e.g. "index,newsletter,customcontroller")</label>
+            <label lang="de">Das Javascript wird bei den hier hinterlegten Controllern ausgegeben. Die Controller Namen müssen klein geschrieben und mit "," getrennt eingeben werden. (z.B. "index,newsletter,customcontroller")</label>
+            <label lang="en">The javascript bundle will be loaded for the controllers defined here. The controller names must be entered in lower case and separated by ",". (e.g. "index,newsletter,customcontroller")</label>
             <value></value>
         </element>
 
