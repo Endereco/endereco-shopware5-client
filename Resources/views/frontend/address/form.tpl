@@ -206,23 +206,22 @@
                 var $interval = setInterval( function() {
                     if (window.EnderecoIntegrator && window.EnderecoIntegrator.ready) {
                         window.EnderecoIntegrator.initAMS(
-                            '{$inputPrefix}',
+                            {
+                                countryCode: '[name="{$inputPrefix}[country]"]',
+                                subdivisionCode: '[data-address-type=\"{$inputPrefix}\"] .select--state',
+                                postalCode: '[name="{$inputPrefix}[zipcode]"]',
+                                locality: '[name="{$inputPrefix}[city]"]',
+                                streetFull: '[name="{$inputPrefix}[street]"]',
+                                streetName: '[name="{$inputPrefix}[attribute][enderecostreetname]"]',
+                                buildingNumber: '[name="{$inputPrefix}[attribute][enderecobuildingnumber]"]',
+                                addressStatus: '[name="{$inputPrefix}[attribute][enderecoamsstatus]"]',
+                                addressTimestamp: '[name="{$inputPrefix}[attribute][enderecoamsts]"]',
+                                addressPredictions: '[name="{$inputPrefix}[attribute][enderecoamsapredictions]"]',
+                                additionalInfo: '[name="{$inputPrefix}[additionalAddressLine2]"]',
+                            },
                             {
                                 name: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing'{else}'general'{/if},
-                                addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if},
-                                postfixCollection: {
-                                    countryCode: '{$inputPrefix}[country]',
-                                    subdivisionCode: '{$inputPrefix}[state]',
-                                    postalCode: '{$inputPrefix}[zipcode]',
-                                    locality: '{$inputPrefix}[city]',
-                                    streetFull: '{$inputPrefix}[street]',
-                                    streetName: '{$inputPrefix}[attribute][enderecostreetname]',
-                                    buildingNumber: '{$inputPrefix}[attribute][enderecobuildingnumber]',
-                                    addressStatus: '{$inputPrefix}[attribute][enderecoamsstatus]',
-                                    addressTimestamp: '{$inputPrefix}[attribute][enderecoamsts]',
-                                    addressPredictions: '{$inputPrefix}[attribute][enderecoamsapredictions]',
-                                    additionalInfo: '{$inputPrefix}[additionalAddressLine2]',
-                                }
+                                addressType: {if !$formData.id || $sUserData.additional.user.default_billing_address_id != $formData.id}'shipping_address'{elseif $sUserData.additional.user.default_billing_address_id == $formData.id}'billing_address'{else}'general_address'{/if}
                             }
                         );
                         window.EnderecoIntegrator.initPersonServices(

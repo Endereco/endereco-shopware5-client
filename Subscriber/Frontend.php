@@ -546,7 +546,7 @@ class Frontend implements SubscriberInterface
 
         // Create whitelist.
         // 1. These classes are always in the list.
-        $whitelist = ['register', 'address', 'account', 'checkout'];
+        $whitelist = ['register', 'address', 'account', 'checkout', 'premsonepagecheckout'];
         $addController = explode(
             ',',
             strtolower(

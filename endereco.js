@@ -297,7 +297,6 @@ if (!window.EnderecoIntegrator.onLoad) {
     window.EnderecoIntegrator.onLoad = [];
 }
 
-
 (function() {
    setInterval( function() {
        if (
