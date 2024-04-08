@@ -32,6 +32,9 @@ class EnderecoShopware5Client extends Plugin
         parent::build($container);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function install(InstallContext $installContext)
     {
         $this->_addAttributes();
@@ -148,7 +151,9 @@ class EnderecoShopware5Client extends Plugin
         }
 
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
-        $metaDataCache->deleteAll();
+        if (method_exists($metaDataCache, 'deleteAll')) {
+            $metaDataCache->deleteAll();
+        }
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
         $uninstallContext->scheduleClearCache(DeactivateContext::CACHE_LIST_ALL);
     }
@@ -335,7 +340,9 @@ class EnderecoShopware5Client extends Plugin
         }
 
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
-        $metaDataCache->deleteAll();
+        if (method_exists($metaDataCache, 'deleteAll')) {
+            $metaDataCache->deleteAll();
+        }
         Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
     }
 }

@@ -1,0 +1,64 @@
+{
+    "name": "endereco/endereco-shopware5-client",
+    "autoload": {
+        "psr-4": {
+            "Endereco\\EnderecoShopware5Client\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ilja Weber",
+            "email": "ilja@endereco.de"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.7.2",
+        "brainmaestro/composer-git-hooks": "^2.8",
+        "phpstan/phpstan": "^1.10",
+        "phpmd/phpmd": "^2.10"
+    },
+    "extra": {
+        "hooks": {
+            "pre-commit": [
+                "composer qa"
+            ]
+        }
+    },
+    "scripts": {
+        "qa": [
+            "@phpcs",
+            "@phpmd",
+            "@phpstan",
+            "@phpcompat"
+        ],
+        "phpcbf": "phpcbf --standard=PSR12 --ignore=vendor/*,shops/*,node_modules/* ./**/*.php",
+        "phpcs": "phpcs --standard=PSR12 --ignore=vendor/*,shops/*,node_modules/* ./**/*.php",
+        "phpstan": [
+            "phpstan analyse -c phpstan.5.3.0.neon",
+            "phpstan analyse -c phpstan.5.3.7.neon",
+            "phpstan analyse -c phpstan.5.4.6.neon",
+            "phpstan analyse -c phpstan.5.5.10.neon",
+            "phpstan analyse -c phpstan.5.6.10.neon",
+            "phpstan analyse -c phpstan.5.7.0.neon"
+        ],
+        "phpmd": "./check_phpmd.sh",
+        "phpcompat": "bash test_php_versions.sh",
+        "post-install-cmd": [
+            "chmod +x test_php_versions.sh",
+            "chmod +x fetch-shops.sh",
+            "chmod +x build-shopware5-client.sh",
+            "chmod +x check_phpmd.sh",
+            "cghooks add --ignore-lock"
+        ],
+        "post-update-cmd": [
+            "chmod +x test_php_versions.sh",
+            "chmod +x fetch-shops.sh",
+            "chmod +x build-shopware5-client.sh",
+            "chmod +x check_phpmd.sh",
+            "cghooks update"
+        ]
+    }
+}

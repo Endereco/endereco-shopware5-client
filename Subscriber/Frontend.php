@@ -13,14 +13,14 @@ use Shopware_Controllers_Backend_Config;
 
 class Frontend implements SubscriberInterface
 {
-	/**
-	 * @var string
-	 */
-	private $pluginDir;
-	private $pluginInfo;
-	private $logger;
-	private $http;
-	private $enderecoService;
+    /**
+     * @var string
+     */
+    private $pluginDir;
+    private $pluginInfo;
+    private $logger;
+    private $http;
+    private $enderecoService;
     private $config;
     private $themeName;
 
@@ -29,12 +29,13 @@ class Frontend implements SubscriberInterface
      */
     private $cacheManager;
 
-	/**
-	 * @param string $pluginDir
-	 */
-	public function __construct($pluginDir, $pluginInfo, $logger, $cacheManager, $enderecoService) {
-		$this->pluginDir = $pluginDir;
-		$this->pluginInfo = $pluginInfo;
+    /**
+     * @param string $pluginDir
+     */
+    public function __construct($pluginDir, $pluginInfo, $logger, $cacheManager, $enderecoService)
+    {
+        $this->pluginDir = $pluginDir;
+        $this->pluginInfo = $pluginInfo;
         $this->cacheManager = $cacheManager;
         $this->logger = $logger;
         $this->http = new \GuzzleHttp\Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
@@ -45,20 +46,24 @@ class Frontend implements SubscriberInterface
             $shop = Shopware()->Container()->get('shop');
         }
         if (!$shop) {
-            $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
+            $shop = Shopware()->Container()->get('models')
+                ->getRepository(\Shopware\Models\Shop\Shop::class)
+                ->getActiveDefault();
         }
 
         $this->themeName = strtolower($shop->getTemplate()->getTemplate());
-        $this->config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
-	}
+        $this->config = Shopware()->Container()
+            ->get('shopware.plugin.cached_config_reader')
+            ->getByPluginName('EnderecoShopware5Client', $shop);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public static function getSubscribedEvents()
-	{
-		return [
-			'Theme_Inheritance_Template_Directories_Collected' => 'onCollectTemplateDir',
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'Theme_Inheritance_Template_Directories_Collected' => 'onCollectTemplateDir',
 
             'Enlight_Controller_Action_PostDispatchSecure_Frontend' => 'onPostDispatch',
             'Enlight_Controller_Action_PostDispatchSecure_Backend_Config' => 'onPostDispatchConfig',
@@ -72,14 +77,19 @@ class Frontend implements SubscriberInterface
 
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
             'Shopware_Modules_Order_SaveOrder_FilterParams' => 'addCommentToOrder',
-		];
-	}
-
-    public function sendDoAccountingForms($args) {
-        $this->_doAccounting();
+        ];
     }
 
-    public function sendDoAccountingRegister($args) {
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function sendDoAccountingForms($args)
+    {
+        $this->doAccounting();
+    }
+
+    public function sendDoAccountingRegister($args)
+    {
         $request = $args->getRequest();
         $blackListActions = [
             'ajax_validate_password',
@@ -88,14 +98,19 @@ class Frontend implements SubscriberInterface
         if (in_array($request->getActionName(), $blackListActions)) {
             return;
         }
-        $this->_doAccounting();
+        $this->doAccounting();
     }
 
-	public function sendDoAccountingAddress($args) {
-	    $this->_doAccounting();
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function sendDoAccountingAddress($args)
+    {
+        $this->doAccounting();
     }
 
-	public function onAfterOrderSaveOrder($args) {
+    public function onAfterOrderSaveOrder($args)
+    {
         $sOrder = $args->get('subject');
         $returnValue = $args->getReturn();
 
@@ -104,25 +119,30 @@ class Frontend implements SubscriberInterface
         }
 
         if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus']) {
-            $returnValue['endereco_order_billingamsstatus'] = $sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus'];
+            $returnValue['endereco_order_billingamsstatus'] =
+                $sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus'];
         }
 
         if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']) {
-            $returnValue['endereco_order_shippingamsstatus'] = $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus'];
+            $returnValue['endereco_order_shippingamsstatus'] =
+                $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus'];
         }
 
         if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsts']) {
-            $returnValue['endereco_order_billingamsts'] = $sOrder->sUserData['billingaddress']['attributes']['enderecoamsts'];
+            $returnValue['endereco_order_billingamsts'] =
+                $sOrder->sUserData['billingaddress']['attributes']['enderecoamsts'];
         }
 
         if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts']) {
-            $returnValue['endereco_order_shippingamsts'] = $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
+            $returnValue['endereco_order_shippingamsts'] =
+                $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
         }
 
         return $returnValue;
     }
 
-    public function addCommentToOrder($args) {
+    public function addCommentToOrder($args)
+    {
         $sOrder = $args->get('subject');
         $returnValue = $args->getReturn();
 
@@ -137,7 +157,10 @@ class Frontend implements SubscriberInterface
         $statusCodes = explode(',', $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']);
 
         if (!empty($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'])) {
-            $predictions = json_decode($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'], true);
+            $predictions = json_decode(
+                $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsapredictions'],
+                true
+            );
         } else {
             $predictions = [];
         }
@@ -147,7 +170,8 @@ class Frontend implements SubscriberInterface
 
         // Write internal comment for specific case.
         // Case #1: Address was not found
-        if (in_array('address_not_found', $statusCodes)
+        if (
+            in_array('address_not_found', $statusCodes)
             && !empty($Snipt->get('statusAddressNotFoundMainERP'))
         ) {
             $template = $Snipt->get('statusAddressTimestampCheckERP');
@@ -158,7 +182,8 @@ class Frontend implements SubscriberInterface
         }
 
         // Case #2: Address is correct -- dont save anything
-        if (in_array('address_correct', $statusCodes)
+        if (
+            in_array('address_correct', $statusCodes)
             && !empty($Snipt->get('statusAddressCorrectMainERP'))
         ) {
             $template = $Snipt->get('statusAddressTimestampCheckERP');
@@ -169,27 +194,30 @@ class Frontend implements SubscriberInterface
         }
 
         // Case #3: Address needs correction
-        if (in_array('address_needs_correction', $statusCodes) &&
+        if (
+            in_array('address_needs_correction', $statusCodes) &&
             !empty($Snipt->get('statusAddressNeedsCorrectionMainERP'))
         ) {
             $template = $Snipt->get('statusAddressTimestampCheckERP');
             $commentHeadline = sprintf($template, $curDate);
             $commentBody = $Snipt->get('statusAddressNeedsCorrectionMainERP');
 
-            if (in_array('building_number_not_found', $statusCodes) &&
+            if (
+                in_array('building_number_not_found', $statusCodes) &&
                 !empty($Snipt->get('statusAddressNeedsCorrectionBuildingNotFoundERP'))
             ) {
                 $commentBody .= ' ' . $Snipt->get('statusAddressNeedsCorrectionBuildingNotFoundERP');
             }
 
-            if (in_array('building_number_missing', $statusCodes) &&
+            if (
+                in_array('building_number_missing', $statusCodes) &&
                 !empty($Snipt->get('statusAddressNeedsCorrectionBuildingIsMissingERP'))
             ) {
                 $commentBody .= ' ' . $Snipt->get('statusAddressNeedsCorrectionBuildingIsMissingERP');
             }
 
             if (!empty($predictions[0])) {
-                $commentBody .= " ". $Snipt->get('statusAddressNeedsCorrectionSecondaryERP') ." \n";
+                $commentBody .= " " . $Snipt->get('statusAddressNeedsCorrectionSecondaryERP') . " \n";
                 $commentCorrection = sprintf(
                     "  %s %s,  %s %s,  %s", // TODO: country specific formats.
                     $predictions[0]['streetName'],
@@ -199,7 +227,7 @@ class Frontend implements SubscriberInterface
                     strtoupper($predictions[0]['countryCode'])
                 );
             } else {
-                $commentBody .= " ". $Snipt->get('statusAddressNoPredictions') ." \n";
+                $commentBody .= " " . $Snipt->get('statusAddressNoPredictions') . " \n";
                 $commentCorrection = null;
             }
 
@@ -207,7 +235,8 @@ class Frontend implements SubscriberInterface
             return $returnValue;
         }
         // Case #4: Address has multiple variants
-        if (in_array('address_multiple_variants', $statusCodes) &&
+        if (
+            in_array('address_multiple_variants', $statusCodes) &&
             !empty($Snipt->get('statusAddressMultipleVariantsMainERP'))
         ) {
             $template = $Snipt->get('statusAddressTimestampCheckERP');
@@ -240,7 +269,8 @@ class Frontend implements SubscriberInterface
         return $returnValue;
     }
 
-	public function checkAdressesOrOpenModals($args) {
+    public function checkAdressesOrOpenModals($args)
+    {
         if (!$this->config['isPluginActive']) {
             return;
         }
@@ -264,7 +294,8 @@ class Frontend implements SubscriberInterface
         /**
          * If existing customers can be checked and the payment method is whitelisted -> check it.
          */
-        if ($this->config['checkExisting'] &&
+        if (
+            $this->config['checkExisting'] &&
             in_array($currentPaymentMethod, [
                 'prepayment',
                 'cash',
@@ -279,7 +310,8 @@ class Frontend implements SubscriberInterface
         /**
          * If paypal express check is active and payment method is paypalexpress -> check it.
          */
-        if ($this->config['checkPayPalExpress'] &&
+        if (
+            $this->config['checkPayPalExpress'] &&
             in_array($currentPaymentMethod, [
                 'SwagPaymentPayPalUnified',
             ])
@@ -307,8 +339,14 @@ class Frontend implements SubscriberInterface
                 // Check if users address is alright.
                 if (
                     array_key_exists('enderecoamsstatus', $address['attribute']) &&
-                    (!array_key_exists('moptwunschpaketaddresstype', $address['attribute']) || !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])) &&
-                    (!$address['attribute']['enderecoamsstatus'] || (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked')))
+                    (
+                        !array_key_exists('moptwunschpaketaddresstype', $address['attribute']) ||
+                        !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])
+                    ) &&
+                    (
+                        !$address['attribute']['enderecoamsstatus'] ||
+                        (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked'))
+                    )
                 ) {
                     $addressesToCheck[$address['id']] = true;
                 }
@@ -317,7 +355,11 @@ class Frontend implements SubscriberInterface
             // Check addresses.
             $checkedAddresses = $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
 
-            if ($addressesToCheck && (0 < $checkedAddresses) && !Shopware()->Session()->endereco_should_not_reload_anymore) {
+            if (
+                $addressesToCheck &&
+                (0 < $checkedAddresses) &&
+                !Shopware()->Session()->endereco_should_not_reload_anymore
+            ) {
                 $view->assign('endereco_need_to_reload', true);
                 Shopware()->Session()->endereco_should_not_reload_anymore = true;
                 return;
@@ -332,14 +374,28 @@ class Frontend implements SubscriberInterface
             $sUserData &&
             $sUserData['billingaddress'] &&
             array_key_exists('enderecoamsstatus', $sUserData['billingaddress']['attributes']) &&
-            !in_array('address_selected_by_customer', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) &&
-            !in_array('address_selected_automatically', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) &&
+            !in_array(
+                'address_selected_by_customer',
+                explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])
+            ) &&
+            !in_array(
+                'address_selected_automatically',
+                explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])
+            ) &&
             (
-                in_array('address_needs_correction', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_multiple_variants', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_not_found', explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus']))
+                in_array(
+                    'address_needs_correction',
+                    explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])
+                ) ||
+                in_array(
+                    'address_multiple_variants',
+                    explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])
+                ) ||
+                in_array(
+                    'address_not_found',
+                    explode(',', $sUserData['billingaddress']['attributes']['enderecoamsstatus'])
+                )
             )
-
         ) {
             $needToCheckBilling = '1';
         }
@@ -349,14 +405,28 @@ class Frontend implements SubscriberInterface
             $sUserData['shippingaddress'] &&
             $sUserData['billingaddress']['id'] !== $sUserData['shippingaddress']['id'] &&
             array_key_exists('enderecoamsstatus', $sUserData['shippingaddress']['attributes']) &&
-            !in_array('address_selected_by_customer', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) &&
-            !in_array('address_selected_automatically', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) &&
+            !in_array(
+                'address_selected_by_customer',
+                explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])
+            ) &&
+            !in_array(
+                'address_selected_automatically',
+                explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])
+            ) &&
             (
-                in_array('address_needs_correction', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_multiple_variants', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])) ||
-                in_array('address_not_found', explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus']))
+                in_array(
+                    'address_needs_correction',
+                    explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])
+                ) ||
+                in_array(
+                    'address_multiple_variants',
+                    explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])
+                ) ||
+                in_array(
+                    'address_not_found',
+                    explode(',', $sUserData['shippingaddress']['attributes']['enderecoamsstatus'])
+                )
             )
-
         ) {
             $needToCheckShipping = '1';
         }
@@ -374,7 +444,8 @@ class Frontend implements SubscriberInterface
      *
      * @return void
      */
-    private function ensureSplitStreet($sUserData) {
+    private function ensureSplitStreet($sUserData)
+    {
         /**
          * @var AddressRepository
          */
@@ -388,7 +459,6 @@ class Frontend implements SubscriberInterface
         $addresses = $addressRepository->getListArray($sUserData['additional']['user']['id']);
 
         foreach ($addresses as $address) {
-
             // Check if users address is alright.
             $fullStreet = $address['street'];
 
@@ -427,14 +497,15 @@ class Frontend implements SubscriberInterface
                     }
 
                     Shopware()->Container()->get('shopware_account.address_service')->update($address);
-                } catch( \Exception $e) {
+                } catch (\Exception $e) {
                     $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 }
             }
         }
     }
 
-	public function checkExistingCustomerAddresses($args) {
+    public function checkExistingCustomerAddresses($args)
+    {
         $request = $args->getRequest();
         $controller = $args->get('subject');
         $view = $controller->View();
@@ -466,8 +537,14 @@ class Frontend implements SubscriberInterface
                 // Check if users address is alright.
                 if (
                     array_key_exists('enderecoamsstatus', $address['attribute']) &&
-                    (!array_key_exists('moptwunschpaketaddresstype', $address['attribute']) || !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])) &&
-                    (!$address['attribute']['enderecoamsstatus'] || (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked')))
+                    (
+                        !array_key_exists('moptwunschpaketaddresstype', $address['attribute']) ||
+                        !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])
+                    ) &&
+                    (
+                        !$address['attribute']['enderecoamsstatus'] ||
+                        (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked'))
+                    )
                 ) {
                     $addressesToCheck[$address['id']] = true;
                 }
@@ -492,7 +569,8 @@ class Frontend implements SubscriberInterface
         }
     }
 
-	public function onPostDispatch(\Enlight_Event_EventArgs $args) {
+    public function onPostDispatch(\Enlight_Event_EventArgs $args)
+    {
         $enderecoService = Shopware()->Container()->get('endereco_shopware5_client.endereco_service');
 
         $splitStreet = $this->config['splitStreet'];
@@ -505,13 +583,16 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_theme_name', $this->themeName);
 
         // Get country mapping.
-        $countryRepository = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Country\Country::class);
+        $countryRepository = Shopware()
+            ->Container()
+            ->get('models')
+            ->getRepository(\Shopware\Models\Country\Country::class);
         $countries = $countryRepository->findBy(['active' => 1]);
 
         $countryMapping = [];
         $countryMappingId2Code = [];
         $countryMappingCode2Id = [];
-        foreach($countries as $country) {
+        foreach ($countries as $country) {
             $countryMapping[$country->getIso()] = $country->getName();
             $countryMappingId2Code[$country->getId()] = $country->getIso();
             $countryMappingCode2Id[$country->getIso()] = $country->getId();
@@ -521,13 +602,16 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_country_id2code_mapping', addslashes(json_encode($countryMappingId2Code)));
         $view->assign('endereco_country_code2id_mapping', addslashes(json_encode($countryMappingCode2Id)));
 
-        $subdivisionRepository = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Country\State::class);
+        $subdivisionRepository = Shopware()
+            ->Container()
+            ->get('models')
+            ->getRepository(\Shopware\Models\Country\State::class);
         $subdivisions = $subdivisionRepository->findBy(['active' => 1]);
 
         $subdivisionMapping = [];
         $subdivisionMappingId2Code = [];
         $subdivisionMappingCode2Id = [];
-        foreach($subdivisions as $subdivision) {
+        foreach ($subdivisions as $subdivision) {
             $subdisivionCode = implode(
                 '-',
                 [
@@ -553,9 +637,8 @@ class Frontend implements SubscriberInterface
                 preg_replace('/\s+/', '', $this->config['whitelistController'])
             )
         );
-        if (!empty($addController)) {
-            $whitelist = array_merge($whitelist, $addController);
-        }
+        $whitelist = array_merge($whitelist, $addController);
+
         $view->assign('endereco_controller_whitelist', $whitelist);
 
         $view->assign('endereco_ams_is_active', $this->config['amsActive']);
@@ -564,7 +647,7 @@ class Frontend implements SubscriberInterface
 
         $mainColorCode =  $this->config['mainColor'];
         if ($mainColorCode) {
-            list($red, $gren, $blue) = $this->_hex2rgb($mainColorCode);
+            list($red, $gren, $blue) = $this->hex2rgb($mainColorCode);
             $mainColor = "rgb({$red}, {$gren}, {$blue})";
             $mainColorBG = "rgba({$red}, {$gren}, {$blue}, 0.1)";
             $view->assign('endereco_main_color', $mainColor);
@@ -573,7 +656,7 @@ class Frontend implements SubscriberInterface
 
         $errorColorCode = $this->config['errorColor'];
         if ($errorColorCode) {
-            list($red, $gren, $blue) = $this->_hex2rgb($errorColorCode);
+            list($red, $gren, $blue) = $this->hex2rgb($errorColorCode);
             $errorColor = "rgb({$red}, {$gren}, {$blue})";
             $errorColorBG = "rgba({$red}, {$gren}, {$blue}, 0.125)";
             $view->assign('endereco_error_color', $errorColor);
@@ -582,7 +665,7 @@ class Frontend implements SubscriberInterface
 
         $successColorCode = $this->config['successColor'];
         if ($successColorCode) {
-            list($red, $gren, $blue) = $this->_hex2rgb($successColorCode);
+            list($red, $gren, $blue) = $this->hex2rgb($successColorCode);
             $successColor = "rgb({$red}, {$gren}, {$blue})";
             $successColorBG = "rgba({$red}, {$gren}, {$blue}, 0.125)";
             $view->assign('endereco_success_color', $successColor);
@@ -592,35 +675,36 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_use_default_styles', $this->config['useDefaultCss']);
     }
 
-	public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
-	{
+    public function onCollectTemplateDir(\Enlight_Event_EventArgs $args)
+    {
         $dirs = $args->getReturn();
-		$dirs[] = $this->pluginDir . '/Resources/views/';
+        $dirs[] = $this->pluginDir . '/Resources/views/';
 
-		$args->setReturn($dirs);
-	}
+        $args->setReturn($dirs);
+    }
 
-    private function _hex2rgb($hex) {
+    private function hex2rgb($hex)
+    {
         $hex = str_replace("#", "", $hex);
 
-        if(strlen($hex) == 3) {
-            $r = hexdec(substr($hex,0,1).substr($hex,0,1));
-            $g = hexdec(substr($hex,1,1).substr($hex,1,1));
-            $b = hexdec(substr($hex,2,1).substr($hex,2,1));
+        if (strlen($hex) == 3) {
+            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
         } else {
-            $r = hexdec(substr($hex,0,2));
-            $g = hexdec(substr($hex,2,2));
-            $b = hexdec(substr($hex,4,2));
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
         }
         return array($r, $g, $b);
     }
 
-    private function _doAccounting() {
+    private function doAccounting()
+    {
         $accountableSessionIds = array();
 
         if ('POST' === $_SERVER['REQUEST_METHOD']) {
             foreach ($_POST as $sVarName => $sVarValue) {
-
                 if ((strpos($sVarName, '_session_counter') !== false) && 0 < intval($sVarValue)) {
                     $sSessionIdName = str_replace('_session_counter', '', $sVarName) . '_session_id';
                     $accountableSessionIds[$_POST[$sSessionIdName]] = true;

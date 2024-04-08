@@ -1,4 +1,5 @@
 <?php
+
 namespace EnderecoShopware5Client\Services;
 
 use GuzzleHttp\Client;
@@ -9,7 +10,8 @@ use Shopware\Models\Customer\AddressRepository;
 use GuzzleHttp\Exception\RequestException;
 use Shopware\Components\Logger;
 
-class EnderecoService {
+class EnderecoService
+{
     private $logger;
     private $pluginInfo;
     private $apiKey;
@@ -18,7 +20,8 @@ class EnderecoService {
     private $serviceUrl;
     private $version;
 
-    public function __construct($pluginInfo, $logger) {
+    public function __construct($pluginInfo, $logger)
+    {
         $this->pluginInfo = $pluginInfo;
         $this->logger = $logger;
         $this->httpClient = new Client(['timeout' => 3.0, 'connection_timeout' => 2.0]);
@@ -28,28 +31,34 @@ class EnderecoService {
             $shop = Shopware()->Container()->get('shop');
         }
         if (!$shop) {
-            $shop = Shopware()->Container()->get('models')->getRepository(\Shopware\Models\Shop\Shop::class)->getActiveDefault();
+            $shop = Shopware()->Container()->get('models')
+                ->getRepository(\Shopware\Models\Shop\Shop::class)
+                ->getActiveDefault();
         }
-        $config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')->getByPluginName('EnderecoShopware5Client', $shop);
+        $config = Shopware()->Container()->get('shopware.plugin.cached_config_reader')
+            ->getByPluginName('EnderecoShopware5Client', $shop);
 
         $this->apiKey = $config['apiKey'];
-        $this->info = 'Endereco Shopware5 Client (Download) v'.$this->pluginInfo['version'];
+        $this->info = 'Endereco Shopware5 Client (Download) v' . $this->pluginInfo['version'];
         $this->serviceUrl = $config['remoteApiUrl'];
         $this->version = $this->pluginInfo['version'];
     }
 
-    public function getVersion() {
+    public function getVersion()
+    {
         return $this->version;
     }
 
-    public function generateTid() {
+    public function generateTid()
+    {
         $data = random_bytes(16);
         $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
         $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
         return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
-    public function splitStreet($fullStreet, $countryCode) {
+    public function splitStreet($fullStreet, $countryCode)
+    {
 
         try {
             $message = array(
@@ -67,7 +76,7 @@ class EnderecoService {
                 'Content-Type' => 'application/json',
                 'X-Auth-Key' => $this->apiKey,
                 'X-Transaction-Id' => 'not_required',
-                'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
+                'X-Transaction-Referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : __FILE__,
                 'X-Agent' => $this->info,
             );
 
@@ -90,15 +99,16 @@ class EnderecoService {
                     $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 }
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->addRecord(Logger::ERROR, $e->getMessage());
         }
         return ["", ""];
     }
 
-    public function checkAddresses($addressIdArray = array()) {
+    public function checkAddresses($addressIdArray = array())
+    {
         $checkedAddressesCounter = 0;
-        if(!$addressIdArray) {
+        if (!$addressIdArray) {
             return;
         }
         $accountableSessions = array();
@@ -116,7 +126,6 @@ class EnderecoService {
         $stateRepository = Shopware()->Models()->getRepository(State::class);
         // For each address.
         foreach ($addressIdArray as $addressId) {
-
             // Generate session id.
             $tid = $this->generateTid();
 
@@ -137,7 +146,7 @@ class EnderecoService {
 
                 $locale = Shopware()->Container()->get('shop')->getLocale()->getLocale();
                 $languageCode = explode('_', $locale)[0];
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 continue;
             }
@@ -166,7 +175,7 @@ class EnderecoService {
                         'Content-Type' => 'application/json',
                         'X-Auth-Key' => $this->apiKey,
                         'X-Transaction-Id' => $tid,
-                        'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
+                        'X-Transaction-Referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : __FILE__,
                         'X-Agent' => $this->info,
                     );
 
@@ -188,7 +197,7 @@ class EnderecoService {
                         $counter = 0;
                         foreach ($result['result']['predictions'] as $prediction) {
                             $tempAddress = array(
-                                'countryCode' => $prediction['countryCode']?$prediction['countryCode']:$countryCode,
+                                'countryCode' => $prediction['countryCode'] ? $prediction['countryCode'] : $countryCode,
                                 'postalCode' => $prediction['postCode'],
                                 'locality' => $prediction['cityName'],
                                 'streetName' => $prediction['street'],
@@ -246,7 +255,7 @@ class EnderecoService {
                             $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                         }
                     }
-                } catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                 }
             }
@@ -257,7 +266,8 @@ class EnderecoService {
         return $checkedAddressesCounter;
     }
 
-    public function sendDoAccountings($sessionIds = array()) {
+    public function sendDoAccountings($sessionIds = array())
+    {
         if (!$sessionIds) {
             return;
         }
@@ -278,7 +288,7 @@ class EnderecoService {
                     'Content-Type' => 'application/json',
                     'X-Auth-Key' => $this->apiKey,
                     'X-Transaction-Id' => $sessionId,
-                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
+                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : __FILE__,
                     'X-Agent' => $this->info,
                 );
                 $this->httpClient->post(
@@ -289,7 +299,6 @@ class EnderecoService {
                     )
                 );
                 $anyDoAccounting = true;
-
             } catch (RequestException $e) {
                 if ($e->hasResponse()) {
                     $response = $e->getResponse();
@@ -297,7 +306,7 @@ class EnderecoService {
                         $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                     }
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
         }
@@ -314,7 +323,7 @@ class EnderecoService {
                     'Content-Type' => 'application/json',
                     'X-Auth-Key' => $this->apiKey,
                     'X-Transaction-Id' => 'not_required',
-                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER']?$_SERVER['HTTP_REFERER']:__FILE__,
+                    'X-Transaction-Referer' => $_SERVER['HTTP_REFERER'] ? $_SERVER['HTTP_REFERER'] : __FILE__,
                     'X-Agent' => $this->info,
                 );
                 $this->httpClient->post(
@@ -331,7 +340,7 @@ class EnderecoService {
                         $this->logger->addRecord(Logger::ERROR, $e->getMessage());
                     }
                 }
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
         }
