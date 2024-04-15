@@ -7,6 +7,6 @@ parameters:
         - ./vendor
         - ./node_modules
     bootstrapFiles:
-        - shops/5.7.0/autoload.php
+        - shops/5.7.19/autoload.php
     scanDirectories:
         - %currentWorkingDirectory%/Mocks # And this line

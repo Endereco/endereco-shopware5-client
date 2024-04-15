@@ -9,7 +9,7 @@ if ! command -v git &> /dev/null; then
 fi
 
 # Array of version tags to be downloaded
-versions=("5.3.0" "5.3.7" "5.4.6" "5.5.10" "5.6.10" "5.7.0") 
+declare -A versions=( ["5.3.0"]="1" ["5.3.7"]="1" ["5.4.6"]="1" ["5.5.10"]="1" ["5.6.10"]="1" ["5.7.19"]="2")
 
 # Base repository URL
 repo_url="https://github.com/shopware5/shopware.git"
@@ -17,16 +17,17 @@ repo_url="https://github.com/shopware5/shopware.git"
 # Destination base directory
 base_dir="shops"
 
-# Remove existing directories within shops to start fresh
-rm -rf "$base_dir"/*
-
 # Iterate over the versions array
-for version in "${versions[@]}"; do
+for version in "${!versions[@]}"; do
     # Define the destination directory for the current version
     dest_dir="$base_dir/$version"
 
     # Create the destination directory if it doesn't exist
+    rm -rf "$dest_dir"
     mkdir -p "$dest_dir"
+
+    # Determine which Composer version to use based on the version
+    composer_version="${versions[$version]}"
 
     # Attempt to download and extract the archive directly without .git metadata
     if git archive --remote="$repo_url" --format=tar "v$version" | tar -x -C "$dest_dir"; then
@@ -47,8 +48,11 @@ for version in "${versions[@]}"; do
 
     # Navigate into the directory and run Composer install using a Docker container with PHP 7.4
     echo "Running Composer install for version $version..."
-    docker run --rm -v "$(pwd)/$dest_dir":/app composer:1.10.1 composer install --no-dev --ignore-platform-reqs
+    docker run --rm -v "$(pwd)/$dest_dir":/app composer:$composer_version  composer install --no-dev --ignore-platform-reqs
 
 done
+
+# Change ownership of the copied files to the current user
+sudo chown -R $(whoami):$(whoami) "./shops"
 
 echo "All specified versions processed."
