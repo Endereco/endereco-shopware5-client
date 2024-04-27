@@ -1,6 +1,7 @@
 <?php
 
 use Shopware\Components\Logger;
+use Shopware\Components\HttpClient\GuzzleHttpClient;
 use Shopware\Components\CSRFWhitelistAware;
 use Symfony\Component\HttpFoundation\Response;
 use Shopware\Components\HttpClient\RequestException;
@@ -11,12 +12,15 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
      * @var Logger
      */
     private $logger;
+
+    /**
+     * @var GuzzleHttpClient
+     */
     private $http;
 
-	public function indexAction()
-    {
-	}
-
+    /**
+     * @return void
+     */
 	public function testApiAction() {
         $this->logger = Shopware()->Container()->get('pluginlogger');
         $this->http = Shopware()->Container()->get('http_client');
@@ -82,7 +86,7 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
                 $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
             $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
-            if (strpos($errorMessage, '400') !== false) {
+            if (strpos($e->getMessage(), '421') !== false) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
             } else {
                 $this->View()->assign('response', $e->getMessage());
@@ -93,7 +97,7 @@ class Shopware_Controllers_Backend_EnderecoShopware5Client extends \Shopware_Con
             $this->logger->addRecord(Logger::ERROR, $errorMessage);
             $this->response->setHttpResponseCode(Response::HTTP_BAD_REQUEST);
 
-            if (strpos($errorMessage, '400') !== false) {
+            if (strpos($errorMessage, '421') !== false) {
                 $this->View()->assign('response', Shopware()->Snippets()->getNamespace('EnderecoShopware5Client')->get('apiError'));
             } else {
                 $this->View()->assign('response', $exception->getMessage());

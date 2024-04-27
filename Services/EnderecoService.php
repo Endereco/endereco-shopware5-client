@@ -102,7 +102,7 @@ class EnderecoService
         } catch (\Exception $e) {
             $this->logger->addRecord(Logger::ERROR, $e->getMessage());
         }
-        return ["", ""];
+        return [$fullStreet, ""];
     }
 
     public function checkAddresses($addressIdArray = array())

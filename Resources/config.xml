@@ -29,14 +29,17 @@
                       Ext.Ajax.request({
                         url: 'EnderecoShopware5Client/testApi?apiKey='+$apiKey,
                         success: function (response) {
+                            console.log("Success");
                             try {
                                 var responseO = JSON.parse(response.responseText)
                                 Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
                             } catch (e) {
+                                
                                 // There is no json here, probably user clicked on the button, before the controller is visible.
                             }
                         },
                         failure: function (response) {
+                            console.log("Failure");
                             try {
                                 var responseO = JSON.parse(response.responseText)
                                 Shopware.Msg.createGrowlMessage(response.statusText, responseO.response)
