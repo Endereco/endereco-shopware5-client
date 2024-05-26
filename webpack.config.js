@@ -1,20 +1,20 @@
-var path = require('path');
-var TerserPlugin = require('terser-webpack-plugin');
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  mode: process.env.NODE_ENV,
+  mode: process.env.NODE_ENV || 'development',
   entry: {
-    'endereco': './endereco.js',
+    endereco: './endereco.js',
   },
   output: {
     path: path.resolve(__dirname, './Resources/views/frontend/_public/src/js/'),
     publicPath: '/',
-    filename: 'endereco.min.js'
+    filename: 'endereco.min.js',
+    clean: true, // Ensures the output directory is cleaned before each build
   },
   optimization: {
     minimize: true,
     minimizer: [new TerserPlugin({
-      sourceMap: false,
       terserOptions: {
         output: {
           comments: false,
@@ -28,14 +28,14 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'css-loader',
+          'css-loader'
         ],
       },
       {
         test: /\.scss$/,
         use: [
-          'css-loader',
-          'sass-loader'
+          'css-loader', 
+          'sass-loader',
         ],
       },
       {
@@ -46,39 +46,50 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: {loader: 'html-loader'}
+        use: {
+          loader: 'html-loader',
+          options: {
+            sources: false,
+            minimize: false
+          },
+        },
       },
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env']
-          }
-        }
+            presets: ['@babel/preset-env'],
+          },
+        },
       },
       {
         test: /\.svg$/,
-        use: {loader: 'html-loader'}
+        use: 'html-loader',
       },
       {
         test: /\.(png|jpg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]'
-        }
-      }
-    ]
+        type: 'asset/resource',
+        generator: {
+          filename: '[name][ext]?[hash]',
+        },
+      },
+    ],
   },
   devServer: {
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
     historyApiFallback: true,
-    noInfo: true,
-    overlay: true
+    compress: true,
+    port: 9000,
+    open: true,
   },
   performance: {
-    hints: false
+    hints: false,
   },
   devtool: false,
   plugins: [
-  ]
+  ],
 };
