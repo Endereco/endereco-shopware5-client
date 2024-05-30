@@ -5,7 +5,7 @@
     <label lang="en">Endereco Address-Services for Shopware (Download)</label>
     <label lang="de">Endereco Adress-Services für Shopware (Download)</label>
 
-    <version>3.9.2</version>
+    <version>3.10.0</version>
 
     <link>https://www.endereco.de/shopware</link>
 
@@ -30,6 +30,104 @@
     </description>
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
+
+    <changelog version="3.10.0">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li><b>Neue Features</b>
+                    <ul>
+                        <li>Mocking hinzugefügt: Einführung einer neuen Klasse <code>CustomerAddressMock</code> unter <code>Shopware\Models\Attribute</code> zur Unterstützung von Tests und Entwicklung.</li>
+                        <li>Composer-Integration: Hinzufügen einer <code>composer.json</code> Datei zur Verwaltung von Abhängigkeiten und Entwicklungstools wie PHP_CodeSniffer, PHPStan und PHPMD.</li>
+                        <li>Automatisiertes QA: Implementierung eines Skripts <code>check_phpmd.sh</code> zur Ausführung von PHPMD und Hinzufügen von QA-Skripten für PHP_CodeSniffer, PHPStan und PHP-Kompatibilitätstests in <code>composer.json</code>.</li>
+                    </ul>
+                </li>
+                <li><b>Verbesserungen</b>
+                    <ul>
+                        <li>Logging und HTTP-Client: Integration von <code>GuzzleHttpClient</code> im Backend-Controller <code>EnderecoShopware5Client</code> zur Verbesserung der Zuverlässigkeit der API-Interaktion.</li>
+                        <li>Fehlerbehandlung: Verbesserte Fehlerprotokollierung durch detaillierte Ausnahme-Meldungen und verbesserte Fehlerreaktionen bei API-Aufrufen.</li>
+                        <li>Skript- und Stilaktualisierungen: Aktualisierung von <code>webpack.config.js</code> zur besseren Handhabung von CSS, SCSS, HTML, SVG und Bildressourcen und Anpassung der Webpack-Konfiguration für ein besseres Build- und Entwicklungsserver-Management.</li>
+                        <li>Update js-sdk: JS-SDK wurde auf die neueste Version aktualisiert, was die Leistung verbessert und einige bekannte Fehler behebt.</li>
+                    </ul>
+                </li>
+                <li><b>Fehlerbehebungen</b>
+                    <ul>
+                        <li>API-Fehlerbehandlung: Fehler behoben, bei dem falsche HTTP-Statuscodes geprüft wurden (von <code>400</code> auf <code>421</code>).</li>
+                        <li>Cache-Löschung: Überprüfungen hinzugefügt, ob die Methode <code>deleteAll</code> vorhanden ist, bevor versucht wird, Metadaten-Caches zu löschen, um mögliche Fehler bei der Installation und Deinstallation zu vermeiden.</li>
+                        <li>Frontend-Subscriber: Verschiedene kleinere Probleme behoben und die Code-Lesbarkeit und Wartbarkeit in der <code>Frontend</code> Subscriber-Klasse verbessert.</li>
+                        <li>Composer-Bereinigung: Das Build-Skript <code>build-shopware5-client.sh</code> aktualisiert, um unnötige Dateien und Verzeichnisse (<code>vendor</code>, <code>node_modules</code> usw.) aus dem Build-Output auszuschließen.</li>
+                    </ul>
+                </li>
+                <li><b>Technische Verbesserungen</b>
+                    <ul>
+                        <li>Code-Standardisierung: Sicherstellung, dass alle PHP-Dateien den PSR-12-Codierungsstandard einhalten, indem PHP_CodeSniffer ausgeführt wurde.</li>
+                        <li>PHP-Kompatibilität: <code>test_php_versions.sh</code> hinzugefügt, um die Kompatibilität des Codes mit mehreren PHP-Versionen (7.4, 8.0, 8.1, 8.2 und 8.3) zu überprüfen.</li>
+                        <li>Docker-Integration: Einführung von <code>fetch-shops.sh</code>, um die Einrichtung verschiedener Shopware-Versionen mit Docker zu automatisieren und so Tests in mehreren Shopware-Umgebungen zu erleichtern.</li>
+                    </ul>
+                </li>
+                <li><b>Entfernt</b>
+                    <ul>
+                        <li>Veralteter Controller: Entfernen des Frontend-Controllers <code>EnderecoShopware5Client</code>, der nicht mehr verwendet wurde.</li>
+                    </ul>
+                </li>
+                <li><b>Sonstige Änderungen</b>
+                    <ul>
+                        <li>Aktualisierte <code>.gitignore</code>: Modifiziert, um neue Verzeichnisse (<code>shops</code>, <code>vendor</code>) und Dateien (<code>composer.lock</code>) auszuschließen.</li>
+                        <li>Verbessertes Build-Skript: Das <code>build-shopware5-client.sh</code> Skript verfeinert, um den Prozess der Vorbereitung des Plugins für die Bereitstellung zu verbessern.</li>
+                    </ul>
+                </li>
+            </ul>
+            ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li><b>New Features</b>
+                    <ul>
+                        <li>Mocking Added: Introduced a new <code>CustomerAddressMock</code> class under <code>Shopware\Models\Attribute</code> to assist with testing and development.</li>
+                        <li>Composer Integration: Added a <code>composer.json</code> file to manage dependencies and development tools such as PHP_CodeSniffer, PHPStan, and PHPMD.</li>
+                        <li>Automated QA: Implemented a script <code>check_phpmd.sh</code> for running PHPMD, and added QA scripts for PHP_CodeSniffer, PHPStan, and PHP compatibility testing in <code>composer.json</code>.</li>
+                    </ul>
+                </li>
+                <li><b>Enhancements</b>
+                    <ul>
+                        <li>Logging and HTTP Client: Integrated <code>GuzzleHttpClient</code> in the backend controller <code>EnderecoShopware5Client</code> to replace the previous HTTP client, improving API interaction reliability.</li>
+                        <li>Error Handling: Enhanced error logging by including detailed exception messages and improved error response handling for API calls.</li>
+                        <li>Script and Style Updates: Updated <code>webpack.config.js</code> to include better handling of CSS, SCSS, HTML, SVG, and image assets, and adjusted Webpack configuration for better build and development server management.</li>
+                        <li>Update js-sdk: JS-SDK was updated to the latest version improving performance and fixing some known bugs.</li>
+                    </ul>
+                </li>
+                <li><b>Bug Fixes</b>
+                    <ul>
+                        <li>API Error Handling: Fixed the issue where incorrect HTTP status codes were checked (from <code>400</code> to <code>421</code>).</li>
+                        <li>Cache Clearing: Added checks for the existence of the <code>deleteAll</code> method before attempting to clear metadata caches, preventing potential errors during installation and uninstallation.</li>
+                        <li>Frontend Subscriber: Addressed various minor issues and improved code readability and maintainability in the <code>Frontend</code> subscriber class.</li>
+                        <li>Composer Cleanup: Updated the build script <code>build-shopware5-client.sh</code> to exclude unnecessary files and directories (<code>vendor</code>, <code>node_modules</code>, etc.) from the build output.</li>
+                    </ul>
+                </li>
+                <li><b>Technical Improvements</b>
+                    <ul>
+                        <li>Code Standardization: Ensured all PHP files follow the PSR-12 coding standard by running PHP_CodeSniffer.</li>
+                        <li>PHP Compatibility: Added <code>test_php_versions.sh</code> to verify code compatibility with multiple PHP versions (7.4, 8.0, 8.1, 8.2, and 8.3).</li>
+                        <li>Docker Integration: Introduced <code>fetch-shops.sh</code> to automate the setup of different Shopware versions using Docker, facilitating easier testing across multiple Shopware environments.</li>
+                    </ul>
+                </li>
+                <li><b>Removed</b>
+                    <ul>
+                        <li>Obsolete Controller: Removed the frontend controller <code>EnderecoShopware5Client</code> which was no longer in use.</li>
+                    </ul>
+                </li>
+                <li><b>Other Changes</b>
+                    <ul>
+                        <li>Updated <code>.gitignore</code>: Modified to exclude new directories (<code>shops</code>, <code>vendor</code>) and files (<code>composer.lock</code>).</li>
+                        <li>Enhanced Build Script: Refined the <code>build-shopware5-client.sh</code> to improve the process of preparing the plugin for deployment.</li>
+                    </ul>
+                </li>
+            </ul>
+            ]]>
+        </changes>
+    </changelog>
+
 
     <changelog version="3.9.2">
         <changes lang="de">
