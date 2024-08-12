@@ -106,6 +106,12 @@
             <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsstatus]" value="{$formData.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsts]" value="{$formData.attribute.enderecoamsts|escape}" />
             <input type="hidden" name="{$inputPrefix}[attribute][enderecoamsapredictions]" value="{$formData.attribute.enderecoamsapredictions|escape}" />
+
+            <input type="hidden" name="{$inputPrefix}[attribute][endereco_status]" value="{$formData.attribute.endereco_status}" />
+            <input type="hidden" name="{$inputPrefix}[attribute][endereco_predictions]" value="{$formData.attribute.endereco_predictions}" />
+            <input type="hidden" name="{$inputPrefix}[attribute][endereco_hash]" value="{$formData.attribute.endereco_hash}" />
+            <input type="hidden" name="{$inputPrefix}[attribute][endereco_session_id]" value="{$formData.attribute.endereco_session_id}" />
+            <input type="hidden" name="{$inputPrefix}[attribute][endereco_session_counter]" value="{$formData.attribute.endereco_session_counter}" />
         {/capture}
     {else}
         {$smarty.block.parent}
@@ -164,6 +170,11 @@
     {else}
         {$smarty.block.parent}
     {/if}
+    <input type="hidden" name="{$inputPrefix}[phone][attribute][endereco_status]" value="{$formData.attribute.endereco_status}" />
+    <input type="hidden" name="{$inputPrefix}[phone][attribute][endereco_predictions]" value="{$formData.attribute.endereco_predictions}" />
+    <input type="hidden" name="{$inputPrefix}[phone][attribute][endereco_hash]" value="{$formData.attribute.endereco_hash}" />
+    <input type="hidden" name="{$inputPrefix}[phone][attribute][endereco_session_id]" value="{$formData.attribute.endereco_session_id}" />
+    <input type="hidden" name="{$inputPrefix}[phone][attribute][endereco_session_counter]" value="{$formData.attribute.endereco_session_counter}" />
 {/block}
 {block name='frontend_address_form_input_set_default_shipping'}
     {if $endereco_is_active && ({controllerName|lower}|in_array:$endereco_controller_whitelist)}

@@ -95,6 +95,12 @@
             <input type="hidden" name="register[billing][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[billing][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
             <input type="hidden" name="register[billing][attribute][enderecoamsapredictions]" value="{$form_data.attribute.enderecoamsapredictions|escape}" />
+
+            <input type="hidden" name="register[billing][attribute][endereco_status]" value="{$form_data.attribute.endereco_status}" />
+            <input type="hidden" name="register[billing][attribute][endereco_predictions]" value="{$form_data.attribute.endereco_predictions}" />
+            <input type="hidden" name="register[billing][attribute][endereco_hash]" value="{$form_data.attribute.endereco_hash}" />
+            <input type="hidden" name="register[billing][attribute][endereco_session_id]" value="{$form_data.attribute.endereco_session_id}" />
+            <input type="hidden" name="register[billing][attribute][endereco_session_counter]" value="{$form_data.attribute.endereco_session_counter}" />
         {/capture}
     {else}
         {$smarty.block.parent}
@@ -292,6 +298,12 @@
             <input type="hidden" name="register[shipping][attribute][enderecoamsstatus]" value="{$form_data.attribute.enderecoamsstatus|escape}" />
             <input type="hidden" name="register[shipping][attribute][enderecoamsts]" value="{$form_data.attribute.enderecoamsts|escape}" />
             <input type="hidden" name="register[shipping][attribute][enderecoamsapredictions]" value="{$form_data.attribute.enderecoamsapredictions|escape}" />
+
+            <input type="hidden" name="register[shipping][attribute][endereco_status]" value="{$form_data.attribute.endereco_status}" />
+            <input type="hidden" name="register[shipping][attribute][endereco_predictions]" value="{$form_data.attribute.endereco_predictions}" />
+            <input type="hidden" name="register[shipping][attribute][endereco_hash]" value="{$form_data.attribute.endereco_hash}" />
+            <input type="hidden" name="register[shipping][attribute][endereco_session_id]" value="{$form_data.attribute.endereco_session_id}" />
+            <input type="hidden" name="register[shipping][attribute][endereco_session_counter]" value="{$form_data.attribute.endereco_session_counter}" />
         {/capture}
     {else}
         {$smarty.block.parent}

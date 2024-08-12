@@ -150,11 +150,58 @@ class EnderecoShopware5Client extends Plugin
             $service->delete('s_order_attributes', 'endereco_order_shippingamsstatus');
         }
 
+        // Meta-Data attributes
+        $metaAttributes = [
+            'endereco_status',
+            'endereco_predictions',
+            'endereco_hash'
+        ];
+
+        foreach ($metaAttributes as $attribute) {
+            if ($service->get('s_user_addresses_attributes', $attribute)) {
+                $service->delete('s_user_addresses_attributes', $attribute);
+            }
+        }
+
+        // Session-Data attributes
+        $sessionAttributes = [
+            'endereco_session_id',
+            'endereco_session_counter'
+        ];
+
+        foreach ($sessionAttributes as $attribute) {
+            if ($service->get('s_user_addresses_attributes', $attribute)) {
+                $service->delete('s_user_addresses_attributes', $attribute);
+            }
+        }
+
+        // Ensure attributes are removed from order addresses as well
+        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
+        foreach ($orderAttributes as $attribute) {
+            if ($service->get('s_order_billingaddress_attributes', $attribute)) {
+                $service->delete('s_order_billingaddress_attributes', $attribute);
+            }
+            if ($service->get('s_order_shippingaddress_attributes', $attribute)) {
+                $service->delete('s_order_shippingaddress_attributes', $attribute);
+            }
+        }
+
+        // Ensure attributes are removed from user as well
+        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
+        foreach ($orderAttributes as $attribute) {
+            if ($service->get('s_user_attributes', $attribute)) {
+                $service->delete('s_user_attributes', $attribute);
+            }
+            if ($service->get('s_user_attributes', $attribute)) {
+                $service->delete('s_user_attributes', $attribute);
+            }
+        }
+
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         if (method_exists($metaDataCache, 'deleteAll')) {
             $metaDataCache->deleteAll();
         }
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes']);
         $uninstallContext->scheduleClearCache(DeactivateContext::CACHE_LIST_ALL);
     }
 
@@ -308,6 +355,70 @@ class EnderecoShopware5Client extends Plugin
             ]);
         }
 
+        // Meta-Data attributes
+        $metaAttributes = [
+            'endereco_status' => 'Status der Adressprüfung',
+            'endereco_predictions' => 'JSON mit möglicher Adresskorrekturen',
+            'endereco_hash' => 'Hash der Daten'
+        ];
+
+        foreach ($metaAttributes as $attribute => $label) {
+            if (!$service->get('s_user_addresses_attributes', $attribute)) {
+                $service->update('s_user_addresses_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                    'label' => $label,
+                    'displayInBackend' => true,
+                    'custom' => true
+                ]);
+            }
+        }
+
+        // Session-Data attributes
+        $sessionAttributes = [
+            'endereco_session_id' => 'Session ID',
+            'endereco_session_counter' => 'Session Counter'
+        ];
+
+        foreach ($sessionAttributes as $attribute => $label) {
+            if (!$service->get('s_user_addresses_attributes', $attribute)) {
+                $service->update('s_user_addresses_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                    'label' => $label,
+                    'displayInBackend' => true,
+                    'custom' => true
+                ]);
+            }
+        }
+
+        // Ensure attributes are added to order addresses as well
+        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
+        foreach ($orderAttributes as $attribute => $label) {
+            if (!$service->get('s_order_billingaddress_attributes', $attribute)) {
+                $service->update('s_order_billingaddress_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                    'label' => $label,
+                    'displayInBackend' => true,
+                    'custom' => true
+                ]);
+            }
+            if (!$service->get('s_order_shippingaddress_attributes', $attribute)) {
+                $service->update('s_order_shippingaddress_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                    'label' => $label,
+                    'displayInBackend' => true,
+                    'custom' => true
+                ]);
+            }
+        }
+
+        // Ensure attributes are added to user as well
+        $userAttributes = array_merge($metaAttributes, $sessionAttributes);
+        foreach ($userAttributes as $attribute => $label) {
+            if (!$service->get('s_user_attributes', $attribute)) {
+                $service->update('s_user_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
+                    'label' => $label,
+                    'displayInBackend' => true,
+                    'custom' => true
+                ]);
+            }
+        }
+
         // If current plugin is EnderecoAMS, the GitHub version is not installed, try to remove old attributes.
         $temp = explode('\\', get_class($this));
         $className =  $temp[count($temp)-1];
@@ -343,6 +454,6 @@ class EnderecoShopware5Client extends Plugin
         if (method_exists($metaDataCache, 'deleteAll')) {
             $metaDataCache->deleteAll();
         }
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes','s_order_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes', 's_user_attributes']);
     }
 }
