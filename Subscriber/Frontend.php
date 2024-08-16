@@ -29,6 +29,18 @@ class Frontend implements SubscriberInterface
      */
     private $cacheManager;
 
+    private $defaultPaymentMethodsWhitelist = [
+        'prepayment',
+        'cash',
+        'invoice',
+        'debit',
+        'sepa'
+    ];
+
+    private $paypalExpressCheckoutPaymentMethodsWhitelist = [
+        'swagpaymentpaypalunified'
+    ];
+
     /**
      * @param string $pluginDir
      */
@@ -291,18 +303,20 @@ class Frontend implements SubscriberInterface
         // This method makes sure the street is saved in split form in attributes.
         $this->ensureSplitStreet($sUserData);
 
+        $fullPaymentMethodsNameWhitelist = array_merge(
+            $this->defaultPaymentMethodsWhitelist,
+            $this->getPaymentMethodsWhitelistExtension()
+        );
+
         /**
          * If existing customers can be checked and the payment method is whitelisted -> check it.
          */
         if (
             $this->config['checkExisting'] &&
-            in_array($currentPaymentMethod, [
-                'prepayment',
-                'cash',
-                'invoice',
-                'debit',
-                'sepa'
-            ])
+            $this->isCurrentPaymentMethodInWhitelist(
+                $this->normalizePaymentMethodName($currentPaymentMethod),
+                $fullPaymentMethodsNameWhitelist
+            )
         ) {
             $continue = true;
         }
@@ -312,9 +326,10 @@ class Frontend implements SubscriberInterface
          */
         if (
             $this->config['checkPayPalExpress'] &&
-            in_array($currentPaymentMethod, [
-                'SwagPaymentPayPalUnified',
-            ])
+            $this->isCurrentPaymentMethodInWhitelist(
+                $this->normalizePaymentMethodName($currentPaymentMethod),
+                $this->paypalExpressCheckoutPaymentMethodsWhitelist
+            )
         ) {
             $continue = true;
         }
@@ -715,5 +730,25 @@ class Frontend implements SubscriberInterface
         }
 
         $this->enderecoService->sendDoAccountings($accountableSessionIds);
+    }
+
+    private function getPaymentMethodsWhitelistExtension(): array
+    {
+        $fullPaymentMethodsWhitelist = explode(
+            ',',
+            preg_replace('/\s+/', '', $this->config['whitelistPaymentMethod'])
+        );
+
+        return array_map([$this, 'normalizePaymentMethodName'], $fullPaymentMethodsWhitelist);
+    }
+
+    private function isCurrentPaymentMethodInWhitelist($currentPaymentMethod, $fullPaymentMethodsWhitelist): bool
+    {
+        return in_array($currentPaymentMethod, $fullPaymentMethodsWhitelist);
+    }
+
+    private function normalizePaymentMethodName($paymentMethodName): string
+    {
+        return strtolower(trim($paymentMethodName));
     }
 }
