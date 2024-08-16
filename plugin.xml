@@ -31,6 +31,27 @@
 
     <logo>/custom/plugins/EnderecoShopware5Client/logo.png</logo>
 
+    <changelog version="3.11.0">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li>Im Backend konfigurierbare Whitelist für Zahlungsmethoden hinzugefügt.</li>
+                <li>Im Backend konfigurierbare Whitelist für Zahlungsmethoden im PayPal Express Checkout hinzugefügt.</li>
+                <li>Legacycode für das Prüfen eines existierenden Nutzers entfernt.</li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li>In backend configurable whitelist for payment methods added.</li>
+                <li>In backend configurable whitelist for payment methods in PayPal Express Checkout added.</li>
+                <li>Legacy code for checking an existing user removed.</li>
+            </ul>
+        ]]>
+        </changes>
+    </changelog>
+
     <changelog version="3.10.0">
         <changes lang="de">
             <![CDATA[
