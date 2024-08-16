@@ -29,6 +29,9 @@ class Frontend implements SubscriberInterface
      */
     private $cacheManager;
 
+    /**
+     * Payment methods used to recognize an existing customer.
+     */
     private $defaultPaymentMethodsWhitelist = [
         'prepayment',
         'cash',
@@ -37,6 +40,9 @@ class Frontend implements SubscriberInterface
         'sepa'
     ];
 
+    /**
+     * Payment methods used to recognize a paypal checkout customer.
+     */
     private $paypalExpressCheckoutPaymentMethodsWhitelist = [
         'swagpaymentpaypalunified'
     ];
@@ -84,7 +90,6 @@ class Frontend implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Address' => 'sendDoAccountingAddress',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Forms' => 'sendDoAccountingForms',
 
-            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'checkExistingCustomerAddresses',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
 
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
@@ -303,19 +308,14 @@ class Frontend implements SubscriberInterface
         // This method makes sure the street is saved in split form in attributes.
         $this->ensureSplitStreet($sUserData);
 
-        $fullPaymentMethodsNameWhitelist = array_merge(
-            $this->defaultPaymentMethodsWhitelist,
-            $this->getPaymentMethodsWhitelistExtension()
-        );
-
         /**
          * If existing customers can be checked and the payment method is whitelisted -> check it.
          */
         if (
             $this->config['checkExisting'] &&
             $this->isCurrentPaymentMethodInWhitelist(
-                $this->normalizePaymentMethodName($currentPaymentMethod),
-                $fullPaymentMethodsNameWhitelist
+                $currentPaymentMethod,
+                $this->getExistingCustomerPaymentWhitelist()
             )
         ) {
             $continue = true;
@@ -327,8 +327,8 @@ class Frontend implements SubscriberInterface
         if (
             $this->config['checkPayPalExpress'] &&
             $this->isCurrentPaymentMethodInWhitelist(
-                $this->normalizePaymentMethodName($currentPaymentMethod),
-                $this->paypalExpressCheckoutPaymentMethodsWhitelist
+                $currentPaymentMethod,
+                $this->getPayPalExpressCheckoutPaymentWhitelist()
             )
         ) {
             $continue = true;
@@ -519,57 +519,6 @@ class Frontend implements SubscriberInterface
         }
     }
 
-    public function checkExistingCustomerAddresses($args)
-    {
-        $request = $args->getRequest();
-        $controller = $args->get('subject');
-        $view = $controller->View();
-        $availableActions = ['login', 'index'];
-
-        if (!in_array(strtolower($request->getActionName()), $availableActions, true)) {
-            return;
-        }
-
-        if (!$this->config['checkExisting']) {
-            return;
-        }
-        if (!$this->config['isPluginActive']) {
-            return;
-        }
-
-        $sUserData = $view->getAssign('sUserData');
-
-        if (array_key_exists('user', $sUserData['additional'])) {
-            // Fetch all user addresses.
-            /**
-             * @var AddressRepository
-             */
-            $addressRepository = Shopware()->Models()->getRepository(Address::class);
-            $addresses = $addressRepository->getListArray($sUserData['additional']['user']['id']);
-            $addressesToCheck = array();
-
-            foreach ($addresses as $address) {
-                // Check if users address is alright.
-                if (
-                    array_key_exists('enderecoamsstatus', $address['attribute']) &&
-                    (
-                        !array_key_exists('moptwunschpaketaddresstype', $address['attribute']) ||
-                        !in_array($address['attribute']['moptwunschpaketaddresstype'], ['filiale', 'packstation'])
-                    ) &&
-                    (
-                        !$address['attribute']['enderecoamsstatus'] ||
-                        (false !== strpos($address['attribute']['enderecoamsstatus'], 'address_not_checked'))
-                    )
-                ) {
-                    $addressesToCheck[$address['id']] = true;
-                }
-            }
-
-            // Check addresses.
-            $this->enderecoService->checkAddresses(array_keys($addressesToCheck));
-        }
-    }
-
     public function onPostDispatchConfig(\Enlight_Event_EventArgs $args)
     {
         /** @var Shopware_Controllers_Backend_Config $subject */
@@ -732,23 +681,74 @@ class Frontend implements SubscriberInterface
         $this->enderecoService->sendDoAccountings($accountableSessionIds);
     }
 
-    private function getPaymentMethodsWhitelistExtension(): array
+    /**
+     * Returns the most up-to-date list of payment names that indicate an existing customer.
+     *
+     * @return array List of payment method names
+     */
+    private function getExistingCustomerPaymentWhitelist()
     {
-        $fullPaymentMethodsWhitelist = explode(
-            ',',
-            preg_replace('/\s+/', '', $this->config['whitelistPaymentMethod'])
+        $originalWhitelist = $this->defaultPaymentMethodsWhitelist;
+        $additionalNames = explode(',', $this->config['whitelistPaymentMethod']);
+        return array_merge($originalWhitelist, $additionalNames);
+    }
+
+    /**
+     * Returns the most up-to-date list of payment names that indicate PayPal Express Checkout customer.
+     *
+     * @return array List of PayPal Express Checkout payment method names
+     */
+    private function getPayPalExpressCheckoutPaymentWhitelist()
+    {
+        $originalWhitelist = $this->paypalExpressCheckoutPaymentMethodsWhitelist;
+        $additionalNames = explode(',', $this->config['alternativePayPalPaymentNames']);
+        return array_merge($originalWhitelist, $additionalNames);
+    }
+
+    /**
+     * Checks if the current payment method is in the given whitelist.
+     *
+     * @param string $currentPaymentMethod Name of the current payment method
+     * @param array  $whitelist List of whitelisted payment method names
+     *
+     * @return bool True if the current payment method is in the whitelist, false otherwise
+     */
+    private function isCurrentPaymentMethodInWhitelist($currentPaymentMethod, array $whitelist): bool
+    {
+        $normalizedPaymentName = $this->normalizePaymentMethodName($currentPaymentMethod);
+        $normalizedWhitelist = $this->normalizePaymentMethodNames($whitelist);
+        return in_array($normalizedPaymentName, $normalizedWhitelist);
+    }
+
+    /**
+     * Normalizes an array of payment method names. The normalization is used to make
+     * comparison a bit more robust, as the user might potentially use lower and upper
+     * case in unexpected manner.
+     *
+     * @param array $paymentMethodNames Array of payment method names to normalize
+     *
+     * @return array Normalized payment method names
+     */
+    private function normalizePaymentMethodNames(array $paymentMethodNames): array
+    {
+        return array_map([$this, 'normalizePaymentMethodName'], $paymentMethodNames);
+    }
+
+    /**
+     * Normalizes a single payment method name. This method reduces the variability in the way
+     * a payment name can be written by a shop user, potentially making the comparison agains whitelist
+     * more robust.
+     *
+     * @param string $paymentMethodName Payment method name to normalize
+     *
+     * @return string Normalized payment method name
+     */
+    private function normalizePaymentMethodName(string $paymentMethodName): string
+    {
+        return mb_strtolower(
+            trim(
+                preg_replace('/\s+/', '', $paymentMethodName)
+            )
         );
-
-        return array_map([$this, 'normalizePaymentMethodName'], $fullPaymentMethodsWhitelist);
-    }
-
-    private function isCurrentPaymentMethodInWhitelist($currentPaymentMethod, $fullPaymentMethodsWhitelist): bool
-    {
-        return in_array($currentPaymentMethod, $fullPaymentMethodsWhitelist);
-    }
-
-    private function normalizePaymentMethodName($paymentMethodName): string
-    {
-        return strtolower(trim($paymentMethodName));
     }
 }

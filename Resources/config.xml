@@ -539,8 +539,16 @@
 
         <element type="text" scope="shop">
             <name>whitelistPaymentMethod</name>
-            <label lang="de">Das Plugin wird zusätzlich für diese Zahlungsmethoden aktiviert.</label>
-            <label lang="en">The plugin will be activated additionally for the payment methods defined here.</label>
+            <label lang="de">Die Bestandskundenprüfung wird zusätzlich für diese Zahlungsarten aktiviert.</label>
+            <label lang="en">The existing customer check is additionally activated for these payment methods.</label>
+            <description lang="de">Die Namen der Zahlungsmethoden müssen klein geschrieben und mit "," getrennt eingeben werden. (z.B. "paypal,paypalexpress,cashondelivery").</description>
+            <description lang="en">The payment method names must be entered in lower case and separated by ",". (e.g. "paypal,paypalexpress,cashondelivery").</description>
+        </element>
+
+        <element type="text" scope="shop">
+            <name>alternativePayPalPaymentNames</name>
+            <label lang="de">Die PayPal Express Checkout Prüfung wird zusätzlich für diese Zahlungsarten aktiviert.</label>
+            <label lang="en">The paypal express checkout check is additionally activated for these payment methods.</label>
             <description lang="de">Die Namen der Zahlungsmethoden müssen klein geschrieben und mit "," getrennt eingeben werden. (z.B. "paypal,paypalexpress,cashondelivery").</description>
             <description lang="en">The payment method names must be entered in lower case and separated by ",". (e.g. "paypal,paypalexpress,cashondelivery").</description>
         </element>
