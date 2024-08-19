@@ -539,18 +539,18 @@
 
         <element type="text" scope="shop">
             <name>whitelistPaymentMethod</name>
-            <label lang="de">Die Bestandskundenprüfung wird zusätzlich für diese Zahlungsarten aktiviert.</label>
-            <label lang="en">The existing customer check is additionally activated for these payment methods.</label>
-            <description lang="de">Die Namen der Zahlungsmethoden müssen klein geschrieben und mit "," getrennt eingeben werden. (z.B. "paypal,paypalexpress,cashondelivery").</description>
-            <description lang="en">The payment method names must be entered in lower case and separated by ",". (e.g. "paypal,paypalexpress,cashondelivery").</description>
+            <label lang="de">Die Bestandskundenprüfung soll für Bestellungen aus diesen Quellen erweitert werden:</label>
+            <label lang="en">The existing customer check should be extended to orders from these sources:</label>
+            <description lang="de">Standardmäßig sind folgende Zahlungsarten hinterlegt: 'prepayment', 'cash', 'invoice', 'debit', 'sepa' (geprüft wird das Feld "Name"). Es werden nicht alle Zahlungarten untersützt.</description>
+            <description lang="en">The following payment methods are additionally checked by default: 'prepayment', 'cash', 'invoice', 'debit', 'sepa' (the "Name" field is checked). Not all payment methods are supported.</description>
         </element>
 
         <element type="text" scope="shop">
             <name>alternativePayPalPaymentNames</name>
-            <label lang="de">Die PayPal Express Checkout Prüfung wird zusätzlich für diese Zahlungsarten aktiviert.</label>
-            <label lang="en">The paypal express checkout check is additionally activated for these payment methods.</label>
-            <description lang="de">Die Namen der Zahlungsmethoden müssen klein geschrieben und mit "," getrennt eingeben werden. (z.B. "paypal,paypalexpress,cashondelivery").</description>
-            <description lang="en">The payment method names must be entered in lower case and separated by ",". (e.g. "paypal,paypalexpress,cashondelivery").</description>
+            <label lang="de">Folgende “Sofortzahlungsarten” sollen zusätzlich zu PayPal Express geprüft werden:</label>
+            <label lang="en">The following “instant payment methods” should be checked in addition to PayPal Express:</label>
+            <description lang="de">Standardmäßig sind folgende Zahlungsarten hinterlegt: 'swagpaymentpaypalunified' (geprüft wird das Feld "Name"). Es werden nicht alle Zahlungarten untersützt.</description>
+            <description lang="en">The following payment methods are additionally checked by default: 'swagpaymentpaypalunified' (the "Name" field is checked). Not all payment methods are supported.</description>
         </element>
 
         <element type="boolean" scope="shop">

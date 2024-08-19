@@ -713,7 +713,7 @@ class Frontend implements SubscriberInterface
      *
      * @return bool True if the current payment method is in the whitelist, false otherwise
      */
-    private function isCurrentPaymentMethodInWhitelist($currentPaymentMethod, array $whitelist): bool
+    private function isCurrentPaymentMethodInWhitelist($currentPaymentMethod, array $whitelist)
     {
         $normalizedPaymentName = $this->normalizePaymentMethodName($currentPaymentMethod);
         $normalizedWhitelist = $this->normalizePaymentMethodNames($whitelist);
@@ -729,7 +729,7 @@ class Frontend implements SubscriberInterface
      *
      * @return array Normalized payment method names
      */
-    private function normalizePaymentMethodNames(array $paymentMethodNames): array
+    private function normalizePaymentMethodNames(array $paymentMethodNames)
     {
         return array_map([$this, 'normalizePaymentMethodName'], $paymentMethodNames);
     }
@@ -743,7 +743,7 @@ class Frontend implements SubscriberInterface
      *
      * @return string Normalized payment method name
      */
-    private function normalizePaymentMethodName(string $paymentMethodName): string
+    private function normalizePaymentMethodName(string $paymentMethodName)
     {
         return mb_strtolower(
             trim(

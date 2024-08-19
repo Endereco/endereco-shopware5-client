@@ -35,20 +35,36 @@
         <changes lang="de">
             <![CDATA[
             <ul>
-                <li>Im Backend konfigurierbare Whitelist für Zahlungsmethoden hinzugefügt.</li>
-                <li>Im Backend konfigurierbare Whitelist für Zahlungsmethoden im PayPal Express Checkout hinzugefügt.</li>
-                <li>Legacycode für das Prüfen eines existierenden Nutzers entfernt.</li>
+                <li><b>Neue Features</b>
+                    <ul>
+                        <li>Im Backend wurde die Option hinzugefügt, weitere Quellen für Bestellungen zu hinterlegen, die von der Bestandskundenprüfung validiert werden sollen.</li>
+                        <li>Im Backend wurde die Option hinzugefügt weitere Sofortzahlungsarten zu hinterlegen, die von der Adressprüfung validiert werden sollen.</li>
+                    </ul>
+                </li>
+                <li><b>Verbesserungen</b>
+                    <ul>
+                        <li>Legacycode für das Prüfen eines existierenden Nutzers entfernt.</li>
+                    </ul>
+                </li>
             </ul>
         ]]>
         </changes>
         <changes lang="en">
             <![CDATA[
             <ul>
-                <li>In backend configurable whitelist for payment methods added.</li>
-                <li>In backend configurable whitelist for payment methods in PayPal Express Checkout added.</li>
-                <li>Legacy code for checking an existing user removed.</li>
+                <li><b>New features</b>
+                    <ul>
+                        <li>The option to store additional sources for orders that should be validated by the existing customer check has been added to the backend.</li>
+                        <li>The option to store additional instant payment methods that should be validated by the address check has been added to the backend.</li>
+                    </ul>
+                </li>
+                <li><b>Improvements</b>
+                    <ul>
+                        <li>Legacy code for checking an existing user has been removed.</li>
+                    </ul>
+                </li>
             </ul>
-        ]]>
+            ]]>
         </changes>
     </changelog>
 
