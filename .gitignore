@@ -5,3 +5,4 @@ package-lock.json
 shops/*
 /vendor/
 composer.lock
+*.zip
