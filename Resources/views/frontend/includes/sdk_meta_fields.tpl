@@ -1,0 +1,5 @@
+<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_status{$suffix}]" value="{$formData.attribute.endereco_{$infix}_status}{$suffix}" />
+<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_predictions{$suffix}]" value="{$formData.attribute.endereco_{$infix}_predictions}{$suffix}" />
+<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_hash{$suffix}]" value="{$formData.attribute.endereco_{$infix}_hash}{$suffix}" />
+<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_session_id{$suffix}]" value="{$formData.attribute.endereco_session_{$infix}_id}{$suffix}" />
+<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_session_counter{$suffix}]" value="{$formData.attribute.endereco_session_{$infix}_counter{$suffix}}" />

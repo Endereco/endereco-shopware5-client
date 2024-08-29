@@ -562,6 +562,11 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_plugin_version', $enderecoService->getVersion());
         $view->assign('endereco_theme_name', $this->themeName);
 
+        $infixes = array_keys($enderecoService->getInfixesToTablesMap());
+        $suffix = $enderecoService->isStoreVersionInstalled();
+        $view->assign('sdk_attributes_infixes', $infixes);
+        $view->assign('sdk_attributes_suffix', $suffix);
+
         // Get country mapping.
         $countryRepository = Shopware()
             ->Container()
