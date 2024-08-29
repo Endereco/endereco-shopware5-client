@@ -2,7 +2,6 @@
 
 namespace EnderecoShopware5Client;
 
-use Shopware\Bundle\PluginInstallerBundle\Service\InstallerService;
 use Shopware\Components\Plugin;
 use Shopware\Components\Plugin\Context\InstallContext;
 use Shopware\Components\Plugin\Context\ActivateContext;
@@ -13,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class EnderecoShopware5Client extends Plugin
 {
-
     /**
      * {@inheritdoc}
      */
@@ -150,58 +148,13 @@ class EnderecoShopware5Client extends Plugin
             $service->delete('s_order_attributes', 'endereco_order_shippingamsstatus');
         }
 
-        // Meta-Data attributes
-        $metaAttributes = [
-            'endereco_status',
-            'endereco_predictions',
-            'endereco_hash'
-        ];
-
-        foreach ($metaAttributes as $attribute) {
-            if ($service->get('s_user_addresses_attributes', $attribute)) {
-                $service->delete('s_user_addresses_attributes', $attribute);
-            }
-        }
-
-        // Session-Data attributes
-        $sessionAttributes = [
-            'endereco_session_id',
-            'endereco_session_counter'
-        ];
-
-        foreach ($sessionAttributes as $attribute) {
-            if ($service->get('s_user_addresses_attributes', $attribute)) {
-                $service->delete('s_user_addresses_attributes', $attribute);
-            }
-        }
-
-        // Ensure attributes are removed from order addresses as well
-        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
-        foreach ($orderAttributes as $attribute) {
-            if ($service->get('s_order_billingaddress_attributes', $attribute)) {
-                $service->delete('s_order_billingaddress_attributes', $attribute);
-            }
-            if ($service->get('s_order_shippingaddress_attributes', $attribute)) {
-                $service->delete('s_order_shippingaddress_attributes', $attribute);
-            }
-        }
-
-        // Ensure attributes are removed from user as well
-        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
-        foreach ($orderAttributes as $attribute) {
-            if ($service->get('s_user_attributes', $attribute)) {
-                $service->delete('s_user_attributes', $attribute);
-            }
-            if ($service->get('s_user_attributes', $attribute)) {
-                $service->delete('s_user_attributes', $attribute);
-            }
-        }
+        $this->deleteAttributes();
 
         $metaDataCache = Shopware()->Models()->getConfiguration()->getMetadataCacheImpl();
         if (method_exists($metaDataCache, 'deleteAll')) {
             $metaDataCache->deleteAll();
         }
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_attributes, s_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes']);
         $uninstallContext->scheduleClearCache(DeactivateContext::CACHE_LIST_ALL);
     }
 
@@ -355,69 +308,7 @@ class EnderecoShopware5Client extends Plugin
             ]);
         }
 
-        // Meta-Data attributes
-        $metaAttributes = [
-            'endereco_status' => 'Status der Adressprüfung',
-            'endereco_predictions' => 'JSON mit möglicher Adresskorrekturen',
-            'endereco_hash' => 'Hash der Daten'
-        ];
-
-        foreach ($metaAttributes as $attribute => $label) {
-            if (!$service->get('s_user_addresses_attributes', $attribute)) {
-                $service->update('s_user_addresses_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                    'label' => $label,
-                    'displayInBackend' => true,
-                    'custom' => true
-                ]);
-            }
-        }
-
-        // Session-Data attributes
-        $sessionAttributes = [
-            'endereco_session_id' => 'Session ID',
-            'endereco_session_counter' => 'Session Counter'
-        ];
-
-        foreach ($sessionAttributes as $attribute => $label) {
-            if (!$service->get('s_user_addresses_attributes', $attribute)) {
-                $service->update('s_user_addresses_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                    'label' => $label,
-                    'displayInBackend' => true,
-                    'custom' => true
-                ]);
-            }
-        }
-
-        // Ensure attributes are added to order addresses as well
-        $orderAttributes = array_merge($metaAttributes, $sessionAttributes);
-        foreach ($orderAttributes as $attribute => $label) {
-            if (!$service->get('s_order_billingaddress_attributes', $attribute)) {
-                $service->update('s_order_billingaddress_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                    'label' => $label,
-                    'displayInBackend' => true,
-                    'custom' => true
-                ]);
-            }
-            if (!$service->get('s_order_shippingaddress_attributes', $attribute)) {
-                $service->update('s_order_shippingaddress_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                    'label' => $label,
-                    'displayInBackend' => true,
-                    'custom' => true
-                ]);
-            }
-        }
-
-        // Ensure attributes are added to user as well
-        $userAttributes = array_merge($metaAttributes, $sessionAttributes);
-        foreach ($userAttributes as $attribute => $label) {
-            if (!$service->get('s_user_attributes', $attribute)) {
-                $service->update('s_user_attributes', $attribute, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING, [
-                    'label' => $label,
-                    'displayInBackend' => true,
-                    'custom' => true
-                ]);
-            }
-        }
+        $this->createAttributes();
 
         // If current plugin is EnderecoAMS, the GitHub version is not installed, try to remove old attributes.
         $temp = explode('\\', get_class($this));
@@ -454,6 +345,76 @@ class EnderecoShopware5Client extends Plugin
         if (method_exists($metaDataCache, 'deleteAll')) {
             $metaDataCache->deleteAll();
         }
-        Shopware()->Models()->generateAttributeModels(['s_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes', 's_user_attributes']);
+        Shopware()->Models()->generateAttributeModels(['s_user_attributes', 's_user_addresses_attributes', 's_order_attributes', 's_order_billingaddress_attributes', 's_order_shippingaddress_attributes']);
     }
+
+    public function createAttributes()
+    {
+        $enderecoService = $this->container->get('endereco_shopware5_client.service.endereco_service');
+
+        $suffix = $enderecoService->isStoreVersionInstalled() ? 'store' : '';
+
+        foreach ($enderecoService->getInfixesToTablesMap as $infix => $tables) {
+            $attributes = $enderecoService->generateAttributeNames($infix, $suffix);
+            foreach ($tables as $table) {
+                foreach ($attributes as $attribute => $label) {
+                    $this->createAttribute($table, $attribute, $label, \Shopware\Bundle\AttributeBundle\Service\TypeMapping::TYPE_STRING);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $table
+     * @param string $name
+     * @param string $label
+     * @param string $type
+     * @param string $suffix
+    **/
+     private function createAttribute($table, $name, $label, $type, $suffix = '')
+     {
+        /**
+        * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
+        **/
+        $service = $this->container->get('shopware_attribute.crud_service');
+        if (!$service->get($table, $name.$suffix)) {
+            $service->update($table, $name.$suffix, $type, [
+                'label' => $label,
+                'displayInBackend' => true,
+                'custom' => true
+            ]);
+        }
+     }
+
+    public function deleteAttributes()
+    {
+        $enderecoService = $this->container->get('endereco_shopware5_client.service.endereco_service');
+
+        $suffix = $enderecoService->isStoreVersionInstalled() ? 'store' : '';
+
+        foreach ($enderecoService->getInfixesToTablesMap as $infix => $tables) {
+            $attributes = $enderecoService->generateAttributeNames($infix, $suffix);
+            foreach ($tables as $table) {
+                foreach ($attributes as $attribute) {
+                    $this->deleteAttribute($table, $attribute);
+                }
+            }
+        }
+    }
+
+     /**
+      * @param string $table
+      * @param string $name
+      * @param string $suffix
+      **/
+     private function deleteAttribute($table, $name, $suffix = '')
+     {
+         /**
+          * @var \Shopware\Bundle\AttributeBundle\Service\CrudService
+          **/
+         $service = $this->container->get('shopware_attribute.crud_service');
+         if ($service->get($table, $name.$suffix)) {
+             $service->delete($table, $name.$suffix);
+         }
+     }
 }

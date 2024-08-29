@@ -3,7 +3,6 @@
 namespace EnderecoShopware5Client\Subscriber;
 
 use Enlight\Event\SubscriberInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Shopware\Components\CacheManager;
 use Shopware\Components\Logger;
 use Shopware\Models\Country\Country;
@@ -90,7 +89,6 @@ class Frontend implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Address' => 'sendDoAccountingAddress',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Forms' => 'sendDoAccountingForms',
 
-            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'saveUserAttributes',
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
 
             'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
@@ -156,24 +154,22 @@ class Frontend implements SubscriberInterface
                 $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
         }
 
-        $user = $args->get('user');
+        $suffix = $this->enderecoService->isStoreVersionInstalled();
 
-        $billingAddress = $user['billingaddress'];
-        $shippingAddress = $user['shippingaddress'];
+        foreach ($this->enderecoService->getInfixesToTablesMap as $infix) {
+            $attributes = $this->enderecoService->generateAttributeNames($infix, $suffix);
+            foreach ($attributes as $attribute) {
+                if ($sOrder->sUserData['billingaddress']['attributes'][$attribute]) {
+                    $returnValue[$attribute] =
+                        $sOrder->sUserData['billingaddress']['attributes'][$attribute];
+                }
 
-        // Set attributes from billing address
-        $sOrder->setAttribute('endereco_status', $billingAddress['attribute']['endereco_status']);
-        $sOrder->setAttribute('endereco_predictions', $billingAddress['attribute']['endereco_predictions']);
-        $sOrder->setAttribute('endereco_hash', $billingAddress['attribute']['endereco_hash']);
-        $sOrder->setAttribute('endereco_session_id', $billingAddress['attribute']['endereco_session_id']);
-        $sOrder->setAttribute('endereco_session_counter', $billingAddress['attribute']['endereco_session_counter']);
-
-        // Set attributes from shipping address
-        $sOrder->setAttribute('endereco_status_shipping', $shippingAddress['attribute']['endereco_status']);
-        $sOrder->setAttribute('endereco_predictions_shipping', $shippingAddress['attribute']['endereco_predictions']);
-        $sOrder->setAttribute('endereco_hash_shipping', $shippingAddress['attribute']['endereco_hash']);
-        $sOrder->setAttribute('endereco_session_id_shipping', $shippingAddress['attribute']['endereco_session_id']);
-        $sOrder->setAttribute('endereco_session_counter_shipping', $shippingAddress['attribute']['endereco_session_counter']);
+                if ($sOrder->sUserData['shippingaddress']['attributes'][$attribute]) {
+                    $returnValue[$attribute] =
+                        $sOrder->sUserData['shippingaddress']['attributes'][$attribute];
+                }
+            }
+        }
 
         return $returnValue;
     }
@@ -665,25 +661,6 @@ class Frontend implements SubscriberInterface
         $dirs[] = $this->pluginDir . '/Resources/views/';
 
         $args->setReturn($dirs);
-    }
-
-    public function saveUserAttributes($args)
-    {
-        // Implementation for saving user attributes
-        $request = $args->getRequest();
-        $controller = $args->get('subject');
-        $userId = $controller->get('session')->get('sUserId');
-
-        if ($userId && $request->isPost()) {
-            $attributes = $request->getPost('attribute', []);
-            $attributeService = Shopware()->Container()->get('shopware_attribute.crud_service');
-
-            foreach ($attributes as $key => $value) {
-                $attributeService->update('s_user_attributes', $key, $value, [
-                    'userId' => $userId
-                ]);
-            }
-        }
     }
 
     private function hex2rgb($hex)

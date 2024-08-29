@@ -20,6 +20,41 @@ class EnderecoService
     private $serviceUrl;
     private $version;
 
+    /**
+     * @var array
+     **/
+    private $attributeNames = [
+        'status' => 'Status der Adressprüfung',
+        'predictions' => 'JSON mit möglicher Adresskorrekturen',
+        'hash' => 'Hash der Daten',
+        'session_id' => 'Session ID',
+        'session_counter' => 'Session Counter'
+    ];
+
+    /**
+     * @var array
+     **/
+    private $infixesToTablesMap = [
+        'person' => [
+            's_user_addresses_attributes',
+            's_user_shippingaddress_attributes',
+            's_user_billingaddress_attributes'
+        ],
+        'email' => ['s_user_attributes'],
+        'phone' => [
+            's_user_addresses_attributes',
+            's_user_shippingaddress_attributes',
+            's_user_billingaddress_attributes'
+        ],
+        'address' => [
+            's_user_addresses_attributes',
+            's_user_shippingaddress_attributes',
+            's_user_billingaddress_attributes'
+        ],
+        'shipping_address' => ['s_user_shippingaddress_attributes'],
+        'billing_address' => ['s_user_billingaddress_attributes']
+    ];
+
     public function __construct($pluginInfo, $logger)
     {
         $this->pluginInfo = $pluginInfo;
@@ -344,5 +379,37 @@ class EnderecoService
                 $this->logger->addRecord(Logger::ERROR, $e->getMessage());
             }
         }
+    }
+
+    /**
+     * @return array
+     **/
+    public function getInfixesToTablesMap()
+    {
+        return $this->infixesToTablesMap;
+    }
+
+    /**
+     * @param  string $infix
+     * @param  string $suffix
+     * @return array
+     **/
+    public function generateAttributeNames($infix, $suffix)
+    {
+        $attributes = [];
+        foreach ($this->attributeNames as $key => $label) {
+            $attributes["endereco_{$infix}_{$key}.{$suffix}"] = $label;
+        }
+        return $attributes;
+    }
+
+    /**
+     * @return bool
+     **/
+    public function isStoreVersionInstalled()
+    {
+        $temp = explode('\\', get_class($this));
+        $className =  $temp[count($temp) - 1];
+        return ('Endereco' . 'AMS') === $className;
     }
 }
