@@ -65,6 +65,15 @@ docker exec $container_name find EnderecoAMS -type f \
     -exec sed -i 's/endereco_order_shippingamsts/endereco_order_swshippingamsts/g' {} + \
     -exec sed -i 's/endereco_order_billingamsstatus/endereco_order_swbillingamsstatus/g' {} + \
     -exec sed -i 's/endereco_order_shippingamsstatus/endereco_order_swshippingamsstatus/g' {} + \
+    -exec sed -i "s/'gh'/'sw'/g" {} + \
+    -exec sed -i "s/_gh/_sw/g" {} + \
+    -exec sed -i "s/StatusGh/StatusSw/g" {} + \
+    -exec sed -i "s/PredictionsGh/PredictionsSw/g" {} + \
+    -exec sed -i "s/HashGh/HashSw/g" {} + \
+    -exec sed -i "s/SessionIdGh/SessionIdSw/g" {} + \
+    -exec sed -i "s/SessionCounterGh/SessionCounterSw/g" {} + \
+
+    
 
 docker exec $container_name find EnderecoAMS -type f -name '*EnderecoShopware5Client*' -exec sh -c '
     for file do

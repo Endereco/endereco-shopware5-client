@@ -15,7 +15,7 @@ echo "Available Shopware 5 versions:"
 printf " - %s\n" "${versions[@]}"
 
 # Ask the user for the desired version
-read -p "Enter the version of Shopware 6 you want to use: " version
+read -p "Enter the version of Shopware 5 you want to use: " version
 
 # Check if the version is valid
 if containsElement "$version" "${versions[@]}"; then
@@ -36,7 +36,7 @@ if containsElement "$version" "${versions[@]}"; then
     echo "Your plugin is mounted at /var/www/html/custom/plugins/EnderecoShopware5Client"
 
     # Activate the plugin
-    docker exec shopware-$version bash -c "cd /var/www/html && ./bin/console sw:plugin:refresh && ./bin/console sw:plugin:install --activate EnderecoShopware5Client"
+    docker exec shopware-$version bash -c "cd /var/www/html && ./bin/console sw:plugin:refresh && ./bin/console sw:plugin:install --activate EnderecoShopware5Client && ./bin/console sw:cache:clear"
 
     echo "Plugin is activated."
 else

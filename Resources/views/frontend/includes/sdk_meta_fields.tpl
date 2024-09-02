@@ -1,5 +1,6 @@
-<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_status{$suffix}]" value="{$formData.attribute.endereco_{$infix}_status}{$suffix}" />
-<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_predictions{$suffix}]" value="{$formData.attribute.endereco_{$infix}_predictions}{$suffix}" />
-<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_hash{$suffix}]" value="{$formData.attribute.endereco_{$infix}_hash}{$suffix}" />
-<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_session_id{$suffix}]" value="{$formData.attribute.endereco_session_{$infix}_id}{$suffix}" />
-<input type="hidden" name="{$inputPrefix}[attribute][endereco_{$infix}_session_counter{$suffix}]" value="{$formData.attribute.endereco_session_{$infix}_counter{$suffix}}" />
+<input type="text" style="width:100%" placeholder="{$inputPrefix}[attribute][endereco{$infix}StatusGh]" name="{$inputPrefix}[attribute][endereco{$infix}StatusGh]" value="{$formData.attribute["endereco{$infix}StatusGh"]|default:''|escape}" />
+<input type="text" style="width:100%" placeholder="{$inputPrefix}[attribute][endereco{$infix}PredictionsGh]" name="{$inputPrefix}[attribute][endereco{$infix}PredictionsGh]" value="{$formData.attribute["endereco{$infix}PredictionsGh"]|default:'[]'|escape}" />
+<input type="text" style="width:100%" placeholder="{$inputPrefix}[attribute][endereco{$infix}HashGh]" name="{$inputPrefix}[attribute][endereco{$infix}HashGh]" value="{$formData.attribute["endereco{$infix}HashGh"]|default:''|escape}" />
+<input type="text" style="width:100%" placeholder="{$inputPrefix}[attribute][endereco{$infix}SessionIdGh]" name="{$inputPrefix}[attribute][endereco{$infix}SessionIdGh]" value="{$formData.attribute["endereco{$infix}SessionIdGh"]|default:''|escape}" />
+<input type="text" style="width:100%" placeholder="{$inputPrefix}[attribute][endereco{$infix}SessionCounterGh]" name="{$inputPrefix}[attribute][endereco{$infix}SessionCounterGh]" value="{$formData.attribute["endereco{$infix}SessionCounterGh"]|default:'0'|escape}" />
+

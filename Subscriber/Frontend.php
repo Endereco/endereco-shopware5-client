@@ -22,6 +22,7 @@ class Frontend implements SubscriberInterface
     private $enderecoService;
     private $config;
     private $themeName;
+    private $registerSubmitData;
 
     /**
      * @var CacheManager
@@ -90,9 +91,222 @@ class Frontend implements SubscriberInterface
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Forms' => 'sendDoAccountingForms',
 
             'Enlight_Controller_Action_PostDispatchSecure_Frontend_Checkout' => 'checkAdressesOrOpenModals',
+            'Enlight_Controller_Action_PostDispatchSecure_Frontend_Account' => 'onAccountPostDispatch',
 
-            'Shopware_Modules_Order_SaveOrder_FilterAttributes' => 'onAfterOrderSaveOrder',
+            'Enlight_Controller_Action_PreDispatch_Frontend_Register' => 'beforeRegister',
+            'Shopware_Modules_Admin_SaveRegister_Successful' => 'afterRegister',
+            'Shopware_Modules_Admin_SaveRegister_DoubleOptIn_Waiting'
+                => 'afterRegister', // This option appears in SW 5.4
+
             'Shopware_Modules_Order_SaveOrder_FilterParams' => 'addCommentToOrder',
+        ];
+    }
+
+    /**
+     * Handles actions after a successful customer registration.
+     *
+     * This method is triggered after the customer registration process is completed successfully.
+     * It retrieves the customer's attribute model based on the customer ID and updates the profile
+     * and email attributes from the registration data. The updated attributes are then persisted
+     * in the database. Thats pretty much the only way to save those attributes we could find, that
+     * would work in older versions (e.g. 5.3) too.
+     *
+     * @param \Enlight_Event_EventArgs $args The event arguments passed to the listener,
+     *                                       containing the customer ID and other relevant data.
+     *
+     * @return void
+     */
+    public function afterRegister(\Enlight_Event_EventArgs $args)
+    {
+        $customerId = $args->get('id');
+
+        /**
+         * @var Shopware\Models\Attribute\Customer
+         */
+        $attributeModel = $this->getCustomerAttributeModelFromId($customerId);
+
+        $this->setProfileAttributesFromBilling(
+            $attributeModel,
+            $this->registerSubmitData['register']['billing']['attribute']
+        );
+        $this->setEmailAttributes($attributeModel, $this->registerSubmitData['email']['attribute']);
+        $this->registerSubmitData = null;
+
+        Shopware()->Models()->persist($attributeModel);
+        Shopware()->Models()->flush();
+    }
+
+    /**
+     * Prepares customer registration data before finalizing the registration process.
+     *
+     * This method is called before the customer registration process is finalized. Basically
+     * before the action is processed we save here in this object the passed formData, to use it
+     * later (after the customer is registered and persisted) to add and save the attributes.
+     *
+     * @param \Enlight_Event_EventArgs $args The event arguments passed to the listener,
+     *                                       containing the request and action details.
+     *
+     * @return void
+     */
+    public function beforeRegister(\Enlight_Event_EventArgs $args)
+    {
+        $request = $args->getSubject()->Request();
+        $actionName = $request->getActionName();
+
+        if ($actionName !== 'saveRegister') {
+            return;
+        }
+
+        $request = Shopware()->Front()->Request();
+        $this->registerSubmitData = $request->getPost();
+    }
+
+    /**
+     * This method ensures that on profile page we actually have attributes, as shopware 5 itself doesn't do it.
+     * Its also responsible for saving those attributes upon submit.
+     *
+     * @param \Enlight_Event_EventArgs $args Event arguments containing the controller and request information.
+     */
+    public function onAccountPostDispatch(\Enlight_Event_EventArgs $args)
+    {
+        $controller = $args->getSubject();
+        $request = $controller->Request();
+        $view = $controller->View();
+
+        $userData = $view->getAssign('sUserData');
+        $formData = $view->getAssign('form_data');
+        $actionName = $request->getActionName();
+
+        if ($request->isPost() && ($actionName === 'saveProfile' || $actionName === 'saveEmail')) {
+            $this->updateCustomerAttributes($userData, $request->getPost());
+        }
+
+        $this->assignFormDataAttributes($userData, $formData);
+
+        $view->assign('sUserData', $userData);
+        $view->assign('form_data', $formData);
+    }
+
+    /**
+     * Updates customer profile attributes for profile and email based on the submitted data.
+     * Depending on which data is actually available its either the profile or the email,
+     * that gets updated.
+     *
+     * @param array $userData The current user's data.
+     * @param array $submittedData The submitted data from the profile or email form.
+     */
+    private function updateCustomerAttributes($userData, $submittedData)
+    {
+        $customerId = $userData['additional']['user']['id'];
+        $attributeModel = $this->getCustomerAttributeModelFromId($customerId);
+
+        if (isset($submittedData['profile']['attribute'])) {
+            $this->setProfileAttributes($attributeModel, $submittedData['profile']['attribute']);
+        }
+
+        if (isset($submittedData['email']['attribute'])) {
+            $this->setEmailAttributes($attributeModel, $submittedData['email']['attribute']);
+        }
+
+        Shopware()->Models()->persist($attributeModel);
+        Shopware()->Models()->flush();
+    }
+
+    /**
+     * Retrieves or creates the customer attribute model for the given customer ID
+     * to persist attributes to the database.
+     *
+     * @param int $customerId The ID of the customer.
+     *
+     * @return \Shopware\Models\Attribute\Customer The customer attribute model.
+     */
+    private function getCustomerAttributeModelFromId($customerId)
+    {
+        $attributeRepository = Shopware()->Models()->getRepository('Shopware\Models\Attribute\Customer');
+        $attributeModel = $attributeRepository->findOneBy(['id' => $customerId]);
+
+        if (!$attributeModel) {
+            $attributeModel = new \Shopware\Models\Attribute\Customer();
+            $attributeModel->setUserId($customerId);
+        }
+
+        return $attributeModel;
+    }
+
+    /**
+     * Sets the profile-related attributes on the customer attribute model.
+     *
+     * @param \Shopware\Models\Attribute\Customer $attributeModel The customer attribute model.
+     * @param array $attributes The profile attributes to be set.
+     */
+    private function setProfileAttributes($attributeModel, $attributes)
+    {
+        $attributeModel->setEnderecoProfileStatusGh($attributes['enderecoProfileStatusGh']);
+        $attributeModel->setEnderecoProfilePredictionsGh($attributes['enderecoProfilePredictionsGh']);
+        $attributeModel->setEnderecoProfileHashGh($attributes['enderecoProfileHashGh']);
+        $attributeModel->setEnderecoProfileSessionIdGh($attributes['enderecoProfileSessionIdGh']);
+        $attributeModel->setEnderecoProfileSessionCounterGh($attributes['enderecoProfileSessionCounterGh']);
+
+        return $attributeModel;
+    }
+
+    /**
+     * Sets the profile-related attributes on the customer attribute model using the person attributes from
+     * billing address.
+     *
+     * @param \Shopware\Models\Attribute\Customer $attributeModel The customer attribute model.
+     * @param array $attributes The profile attributes to be set.
+     */
+    private function setProfileAttributesFromBilling($attributeModel, $attributes)
+    {
+        $attributeModel->setEnderecoProfileStatusGh($attributes['enderecoPersonStatusGh']);
+        $attributeModel->setEnderecoProfilePredictionsGh($attributes['enderecoPersonPredictionsGh']);
+        $attributeModel->setEnderecoProfileHashGh($attributes['enderecoPersonHashGh']);
+        $attributeModel->setEnderecoProfileSessionIdGh($attributes['enderecoPersonSessionIdGh']);
+        $attributeModel->setEnderecoProfileSessionCounterGh($attributes['enderecoPersonSessionCounterGh']);
+    }
+
+    /**
+     * Sets the email-related attributes on the customer attribute model.
+     *
+     * @param \Shopware\Models\Attribute\Customer $attributeModel The customer attribute model.
+     * @param array $attributes The email attributes to be set.
+     */
+    private function setEmailAttributes($attributeModel, $attributes)
+    {
+        $attributeModel->setEnderecoEmailStatusGh($attributes['enderecoEmailStatusGh']);
+        $attributeModel->setEnderecoEmailPredictionsGh($attributes['enderecoEmailPredictionsGh']);
+        $attributeModel->setEnderecoEmailHashGh($attributes['enderecoEmailHashGh']);
+        $attributeModel->setEnderecoEmailSessionIdGh($attributes['enderecoEmailSessionIdGh']);
+        $attributeModel->setEnderecoEmailSessionCounterGh($attributes['enderecoEmailSessionCounterGh']);
+
+        return $attributeModel;
+    }
+
+    /**
+     * Assigns form data attributes from the user data to the form_data variable in smarty, which
+     * makes them accessible in frontend. The way we do it here keeps the format compatible
+     * with the includable sdk_meta_field template.
+     *
+     * @param array $userData The current user's data.
+     * @param array &$formData The form data to be updated with user attributes.
+     */
+    private function assignFormDataAttributes($userData, &$formData)
+    {
+        $formData['profile']['attribute'] = [
+            'enderecoProfileStatusGh' => $userData['additional']['user']['endereco_profile_status_gh'],
+            'enderecoProfilePredictionsGh' => $userData['additional']['user']['endereco_profile_predictions_gh'],
+            'enderecoProfileHashGh' => $userData['additional']['user']['endereco_profile_hash_gh'],
+            'enderecoProfileSessionIdGh' => $userData['additional']['user']['endereco_profile_session_id_gh'],
+            'enderecoProfileSessionCounterGh' => $userData['additional']['user']['endereco_profile_session_counter_gh'],
+        ];
+
+        $formData['email']['attribute'] = [
+            'enderecoEmailStatusGh' => $userData['additional']['user']['endereco_email_status_gh'],
+            'enderecoEmailPredictionsGh' => $userData['additional']['user']['endereco_email_predictions_gh'],
+            'enderecoEmailHashGh' => $userData['additional']['user']['endereco_email_hash_gh'],
+            'enderecoEmailSessionIdGh' => $userData['additional']['user']['endereco_email_session_id_gh'],
+            'enderecoEmailSessionCounterGh' => $userData['additional']['user']['endereco_email_session_counter_gh'],
         ];
     }
 
@@ -123,55 +337,6 @@ class Frontend implements SubscriberInterface
     public function sendDoAccountingAddress($args)
     {
         $this->doAccounting();
-    }
-
-    public function onAfterOrderSaveOrder($args)
-    {
-        $sOrder = $args->get('subject');
-        $returnValue = $args->getReturn();
-
-        if (!$this->config['isPluginActive']) {
-            return $returnValue;
-        }
-
-        if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus']) {
-            $returnValue['endereco_order_billingamsstatus'] =
-                $sOrder->sUserData['billingaddress']['attributes']['enderecoamsstatus'];
-        }
-
-        if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus']) {
-            $returnValue['endereco_order_shippingamsstatus'] =
-                $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsstatus'];
-        }
-
-        if ($sOrder->sUserData['billingaddress']['attributes']['enderecoamsts']) {
-            $returnValue['endereco_order_billingamsts'] =
-                $sOrder->sUserData['billingaddress']['attributes']['enderecoamsts'];
-        }
-
-        if ($sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts']) {
-            $returnValue['endereco_order_shippingamsts'] =
-                $sOrder->sUserData['shippingaddress']['attributes']['enderecoamsts'];
-        }
-
-        $suffix = $this->enderecoService->isStoreVersionInstalled();
-
-        foreach ($this->enderecoService->getInfixesToTablesMap as $infix) {
-            $attributes = $this->enderecoService->generateAttributeNames($infix, $suffix);
-            foreach ($attributes as $attribute) {
-                if ($sOrder->sUserData['billingaddress']['attributes'][$attribute]) {
-                    $returnValue[$attribute] =
-                        $sOrder->sUserData['billingaddress']['attributes'][$attribute];
-                }
-
-                if ($sOrder->sUserData['shippingaddress']['attributes'][$attribute]) {
-                    $returnValue[$attribute] =
-                        $sOrder->sUserData['shippingaddress']['attributes'][$attribute];
-                }
-            }
-        }
-
-        return $returnValue;
     }
 
     public function addCommentToOrder($args)
@@ -561,11 +726,6 @@ class Frontend implements SubscriberInterface
         $view->assign('endereco_split_street', $splitStreet);
         $view->assign('endereco_plugin_version', $enderecoService->getVersion());
         $view->assign('endereco_theme_name', $this->themeName);
-
-        $infixes = array_keys($enderecoService->getInfixesToTablesMap());
-        $suffix = $enderecoService->isStoreVersionInstalled();
-        $view->assign('sdk_attributes_infixes', $infixes);
-        $view->assign('sdk_attributes_suffix', $suffix);
 
         // Get country mapping.
         $countryRepository = Shopware()
