@@ -17,6 +17,21 @@ repo_url="https://github.com/shopware5/shopware.git"
 # Destination base directory
 base_dir="shops"
 
+# Check if a version argument is provided
+if [ $# -gt 0 ]; then
+    selected_version="$1"
+
+    # Check if the provided version exists in the predefined list
+    if [[ -z "${versions[$selected_version]}" ]]; then
+        echo "Error: Version $selected_version not found in predefined list."
+        echo "Available versions: $(printf '%s\n' "${!versions[@]}" | sort -V | tr '\n' ' ' | sed 's/ $//')"
+        exit 1
+    fi
+
+    # Restrict the loop to only the selected version
+    versions=([$selected_version]=${versions[$selected_version]})
+fi
+
 # Iterate over the versions array
 for version in "${!versions[@]}"; do
     # Define the destination directory for the current version
@@ -52,7 +67,7 @@ for version in "${!versions[@]}"; do
 
 done
 
-# Change ownership of the copied files to the current user
+# Change ownership of the copied files to the current user 
 sudo chown -R $(whoami):$(whoami) "./shops"
 
 echo "All specified versions processed."
