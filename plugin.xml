@@ -5,7 +5,7 @@
     <label lang="en">Endereco Address-Services for Shopware (Download)</label>
     <label lang="de">Endereco Adress-Services für Shopware (Download)</label>
 
-    <version>3.11.1</version>
+    <version>3.11.2</version>
 
     <link>https://www.endereco.de/shopware</link>
 
@@ -28,6 +28,31 @@
             <p>Der Address Management Service von Endereco bündeln viele Dienste in einem Plugin, um Kunden zu ermöglichen, Ihre Stammdaten schnell, fehlerfrei und richtig formatiert einzugeben. So erhältst Du korrekte Kundendaten und erleichterst deinen Kunden die Adresseingabe auf Smartphones, Tablets und Desktop PCs.</p><p><br></p><p>- Internationale Adressprüfung / Adresscheck für Europa und weltweit für über 200 Länder<br></p><p>- DHL Leitcodierfähige deutsche Adressen</p><p>- Autocomplete / Auto Vervollständigung / Eingabe Assistent für PLZ, Ort, Strasse</p><p>- E-Mail Prüfung auf Format und Zustellbarkeit</p><p>- Anredeprüfung und automatisches setzen der richtigen Anrede</p><p>- Optionale Trennung von Strasse und Hausnummer <br></p><p>- Unterdrückung des Autofillls für viele Browser - um Fehleingaben zu vermeiden</p><p>- Server - Zu Server Kommunikation - 100% Cookiefrei</p><p>- DSGVO Konform</p><p>- Optionale einmalige Prüfung von Bestandskunden nach Login - vor der Bestellung <br></p><p>- Speicherung des Prüfstatuses zur weiteren Bearbeitung in der Warenwirtschaft</p><p>- Left to right, right to left support (z.B. für arabische sprachen)</p><p>- Made in Germany</p><p>- Deutscher Support für Shopbetreiber und Agenturen</p><p><br></p><b>30 Tage ohne Risiko testen!</b><br><p></p><ul><li>Keine Vertragsbindung,&nbsp;</li><li>Keine Mindestlaufzeit,&nbsp;</li><li>keine Grundgebühr,&nbsp;</li><li>kein Mindestumsatz,&nbsp;</li><li>bis 250 Prüfungen im Monat dauerhaft kostenfrei!</li><li>Gratis API Key anfordern unter:&nbsp;<a href="https://www.endereco.de/shopware/" target="_blank">https://www.endereco.de/shopware/</a></li></ul>
         ]]>
     </description>
+
+    <changelog version="3.11.2">
+        <changes lang="de">
+            <![CDATA[
+            <ul>
+                <li><b>Security Update</b>
+                    <ul>
+                        <li>Die io.php Proxy-Datei validiert nun die Ziel-Domain, bevor Anfragen weitergeleitet werden.</li>
+                    </ul>
+                </li>
+            </ul>
+        ]]>
+        </changes>
+        <changes lang="en">
+            <![CDATA[
+            <ul>
+                <li><b>Security fix</b>
+                    <ul>
+                        <li>The io.php proxy file now validates the target domain before forwarding requests.</li>
+                    </ul>
+                </li>
+            </ul>
+            ]]>
+        </changes>
+    </changelog>
 
     <changelog version="3.11.1">
         <changes lang="de">
