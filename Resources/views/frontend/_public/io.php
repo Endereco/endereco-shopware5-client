@@ -44,12 +44,35 @@ $http = array(
 );
 
 if ('POST' === $_SERVER['REQUEST_METHOD']) {
+    // Validate remote API URL to prevent SSRF attacks.
+    if (empty($_SERVER['HTTP_X_REMOTE_API_URL'])) {
+        header('HTTP/1.1 400 Bad Request');
+        header('Content-Type: application/json');
+        echo json_encode(array('error' => 'Missing remote API URL'));
+        exit;
+    }
+
+    $remoteApiUrl = trim($_SERVER['HTTP_X_REMOTE_API_URL']);
+
+    // Strip protocol, path, and query string to isolate the domain.
+    $domain = preg_replace('/^https?:\/\//', '', $remoteApiUrl);
+    $domain = preg_replace('/[\/?#].*$/', '', $domain);
+    $domain = strtolower($domain);
+
+    // Only allow endereco-service.de and its subdomains.
+    if (!preg_match('/^(([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+)?endereco-service\.de$/', $domain)) {
+        header('HTTP/1.1 400 Bad Request');
+        header('Content-Type: application/json');
+        echo json_encode(array('error' => 'Invalid remote API URL'));
+        exit;
+    }
+
     $xml = simplexml_load_file(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/plugin.xml');
     $agent_info  = "Endereco Shopware5 Client (Download) v" . $xml->version;
     $post_data   = json_decode(file_get_contents('php://input'), true);
     $api_key     = trim($_SERVER['HTTP_X_AUTH_KEY']);
     $data_string = json_encode($post_data);
-    $ch          = curl_init(trim($_SERVER['HTTP_X_REMOTE_API_URL']));
+    $ch          = curl_init($remoteApiUrl);
 
     if ($_SERVER['HTTP_X_TRANSACTION_ID']) {
         $tid = $_SERVER['HTTP_X_TRANSACTION_ID'];
