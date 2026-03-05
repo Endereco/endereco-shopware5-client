@@ -1,5 +1,11 @@
 # Endereco Shopware 5 Client
 
+> **⚠️ This plugin is no longer actively maintained and does not receive any updates, including security updates.**
+>
+> The reason for this is that Shopware 5 reached its official end of life in July 2024. As a result, we have discontinued further development and maintenance of this plugin in March 2026.
+>
+> **We recommend migrating to a supported Shopware 6 version.**
+
 Endereco's Address Management Service plugin for Shopware 5, providing address validation, autocomplete, email verification, and more for improved customer data quality.
 
 ## Requirements
